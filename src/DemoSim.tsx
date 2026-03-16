@@ -2,10 +2,10 @@ import { useEffect, useRef, useState } from "preact/hooks"
 import * as THREE from "three"
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js"
 
-import { request_archived_data_components, RequestDataComponentsReturn } from "core/data/fetch_from_db"
+import { request_historical_data_components, RequestDataComponentsReturn } from "core/data/fetch_from_db"
 import { format_data_component_value_to_string } from "core/data/format/format_data_component_value_to_string"
 import { IdAndVersion } from "core/data/id"
-import { get_supabase } from "core/supabase"
+import { get_supabase } from "core/supabase/browser"
 
 import "./DemoSim.css"
 import glowFragmentShader from "./shaders/glow/fragment.glsl"
@@ -132,7 +132,7 @@ function LoadData()
 
     useEffect(() =>
     {
-        request_archived_data_components(get_supabase, [new IdAndVersion(10, 1)])
+        request_historical_data_components(get_supabase, [new IdAndVersion(1002, 6)])
         .then(set_response)
     }, [])
 
@@ -141,17 +141,16 @@ function LoadData()
         {response && response.error && <p>Error loading data from WikiSim: {response.error.message}</p>}
         {response && response.data && <>
             Loaded {response.data.length} data components from WikiSim:
-            <ul>
-                {response.data.map((component, index) => (
-                    <li key={index}>
-                        <strong>ID:</strong> {component.id.id},
-                        <strong>Version:</strong> {component.id.version},
-                        <strong>Title:</strong> {component.title},
-                        <strong>Value:</strong> {component.value},
-                        <strong>Value as text:</strong> {format_data_component_value_to_string(component)}
-                    </li>
-                ))}
-            </ul>
+
+            {response.data.map((component, index) => (
+                <p key={index}>
+                    <strong>ID:</strong> {component.id.id},
+                    <strong>Version:</strong> {component.id.version},
+                    <strong>Title:</strong> {component.title},
+                    <strong>Value:</strong> {component.result_value},
+                    <strong>Value as text:</strong> {format_data_component_value_to_string(component)}
+                </p>
+            ))}
         </>}
     </div>
 }
