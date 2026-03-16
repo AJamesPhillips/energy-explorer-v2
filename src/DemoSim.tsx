@@ -88,7 +88,6 @@ export const DemoSim = () =>
 
         // Animation loop
         let last_time = performance.now()
-        console.log("Starting animation loop with initial time:", last_time)
         const animate = (current_time: number) => {
             requestAnimationFrame(animate)
             const delta_time = current_time - last_time
@@ -111,22 +110,20 @@ export const DemoSim = () =>
         animate(last_time)
 
         // Handle window resize
-        const handleResize = () => {
+        const handle_resize = () => {
             const width = document.body.clientWidth
             const height = document.body.clientHeight
-
-            console.log("Resizing renderer to:", width, height)
 
             camera.aspect = width / height
             camera.updateProjectionMatrix()
             renderer.setSize(width, height)
         }
 
-        window.addEventListener("resize", handleResize)
+        window.addEventListener("resize", handle_resize)
 
         // Cleanup
         return () => {
-            window.removeEventListener("resize", handleResize)
+            window.removeEventListener("resize", handle_resize)
             controls.dispose()
             renderer.dispose()
             add_cube_on_pointer_down.dispose()
