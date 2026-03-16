@@ -4,6 +4,11 @@ import { defineConfig } from "vite"
 import glsl from "vite-plugin-glsl"
 import restart from "vite-plugin-restart"
 
+import {
+    check_asset_imports_plugin,
+    copy_assets_files_plugin,
+} from "./vite_handle_redirected_files"
+
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -25,7 +30,9 @@ export default defineConfig({
     [
         preact(),
         restart({ restart: [ "../public/**", ] }), // Restart server on file changes to public/
-        glsl() // Handle shader files
+        glsl(), // Handle shader files
+        copy_assets_files_plugin(asset_white_list),
+        check_asset_imports_plugin(),
     ],
     resolve: {
         alias: {
@@ -33,3 +40,13 @@ export default defineConfig({
         }
     },
 })
+
+
+function asset_white_list(path: string, entry: string): boolean
+{
+    // For example:
+    // if (entry.endsWith("_boundary.geojson")) return true
+    // if (path.match(/.*src\/assets\/scale_.*\.png/)) return true
+
+    return false
+}
