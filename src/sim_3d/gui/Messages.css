@@ -1,0 +1,24 @@
+
+.message
+{
+    display: flex;
+    font-size: 1.5em;
+    color: white;
+    background-color: rgba(0, 0, 0, 0.7);
+    border-radius: 5px;
+    padding: 10px;
+    overflow: hidden;
+    height: 30px;
+    width: "fit-content";
+}
+
+.message.disappearing
+{
+    opacity: 0.0;
+    height: 0px;
+    padding: 0px;
+    transition:
+        opacity 0.5s ease-in-out,
+        height 0.5s ease-in-out 0.5s,
+        padding 0.5s ease-in-out 0.5s;
+}

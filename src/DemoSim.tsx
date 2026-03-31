@@ -1,15 +1,14 @@
-import { useEffect, useRef, useState } from "preact/hooks"
+import { useEffect, useRef } from "preact/hooks"
 import * as THREE from "three"
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js"
 
-import { request_historical_data_components, RequestDataComponentsReturn } from "core/data/fetch_from_db"
-import { format_data_component_value_to_string } from "core/data/format/format_data_component_value_to_string"
-import { IdAndVersion } from "core/data/id"
-import { get_supabase } from "core/supabase/browser"
+// import { Evaluator } from "core/evaluator/implementation/browser_sandboxed_javascript"
 
+// import { BalanceSheetLoader } from "./balance_sheet/BalanceSheetLoader"
 import "./DemoSim.css"
-import glowFragmentShader from "./shaders/glow/fragment.glsl"
-import glowVertexShader from "./shaders/glow/vertex.glsl"
+import glow_fragment_shader from "./shaders/glow/fragment.glsl"
+import glow_vertex_shader from "./shaders/glow/vertex.glsl"
+import { EnergyExplorerSimV2 } from "./sim_3d/EnergyExplorerSimV2"
 
 
 export const DemoSim = () =>
@@ -57,8 +56,8 @@ export const DemoSim = () =>
         const material_blue_glow = new THREE.ShaderMaterial({
             side: THREE.BackSide, // Render the glow on the inside
             transparent: true,
-            vertexShader: glowVertexShader,
-            fragmentShader: glowFragmentShader,
+            vertexShader: glow_vertex_shader,
+            fragmentShader: glow_fragment_shader,
             uniforms: {
                 uGlowColour: new THREE.Uniform(new THREE.Color(0xaaccff)),
             },
@@ -131,42 +130,11 @@ export const DemoSim = () =>
     }, [])
 
     return <>
+        <EnergyExplorerSimV2 />
+        {/* <Evaluator />
+        <BalanceSheetLoader /> */}
         <canvas ref={canvasRef} id="scene-3d"/>
-        <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, backgroundColor: "rgba(255, 255, 255, 0.8)", padding: "10px", borderRadius: "5px" }}>
-            <h3>Demo Simulation</h3>
-            <LoadData />
-        </div>
     </>
-}
-
-
-function LoadData()
-{
-    const [response, set_response] = useState<RequestDataComponentsReturn | null>(null)
-
-    useEffect(() =>
-    {
-        request_historical_data_components(get_supabase, [new IdAndVersion(1002, 6)])
-        .then(set_response)
-    }, [])
-
-    return <div>
-        {response === null && <p>Loading data from WikiSim...</p>}
-        {response && response.error && <p>Error loading data from WikiSim: {response.error.message}</p>}
-        {response && response.data && <>
-            Demonstration of loading {response.data.length} data components from WikiSim:
-
-            {response.data.map((component, index) => (
-                <p key={index}>
-                    <strong>ID:</strong> {component.id.id},
-                    <strong>Version:</strong> {component.id.version},
-                    <strong>Title:</strong> {component.title},
-                    <strong>Value:</strong> {component.result_value},
-                    <strong>Value as text:</strong> {format_data_component_value_to_string(component)}
-                </p>
-            ))}
-        </>}
-    </div>
 }
 
 
