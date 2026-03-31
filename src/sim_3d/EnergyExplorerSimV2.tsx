@@ -24,9 +24,16 @@ export const EnergyExplorerSimV2 = () =>
 
     useEffect(() =>
     {
+        document.body.style.overflow = "hidden"
         if (!canvas_ref.current) return
 
-        return setup_sim(canvas_ref.current)
+        const clean_up_sim = setup_sim(canvas_ref.current)
+
+        return () =>
+        {
+            document.body.style.overflow = "auto"
+            clean_up_sim()
+        }
     }, [])
 
     return <div>
@@ -63,6 +70,7 @@ function setup_sim(canvas: HTMLCanvasElement)
         controls.dispose()
         renderer.dispose()
         cleanup_handle_window_resize()
+        common_dependencies.dispose()
     }
 }
 

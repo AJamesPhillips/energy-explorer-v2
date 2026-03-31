@@ -56,7 +56,14 @@ export function create_common_dependencies(canvas: HTMLCanvasElement, screen_siz
     controls.minDistance = CONSTANTS.controls.zoom.min
     controls.maxDistance = CONSTANTS.controls.zoom.max
 
-    const deps: CommonDependencies = {
+    function dispose()
+    {
+        controls.dispose()
+        renderer.dispose()
+        gui.destroy()
+    }
+
+    const deps: CommonDependencies & { dispose: () => void } = {
         camera,
         controls,
         CONSTANTS,
@@ -64,6 +71,7 @@ export function create_common_dependencies(canvas: HTMLCanvasElement, screen_siz
         renderer,
         scene,
         texture_loader,
+        dispose,
     }
     ;(window as any).debug = deps
 

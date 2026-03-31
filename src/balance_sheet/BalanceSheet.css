@@ -1,0 +1,8 @@
+
+
+#balance_sheet {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding-left: var(--options-panel-width);
+}

@@ -3,6 +3,7 @@ import { useMemo, useState } from "react"
 import { DataComponent, DataComponentsById } from "core/data/interface"
 import { make_graph } from "core/data/utils/graph"
 
+import "./BalanceSheet.css"
 import { EnergyBoxStack } from "./EnergyBoxes"
 import { factors_up_to } from "./EnergyBoxesHelper"
 import {
@@ -46,7 +47,7 @@ export function BalanceSheet(props: { components: DataComponent[], components_ma
     }, [perspective_ids.join(",")])
 
 
-    return <>
+    return <div id="balance_sheet">
         <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "1em" }}>
             <SelectPerspective
                 perspectives={perspective_ids}
@@ -59,12 +60,6 @@ export function BalanceSheet(props: { components: DataComponent[], components_ma
             // justifyContent: "center",
             gap: "20px",
             flexDirection: "row",
-            overflowX: "scroll",
-
-            overflow: "scroll",
-            height: "60%",
-            padding: "100px 100px 0px 100px",
-            border: "thin solid black",
         }}>
             {persectives.map((p, index) => (
                 <EnergyBoxStack
@@ -86,5 +81,5 @@ export function BalanceSheet(props: { components: DataComponent[], components_ma
         </div>
 
         {/* <GraphViewer components={components} perspective={perspective} /> */}
-    </>
+    </div>
 }
