@@ -1,26 +1,28 @@
-import { useMemo, useState } from "react"
+import { useMemo } from "react"
 
-import { DataComponent, DataComponentsById } from "core/data/interface"
+import { DataComponentsById } from "core/data/interface"
 import { make_graph } from "core/data/utils/graph"
 
 import "./BalanceSheet.css"
 import { EnergyBoxStack } from "./EnergyBoxes"
 import { factors_up_to } from "./EnergyBoxesHelper"
 import {
-    perspective_id_2009_mackay,
     perspective_id_general,
     perspective_id_to_name_map,
-    PerspectiveType,
-    SelectPerspective,
+    PerspectiveType
 } from "./SelectPerspective"
 
 
-export function BalanceSheet(props: { components: DataComponent[], components_map: DataComponentsById })
+interface BalanceSheetProps
 {
-    const { components_map } = props
-    const [perspective_ids, set_perspective_ids] = useState<PerspectiveType[]>([
-        perspective_id_2009_mackay, perspective_id_general
-    ])
+    perspective_ids: PerspectiveType[]
+    // components: DataComponent[]
+    components_map: DataComponentsById
+}
+export function BalanceSheet(props: BalanceSheetProps)
+{
+    const { perspective_ids, components_map } = props
+
 
     const parser = useMemo(() => new DOMParser(), [])
 
@@ -48,13 +50,6 @@ export function BalanceSheet(props: { components: DataComponent[], components_ma
 
 
     return <div id="balance_sheet">
-        <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "1em" }}>
-            <SelectPerspective
-                perspectives={perspective_ids}
-                on_change={set_perspective_ids}
-            />
-        </div>
-
         <div style={{
             display: "flex",
             // justifyContent: "center",

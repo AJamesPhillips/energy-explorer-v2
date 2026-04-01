@@ -8,10 +8,11 @@ import { get_supabase } from "core/supabase/browser"
 
 import { BalanceSheet } from "./BalanceSheet"
 import { top_ids_to_fetch } from "./data"
+import { PerspectiveType } from "./SelectPerspective"
 
 
 
-export function BalanceSheetLoader(props: {})
+export function BalanceSheetLoader(props: { perspective_ids: PerspectiveType[] })
 {
     const [components, set_components] = useState<DataComponent[]>([])
 
@@ -23,7 +24,7 @@ export function BalanceSheetLoader(props: {})
 
     if (components.length === 0) return <div>Loading...</div>
 
-    return <BalanceSheet components={components} components_map={components_map} />
+    return <BalanceSheet perspective_ids={props.perspective_ids} components_map={components_map} />
 }
 
 
