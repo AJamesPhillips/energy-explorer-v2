@@ -3,7 +3,7 @@ import { IdOnly } from "core/data/id"
 import { DataComponent } from "core/data/interface"
 import { Graph, GraphNode } from "core/data/utils/graph"
 
-import { map_factor_name_to_id } from "./data"
+import { map_factor_name_to_id } from "../data/ids"
 import { EnergyFactor, EnergyFactorName } from "./interface"
 
 

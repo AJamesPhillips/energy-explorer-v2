@@ -12,6 +12,9 @@
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+
+    --z-index-options-panel: 2;
+    --z-index-sim: 1;
 }
 
 body {
@@ -34,6 +37,8 @@ body {
 
     max-width: 150px;
     padding: 20px;
+
+    z-index: var(--z-index-options-panel);
 }
 
 #app_options_panel .app_option
@@ -44,10 +49,15 @@ body {
 
     padding: 5px;
     border-radius: 3px;
-    border: 1px solid #ccc;
+    border: 2px solid #ccc;
 
+    background-color: white;
     text-align: center;
     cursor: pointer;
+}
+#app_options_panel .app_option.selected
+{
+    border-color: #646cff;
 }
 #app_options_panel .app_option:hover
 {

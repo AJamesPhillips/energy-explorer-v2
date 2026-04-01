@@ -1,5 +1,5 @@
 import { IdOnly } from "core/data/id"
-import { EnergyFactorName } from "./interface"
+import { EnergyFactorName } from "../balance_sheet/interface"
 
 
 const uk_budget_general = new IdOnly(1239)

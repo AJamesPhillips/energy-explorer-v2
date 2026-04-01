@@ -5,6 +5,7 @@ import { DatetimeRange } from "core/data/values/DatetimeRange"
 import { LatLonWithIsOnshore } from "core/data/values/LatLon"
 
 import { draw_earth_grid } from "./discrete_global_grid"
+import "./EnergyExplorerSimV2.css"
 import { GUI } from "./gui/GUI"
 import { run_model } from "./model"
 import { ModelScenario, UserChoices } from "./model/interface"
@@ -15,7 +16,6 @@ import { create_sun } from "./scene/create_sun"
 import { create_earth } from "./scene/earth"
 import { get_model_data, load_and_render_model_data } from "./scene/spatial_data/load_and_render_model_data"
 import { handle_window_resize } from "./utils/handle_window_resize"
-
 
 
 export const EnergyExplorerSimV2 = () =>
@@ -36,10 +36,10 @@ export const EnergyExplorerSimV2 = () =>
         }
     }, [])
 
-    return <div>
+    return <>
         <canvas ref={canvas_ref} id="scene-3d"/>
         <GUI />
-    </div>
+    </>
 }
 
 function setup_sim(canvas: HTMLCanvasElement)

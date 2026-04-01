@@ -1,34 +1,11 @@
-import { useEffect, useMemo, useState } from "react"
-
 import { IdAndMaybeVersion } from "core/data/id"
 import { DataComponent } from "core/data/interface"
-import { data_components_by_id } from "core/data/utils/data_components_by_id"
 import { request_dependencies, setup_runtime } from "core/evaluation/setup_runtime"
 import { get_supabase } from "core/supabase/browser"
 
-import { BalanceSheet } from "./BalanceSheet"
-import { top_ids_to_fetch } from "./data"
-import { PerspectiveType } from "./SelectPerspective"
 
 
-
-export function BalanceSheetLoader(props: { perspective_ids: PerspectiveType[] })
-{
-    const [components, set_components] = useState<DataComponent[]>([])
-
-    useEffect(() =>
-    {
-        get_wikisim_components(top_ids_to_fetch, set_components)
-    }, [])
-    const components_map = useMemo(() => data_components_by_id(components), [components])
-
-    if (components.length === 0) return <div>Loading...</div>
-
-    return <BalanceSheet perspective_ids={props.perspective_ids} components_map={components_map} />
-}
-
-
-function get_wikisim_components(ids: IdAndMaybeVersion[], set_components: (components: DataComponent[]) => void): Promise<void>
+export function get_wikisim_components(ids: IdAndMaybeVersion[], set_components: (components: DataComponent[]) => void): Promise<void>
 {
     return request_dependencies({
         get_supabase,

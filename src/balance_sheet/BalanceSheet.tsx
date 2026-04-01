@@ -3,6 +3,7 @@ import { useMemo } from "react"
 import { DataComponentsById } from "core/data/interface"
 import { make_graph } from "core/data/utils/graph"
 
+import Loading from "../components/Loading"
 import "./BalanceSheet.css"
 import { EnergyBoxStack } from "./EnergyBoxes"
 import { factors_up_to } from "./EnergyBoxesHelper"
@@ -16,12 +17,14 @@ import {
 interface BalanceSheetProps
 {
     perspective_ids: PerspectiveType[]
-    // components: DataComponent[]
-    components_map: DataComponentsById
+    components_map: DataComponentsById | undefined
 }
 export function BalanceSheet(props: BalanceSheetProps)
 {
     const { perspective_ids, components_map } = props
+
+
+    if (!components_map) return <Loading />
 
 
     const parser = useMemo(() => new DOMParser(), [])
