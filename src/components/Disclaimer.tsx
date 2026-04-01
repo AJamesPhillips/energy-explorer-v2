@@ -3,10 +3,13 @@ import { useCallback, useEffect, useState } from "preact/hooks"
 import "./Disclaimer.css"
 
 
+const KEY_NAME = "disclaimer_shown"
+
 export function Disclaimer()
 {
-    const [disclaimer_shown, set_disclaimer_shown] = useState(boolean_cookie("disclaimer_shown"))
-    const [show_nothing, set_show_nothing] = useState(false)
+    const local_storage_disclaimer_shown = boolean_local_storage(KEY_NAME)
+    const [disclaimer_shown, set_disclaimer_shown] = useState(local_storage_disclaimer_shown)
+    const [show_nothing, set_show_nothing] = useState(local_storage_disclaimer_shown)
 
     const on_click = useCallback(() =>
     {
@@ -16,7 +19,7 @@ export function Disclaimer()
     const on_click_dont_show_again = useCallback(() =>
     {
         set_disclaimer_shown(true)
-        document.cookie = "disclaimer_shown=true; max-age=31536000"   // 1 year
+        localStorage.setItem(KEY_NAME, new Date().toISOString())
     }, [])
 
     useEffect(() =>
@@ -42,7 +45,7 @@ export function Disclaimer()
         <div className="disclaimer-text-holder">
             <div
                 className="disclaimer-text"
-                onPointerDown={on_click}
+                onClick={on_click}
             >
                 <h2>🚧 Energy Explorer v2 🚧</h2>
 
@@ -68,14 +71,19 @@ export function Disclaimer()
 }
 
 
-function boolean_cookie(name: string)
+function boolean_local_storage(key_name: string, time_to_live_ms = 1000 * 60 * 60 * 24 * 365)
 {
-    const cookies = document.cookie.split(";").map(cookie => cookie.trim())
-    const match = cookies.find(cookie => cookie.startsWith(name + "="))
-    if (!match) return undefined
+    const value = localStorage.getItem(key_name)
+    if (!value) return false
 
-    const value = match.substring(name.length + 1).toLowerCase()
-    if (value === "true") return true
-    if (value === "false") return false
-    return undefined
+    const date = Date.parse(value)
+    if (isNaN(date)) return false
+
+    if ((date + time_to_live_ms) < Date.now())
+    {
+        // localStorage.removeItem(key_name)
+        return false
+    }
+
+    return true
 }
