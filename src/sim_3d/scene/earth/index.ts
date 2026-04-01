@@ -19,16 +19,14 @@ export function create_earth(deps: CommonDependencies, subscribe_to_sun_directio
         atmosphere_twilight_color: "#f17143",
     }
 
-    gui
-        .addColor(earth_parameters, "atmosphere_day_color")
+    gui.addColor(earth_parameters, "atmosphere_day_color")
         .onChange(() =>
         {
             earth_material.uniforms.u_atmosphere_day_color!.value.set(earth_parameters.atmosphere_day_color)
             atmosphere_material.uniforms.u_atmosphere_day_color!.value.set(earth_parameters.atmosphere_day_color)
         })
 
-    gui
-        .addColor(earth_parameters, "atmosphere_twilight_color")
+    gui.addColor(earth_parameters, "atmosphere_twilight_color")
         .onChange(() =>
         {
             earth_material.uniforms.u_atmosphere_twilight_color!.value.set(earth_parameters.atmosphere_twilight_color)

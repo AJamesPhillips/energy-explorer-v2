@@ -42,13 +42,11 @@ function App ()
             <Options selected={view} on_select={set_view} />
 
             <div style={{ display: "flex", gap: "20px", flexDirection: "column", flexGrow: 1 }}>
-                <div>
-                    <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "1em", padding: 10 }}>
-                        <SelectPerspective
-                            perspectives={perspective_ids}
-                            on_change={set_perspective_ids}
-                        />
-                    </div>
+                <div id="app_top_bar">
+                    <SelectPerspective
+                        perspectives={perspective_ids}
+                        on_change={set_perspective_ids}
+                    />
                 </div>
 
                 <div id="app_main_view">

@@ -53,13 +53,13 @@ export const respond_to_pointer_events = ({ camera, CONSTANTS }: CommonDependenc
                 {
                     // console .log("Hovering over:", hovered_country.userData.full_country_name) //, country.userData.points)
                     const new_message_id = new_random_id()
-                    pub_sub.pub("show_message", {
-                        id: new_message_id,
-                        message: hovered_country.userData.country_name,
-                        // message: hovered_country.userData.full_country_name,
-                        show_for_seconds: 2,
-                        clear_id: previous_message_id || undefined,
-                    })
+                    // pub_sub.pub("show_message", {
+                    //     id: new_message_id,
+                    //     message: hovered_country.userData.country_name,
+                    //     // message: hovered_country.userData.full_country_name,
+                    //     show_for_seconds: 2,
+                    //     clear_id: previous_message_id || undefined,
+                    // })
                     previous_message_id = new_message_id
                 }
             }

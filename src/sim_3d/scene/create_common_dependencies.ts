@@ -4,11 +4,13 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js"
 
 import { CONSTANTS } from "./CONSTANTS"
 import { CommonDependencies, ScreenSizes } from "./interface"
+import "./lil-gui.css"
 
 
 export function create_common_dependencies(canvas: HTMLCanvasElement, screen_sizes: ScreenSizes)
 {
     const gui = new GUI()
+    gui.close()
 
     // Create scene
     const scene = new THREE.Scene()

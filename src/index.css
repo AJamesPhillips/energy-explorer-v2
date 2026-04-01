@@ -73,6 +73,15 @@ body {
     color: #19446a;
 }
 
+#app_top_bar
+{
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 1em;
+    padding: 10px;
+    z-index: var(--z-index-options-panel);
+}
+
 #app_main_view
 {
     margin: 0 auto;
