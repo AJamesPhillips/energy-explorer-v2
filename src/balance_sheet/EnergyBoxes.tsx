@@ -1,6 +1,6 @@
 import { format_number_to_significant_figures } from "core/data/format/format_number_to_significant_figures"
 
-import { EnergyFactor } from "./interface"
+import { EnergyFactor } from "../data/interface"
 
 
 export function EnergyBoxes(props: { factors: EnergyFactor[] })

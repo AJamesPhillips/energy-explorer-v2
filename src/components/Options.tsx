@@ -1,10 +1,11 @@
 
-export type OptionsType = "balance_sheet" | "knowledge_graph" | "simulation" | "digital_twin"
+export type ViewType = "balance_sheet" | "knowledge_graph" | "simulation" | "digital_twin"
 interface Option
 {
-    id: OptionsType
+    id: ViewType
     label: string
     img_url: string
+    under_construction?: boolean
 }
 const options: Option[] = [
     {
@@ -15,21 +16,23 @@ const options: Option[] = [
     {
         id: "knowledge_graph",
         label: "Knowledge Graph",
-        img_url: ""
+        img_url: "/imgs/knowledge_graph3.jpg"
     },
     {
         id: "simulation",
         label: "Simulation",
-        img_url: ""
+        img_url: "",
+        under_construction: true,
     },
     {
         id: "digital_twin",
         label: "Digital Twin",
-        img_url: "/imgs/digital_twin.jpg"
+        img_url: "/imgs/digital_twin.jpg",
+        under_construction: true,
     }
 ]
 
-export function Options ({ selected, on_select }: { selected: string, on_select: (id: OptionsType) => void })
+export function Options ({ selected, on_select }: { selected: string, on_select: (id: ViewType) => void })
 {
     return <div id="app_options_panel">
         {options.map(option => <div
@@ -39,6 +42,17 @@ export function Options ({ selected, on_select }: { selected: string, on_select:
         >
             {option.img_url && <img src={option.img_url} alt={option.label} style={{ width: "100%", height: "auto" }} />}
             <span>{option.label}</span>
+            {option.under_construction && <span
+                style={{
+                    color: "red",
+                    fontSize: "1em",
+                    fontWeight: "bold",
+                    position: "absolute",
+                    top: "40%",
+                }}
+            >
+                (Coming Soon)
+            </span>}
         </div>)}
     </div>
 }

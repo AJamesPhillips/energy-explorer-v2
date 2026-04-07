@@ -54,6 +54,8 @@ body {
     background-color: white;
     text-align: center;
     cursor: pointer;
+
+    position: relative;
 }
 #app_options_panel .app_option.selected
 {

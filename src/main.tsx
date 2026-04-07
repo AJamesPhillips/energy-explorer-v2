@@ -1,37 +1,122 @@
 import { render } from "preact"
 import { useEffect, useMemo, useState } from "preact/hooks"
+import * as z from "zod"
 
 import "./monkey_patch"
 
-import { DataComponent } from "core/data/interface"
-import { data_components_by_id } from "core/data/utils/data_components_by_id"
+import { flatten_new_or_data_component_to_json, hydrate_data_component_from_json } from "core/data/convert_between_json"
+import { IdAndMaybeVersion } from "core/data/id"
+import { data_components_by_ido, data_components_by_idv } from "core/data/utils/data_components_by_id"
+import { make_graph } from "core/data/utils/graph"
+import { make_field_validators } from "core/data/validate_fields"
 import { Evaluator } from "core/evaluator/implementation/browser_sandboxed_javascript"
+import { DataComponentAsJSON } from "core/supabase"
 
 import { BalanceSheet } from "./balance_sheet/BalanceSheet"
-import { perspective_id_2009_mackay, perspective_id_general, PerspectiveType, SelectPerspective } from "./balance_sheet/SelectPerspective"
+import { factors_up_to } from "./balance_sheet/EnergyBoxesHelper"
+import {
+    perspective_id_2009_mackay,
+    perspective_id_general,
+    PerspectiveType,
+    SelectPerspective
+} from "./balance_sheet/SelectPerspective"
 import { Disclaimer } from "./components/Disclaimer"
-import { Options, OptionsType } from "./components/Options"
+import { Options, ViewType } from "./components/Options"
 import { get_wikisim_components } from "./data/get_wikisim_components"
-import { top_ids_to_fetch } from "./data/ids"
+import { other_ids_performance_boost, top_ids_to_fetch } from "./data/ids"
+import { DataComponentForGraph, Perspective } from "./data/interface"
+import { GraphViewer } from "./graph/GraphViewer"
 import "./index.css"
 import { EnergyExplorerSimV2 } from "./sim_3d/EnergyExplorerSimV2"
 
 
+const all_ids_to_fetch: { id: IdAndMaybeVersion, compute_value: boolean }[] = [
+    ...top_ids_to_fetch.map(id => ({ id, compute_value: true })),
+    ...other_ids_performance_boost.map(id => ({ id, compute_value: false })),
+]
+
+
 function App ()
 {
-    const [view, set_view] = useState<OptionsType>("knowledge_graph")
+    const [view, set_view] = useState<ViewType>("knowledge_graph")
     const [perspective_ids, set_perspective_ids] = useState<PerspectiveType[]>([
-        perspective_id_2009_mackay, perspective_id_general
+        perspective_id_2009_mackay,
+        perspective_id_general
     ])
 
 
-    const [components, set_components] = useState<DataComponent[] | undefined>(undefined)
+    function log_error(error: string)
+    {
+        console.error(error)
+    }
+
+
+    const [components, set_components] = useState<DataComponentForGraph[] | undefined>(cached_components(true))
 
     useEffect(() =>
     {
-        get_wikisim_components(top_ids_to_fetch, set_components)
+        if (components)
+        {
+            console.log(`Using cache of ${components.length} components`)
+            return
+        }
+
+        get_wikisim_components(all_ids_to_fetch, (components) =>
+        {
+            set_components(components)
+            cache_components(components)
+        })
     }, [])
-    const components_map = useMemo(() => data_components_by_id(components), [components])
+    const components_map_by_idv = useMemo(() => data_components_by_idv(components), [components])
+    const components_map_by_ido = useMemo(() => data_components_by_ido(components), [components])
+
+
+    // Make the knowledge graph
+    const parser = useMemo(() => new DOMParser(), [])
+
+    const persectives: Perspective[] = useMemo(() =>
+    {
+        if (Object.keys(components_map_by_idv).length === 0) return []
+
+        const idv_of_concepts = components_map_by_ido[perspective_id_general]?.id
+        if (!idv_of_concepts)
+        {
+            log_error(`Concept id ${perspective_id_general} not found in components_map_by_ido`)
+            return []
+        }
+
+        const perspective_id1 = perspective_ids[1]!
+        const idv_of_comparison = components_map_by_ido[perspective_id1]?.id
+
+        return perspective_ids.map(perspective_id =>
+        {
+            const idv_of_interest = components_map_by_ido[perspective_id]?.id
+            if (!idv_of_interest)
+            {
+                log_error(`Perspective id ${idv_of_interest} not found in components_map_by_ido`)
+                return null
+            }
+
+            const graph = make_graph(parser, components_map_by_idv, {
+                idv_of_concepts,
+                idv_of_interest,
+                idv_of_comparison,
+            })
+
+            const factors = factors_up_to("Defence", graph)
+
+            const sinks = factors.filter(f => f.type === "sink").reverse()
+            const sources = factors.filter(f => f.type !== "sink").reverse()
+
+            return {
+                id: perspective_id,
+                graph,
+                sinks,
+                sources,
+            }
+        })
+        .filter(p => !!p)
+    }, [components_map_by_idv, perspective_ids.join(",")])
 
 
     return <>
@@ -50,8 +135,9 @@ function App ()
                 </div>
 
                 <div id="app_main_view">
-                    {view === "balance_sheet" && <BalanceSheet perspective_ids={perspective_ids} components_map={components_map} />}
-                    {view === "digital_twin" && <EnergyExplorerSimV2 />}
+                    {view === "balance_sheet" && <BalanceSheet persectives={persectives} components_map={components_map_by_idv} />}
+                    {view === "knowledge_graph" && <GraphViewer persectives={persectives} />}
+                    {(view === "simulation" || view === "digital_twin") && <EnergyExplorerSimV2 starting_view={view} />}
                 </div>
             </div>
 
@@ -63,3 +149,59 @@ function App ()
 }
 
 render(<App />, document.getElementById("app")!)
+
+
+interface DataComponentAsJSONForGraph extends DataComponentAsJSON
+{
+    computed_value: string | undefined
+    multiple_versions: { latest_version: number } | undefined
+}
+
+function cached_components(bust_cache = false): DataComponentForGraph[] | undefined
+{
+    const cached = localStorage.getItem("components")
+    if (!cached || bust_cache) return undefined
+
+    try
+    {
+        const parsed = JSON.parse(cached) as DataComponentAsJSONForGraph[]
+        const validators = make_field_validators(z)
+        if (Array.isArray(parsed)) return parsed.map(j =>
+        {
+            const hydrated: DataComponentForGraph = {
+                ...hydrate_data_component_from_json(j, validators),
+                computed_value: j.computed_value,
+                multiple_versions: j.multiple_versions,
+            }
+            return hydrated
+        })
+        return undefined
+    }
+    catch (e)
+    {
+        console.error("Error parsing cached components", e)
+        return undefined
+    }
+}
+
+
+function cache_components(components: DataComponentForGraph[])
+{
+    try
+    {
+        const json = components.map(c =>
+        {
+            const json: DataComponentAsJSONForGraph = {
+                ...flatten_new_or_data_component_to_json(c),
+                computed_value: c.computed_value,
+                multiple_versions: c.multiple_versions,
+            }
+            return json
+        })
+        localStorage.setItem("components", JSON.stringify(json))
+    }
+    catch (e)
+    {
+        console.error("Error caching components", e)
+    }
+}

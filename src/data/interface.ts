@@ -1,3 +1,16 @@
+import { DataComponent } from "core/data/interface"
+import { Graph } from "core/data/utils/graph"
+
+import { PerspectiveType } from "../balance_sheet/SelectPerspective"
+
+
+export interface DataComponentForGraph extends DataComponent
+{
+    computed_value: string | undefined
+    multiple_versions: { latest_version: number } | undefined
+}
+
+export type GraphWithComputedValues = Graph<DataComponentForGraph>
 
 
 export type EnergyFactorName = (
@@ -34,4 +47,13 @@ export interface EnergyFactor
     type: "sink" | "source" | "weak_source"
     link: string
     error?: string
+}
+
+
+export interface Perspective
+{
+    id: PerspectiveType
+    graph: GraphWithComputedValues
+    sinks: EnergyFactor[]
+    sources: EnergyFactor[]
 }

@@ -1,55 +1,25 @@
-import { useMemo } from "react"
-
-import { DataComponentsById } from "core/data/interface"
-import { make_graph } from "core/data/utils/graph"
+import { DataComponentsByIdv } from "core/data/interface"
 
 import Loading from "../components/Loading"
+import { Perspective } from "../data/interface"
 import "./BalanceSheet.css"
 import { EnergyBoxStack } from "./EnergyBoxes"
-import { factors_up_to } from "./EnergyBoxesHelper"
 import {
-    perspective_id_general,
-    perspective_id_to_name_map,
-    PerspectiveType
+    perspective_id_to_name_map
 } from "./SelectPerspective"
 
 
 interface BalanceSheetProps
 {
-    perspective_ids: PerspectiveType[]
-    components_map: DataComponentsById | undefined
+    persectives: Perspective[]
+    components_map: DataComponentsByIdv | undefined
 }
 export function BalanceSheet(props: BalanceSheetProps)
 {
-    const { perspective_ids, components_map } = props
+    const { persectives, components_map } = props
 
 
     if (!components_map) return <Loading />
-
-
-    const parser = useMemo(() => new DOMParser(), [])
-
-    const persectives = useMemo(() =>
-    {
-        return perspective_ids.map(perspective_id =>
-        {
-            const graph = make_graph(parser, components_map, {
-                id_of_concepts: perspective_id_general,
-                id_of_interest: perspective_id,
-                id_of_comparison: perspective_ids[0],
-            })
-            const factors = factors_up_to("Geothermal", graph)
-
-            const sinks = factors.filter(f => f.type === "sink").reverse()
-            const sources = factors.filter(f => f.type !== "sink").reverse()
-
-            return {
-                id: perspective_id,
-                sinks,
-                sources,
-            }
-        })
-    }, [perspective_ids.join(",")])
 
 
     return <div id="balance_sheet">

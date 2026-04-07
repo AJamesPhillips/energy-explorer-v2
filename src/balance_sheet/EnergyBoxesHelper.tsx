@@ -3,8 +3,8 @@ import { IdOnly } from "core/data/id"
 import { DataComponent } from "core/data/interface"
 import { Graph, GraphNode } from "core/data/utils/graph"
 
-import { map_factor_name_to_id } from "../data/ids"
-import { EnergyFactor, EnergyFactorName } from "./interface"
+import { map_factor_name_to_ido } from "../data/ids"
+import { EnergyFactor, EnergyFactorName } from "../data/interface"
 
 
 
@@ -63,22 +63,28 @@ export function factors_up_to(name: EnergyFactorName, graph: Graph): EnergyFacto
 
     factors.forEach(factor =>
     {
-        const id_only = map_factor_name_to_id[factor.name]
+        const id_only = map_factor_name_to_ido[factor.name]
         if (!id_only)
         {
             factor.error = `No component IdAndVersion for factor ${factor.name}`
             return
         }
 
-        const mapped_entry_id = graph.map_concept_id_to_id_of_interest[id_only.id]
-        const entry = graph.nodes["" + mapped_entry_id]
+        const mapped_entry_idv = graph.map_concept_ido_to_idv_of_interest[id_only.id]
+        if (!mapped_entry_idv)
+        {
+            factor.error = `No entry in graph for IdOnly ${id_only.to_str()} (mapped id: ${mapped_entry_idv})`
+            return
+        }
+        const entry = graph.nodes[mapped_entry_idv]
 
         let alternative_id_only: IdOnly | undefined
         let alternative_entry: GraphNode | undefined
         if (entry && entry.alternatives?.length)
         {
-            alternative_id_only = new IdOnly(entry.alternatives[0]!)
-            alternative_entry = graph.nodes[alternative_id_only.id]
+            const alternative_id = entry.alternatives[0]!
+            alternative_id_only = alternative_id.as_IdOnly()
+            alternative_entry = graph.nodes[alternative_id.to_str()]
         }
 
         // Set the factor.link to a general URL of the data component in case

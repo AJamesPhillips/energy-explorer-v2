@@ -62,11 +62,6 @@ export function Messages()
             set_messages(messages => messages.filter(m => m.id !== id))
         })
 
-        pub_sub.pub("show_message", {
-            message: "Welcome to Energy Explorer",
-            show_for_seconds: 3
-        })
-
         return () =>
         {
             unsub_show_message()

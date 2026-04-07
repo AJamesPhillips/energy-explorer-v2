@@ -1,5 +1,5 @@
-import { IdOnly } from "core/data/id"
-import { EnergyFactorName } from "../balance_sheet/interface"
+import { IdAndMaybeVersion, IdOnly, parse_id } from "core/data/id"
+import { EnergyFactorName } from "./interface"
 
 
 const uk_budget_general = new IdOnly(1239)
@@ -33,7 +33,7 @@ const wave_UK = new IdOnly(1224)
 const tide_UK = new IdOnly(1225)
 const geothermal_UK = new IdOnly(1226)
 
-export const map_factor_name_to_id: Record<EnergyFactorName, IdOnly | undefined> = {
+export const map_factor_name_to_ido: Record<EnergyFactorName, IdOnly | undefined> = {
     "Car": cars_uk,
     "Jet flights": planes_uk,
     "Heating, cooling": heating_cooling_uk,
@@ -56,3 +56,59 @@ export const map_factor_name_to_id: Record<EnergyFactorName, IdOnly | undefined>
     "Tide": tide_UK,
     "Geothermal": geothermal_UK,
 }
+
+
+// This is not necessary but it slightly increases the initial loading speed of
+// the application.  It has been manually created by copying and pasting the
+// "Fetching N dependencies... 1191v7, " ... etc. log from the console.
+export const other_ids_performance_boost: IdAndMaybeVersion[] = [
+    "1191v7",
+    "1202v9",
+    "1204v4",
+    "1205v5",
+    "1206v4",
+    "1209v7",
+    "1210v6",
+    "1220v10",
+    "1221v4",
+    "1222v7",
+    "1223v5",
+    "1224v4",
+    "1225v3",
+    "1226v3",
+    "1227v4",
+    "1228v4",
+    "1229v4",
+    "1230v5",
+    "1231v4",
+    "1232v3",
+    "1237v1",
+    "1238v6",
+    "1251v2",
+    "1254v2",
+    "1255v2",
+    "1181v1",
+    "1192v3",
+    "1193v1",
+    "1194v1",
+    "1201v2",
+    "1203v2",
+    "1208v1",
+    "1244v5",
+    "1245v4",
+    "1246v4",
+    "1248v3",
+    "1253v1",
+    "1011v7",
+    "1011v9",
+    "1187v1",
+    "1187v2",
+    "1188v3",
+    "1190v1",
+    "1200v1",
+    "1183v1",
+    "1184v5",
+    "1186v2",
+    "1186v4",
+    "1189v2",
+].map(id => parse_id(id))

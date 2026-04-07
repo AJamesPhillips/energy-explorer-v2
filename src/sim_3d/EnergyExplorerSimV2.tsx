@@ -7,6 +7,7 @@ import { LatLonWithIsOnshore } from "core/data/values/LatLon"
 import { draw_earth_grid } from "./discrete_global_grid"
 import "./EnergyExplorerSimV2.css"
 import { GUI } from "./gui/GUI"
+import { LimitedViewType } from "./interface"
 import { run_model } from "./model"
 import { ModelScenario, UserChoices } from "./model/interface"
 import { animate } from "./scene/animate"
@@ -18,7 +19,8 @@ import { get_model_data, load_and_render_model_data } from "./scene/spatial_data
 import { handle_window_resize } from "./utils/handle_window_resize"
 
 
-export const EnergyExplorerSimV2 = () =>
+
+export const EnergyExplorerSimV2 = (props: { starting_view: LimitedViewType }) =>
 {
     const canvas_ref = useRef<HTMLCanvasElement>(null)
 
@@ -27,22 +29,22 @@ export const EnergyExplorerSimV2 = () =>
         document.body.style.overflow = "hidden"
         if (!canvas_ref.current) return
 
-        const clean_up_sim = setup_sim(canvas_ref.current)
+        const clean_up_sim = setup_sim(canvas_ref.current, props.starting_view)
 
         return () =>
         {
             document.body.style.overflow = "auto"
             clean_up_sim()
         }
-    }, [])
+    }, [props.starting_view])
 
     return <>
         <canvas ref={canvas_ref} id="scene-3d"/>
-        <GUI />
+        <GUI view={props.starting_view} />
     </>
 }
 
-function setup_sim(canvas: HTMLCanvasElement)
+function setup_sim(canvas: HTMLCanvasElement, view: LimitedViewType)
 {
     const screen_sizes = {
         width: window.innerWidth,
@@ -54,19 +56,36 @@ function setup_sim(canvas: HTMLCanvasElement)
     const cleanup_handle_window_resize = handle_window_resize(common_dependencies, screen_sizes)
     const { controls, renderer } = common_dependencies
 
-    const { subscribe_to_sun_direction } = create_sun(common_dependencies)
-    const earth_mesh = create_earth(common_dependencies, subscribe_to_sun_direction)
-    load_and_render_countries(common_dependencies, earth_mesh)
-    load_and_render_model_data(common_dependencies, earth_mesh)
+    let clean_up = () => { }
 
-    animate(common_dependencies, earth_mesh)
+    if (view === "simulation")
+    {
 
-    draw_earth_grid(common_dependencies, earth_mesh)
+    }
+    else
+    {
+        const { subscribe_to_sun_direction } = create_sun(common_dependencies)
+        const earth_mesh = create_earth(common_dependencies, subscribe_to_sun_direction)
+        load_and_render_countries(common_dependencies, earth_mesh)
+        load_and_render_model_data(common_dependencies, earth_mesh)
 
-    get_run_display_model()
+        const clean_up_animate = animate(common_dependencies, earth_mesh)
+
+        draw_earth_grid(common_dependencies, earth_mesh)
+
+        get_run_display_model()
+
+        clean_up = () =>
+        {
+            clean_up_animate()
+            common_dependencies.scene.remove(earth_mesh)
+        }
+    }
+
 
     // Cleanup
     return () => {
+        clean_up()
         controls.dispose()
         renderer.dispose()
         cleanup_handle_window_resize()
