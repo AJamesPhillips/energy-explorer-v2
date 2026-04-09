@@ -7,7 +7,6 @@ import { uk_land_coverage_simplified } from "../data/land_coverage/uk/data"
 import uk_daily_power_demand_profiles from "../data/power_demand/uk/daily_profiles.json"
 import { uk_month_hourly_and_location_average_capacity_factor_solar_generation_2018 } from "../data/power_generation/solar_pv"
 import { uk_month_hourly_and_location_average_capacity_factor_wind_generation_2018 } from "../data/power_generation/wind_turbine"
-import { sun_light_colour_and_intensity_from_datetime_and_latlon } from "../data/sun_light"
 import { IsoMetricGrid } from "./IsoMetricGrid"
 import { CellsData } from "./interface"
 import { map_data_cells } from "./map_data"
@@ -37,8 +36,13 @@ export function SimpleSim()
         const new_datetime = new Date(datetime.getTime() + (delta * speed))
         set_datetime(new_datetime)
 
-        const sun_args = sun_light_colour_and_intensity_from_datetime_and_latlon(new_datetime, lat_lon, false)
-        if (sun_ambient_ref.current)        {
+        // const sun_args = sun_light_colour_and_intensity_from_datetime_and_latlon(new_datetime, lat_lon, false)
+        const sun_args = {
+            colour: new THREE.Color(255, 248, 200),
+            intensity: 0.0075,
+        }
+        if (sun_ambient_ref.current)
+        {
             sun_ambient_ref.current.color = new THREE.Color(sun_args.colour)
             sun_ambient_ref.current.intensity = sun_args.intensity * 0.5
         }
@@ -59,8 +63,8 @@ export function SimpleSim()
 
     return <>
         <IsoCamera grid_size={GRID_SIZE} cell_size={CELL_SIZE} />
-        <ambientLight ref={sun_ambient_ref} intensity={0} />
-        <directionalLight ref={sun_directional_ref} position={[ 5, 5, 5 ]} intensity={0} />
+        <ambientLight ref={sun_ambient_ref} />
+        <directionalLight ref={sun_directional_ref} position={[ 15, 5, 7 ]} />
 
         <IsoMetricGrid size={GRID_SIZE} cell_size={CELL_SIZE} data={data} />
         <Data />
