@@ -58,7 +58,7 @@ export function SelectPerspective(props: SelectPerspectiveProps)
     const multi_selected = props.perspectives.length > 1
 
     return (
-        <div>
+        <div id="select_perspective">
             <ul style={{ listStyle: "none", padding: 10, margin: 0, border: "1px solid #ccc", borderRadius: 4, display: "flex", flexDirection: "column", gap: "0.5rem", backgroundColor: "#f9f9f9" }}>
                 {drop_down_options.map(option =>
                 {

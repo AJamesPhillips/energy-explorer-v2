@@ -1,8 +1,8 @@
 import * as THREE from "three"
 
-import pub_sub from "../../state/pub_sub"
-import { new_random_id } from "../../utils/new_random_id"
-import { CommonDependencies } from "../interface"
+import pub_sub from "../../../state/pub_sub"
+import { new_random_id } from "../../../utils/new_random_id"
+import { CommonDependencies } from "../../interface"
 
 
 export const respond_to_pointer_events = ({ camera, CONSTANTS }: CommonDependencies, earth_mesh: THREE.Mesh, country_surfaces_group: THREE.Group) =>

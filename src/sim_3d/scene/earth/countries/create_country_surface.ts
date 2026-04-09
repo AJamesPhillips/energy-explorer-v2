@@ -1,9 +1,9 @@
 import earcut from "earcut"
 import * as THREE from "three"
 
-import { project_points_to_2d } from "../../utils/geo/project_points_to_2d"
-import { subdivide_long_geometry_to_sphere } from "../../utils/geo/subdivide_long_geometry_to_sphere"
-import { CONSTANTS } from "../CONSTANTS"
+import { project_points_to_2d } from "../../../utils/geo/project_points_to_2d"
+import { subdivide_long_geometry_to_sphere } from "../../../utils/geo/subdivide_long_geometry_to_sphere"
+import { CONSTANTS } from "../../CONSTANTS"
 
 
 export function create_country_surface(points: THREE.Vector3[], radius: number, country_name: string)

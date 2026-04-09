@@ -1,5 +1,5 @@
 import { OrthographicCamera } from "@react-three/drei"
-import { useFrame } from "@react-three/fiber"
+import { useFrame, useThree } from "@react-three/fiber"
 import { useEffect, useMemo, useRef, useState } from "react"
 import * as THREE from "three"
 
@@ -11,7 +11,6 @@ import { sun_light_colour_and_intensity_from_datetime_and_latlon } from "../data
 import { IsoMetricGrid } from "./IsoMetricGrid"
 import { CellsData } from "./interface"
 import { map_data_cells } from "./map_data"
-import { generate_map_data_string } from "./map_generator"
 
 
 const start_datetime = new Date("2018-06-01T00:00:00.000Z")
@@ -20,7 +19,7 @@ const lat_lon = { lat: 50, lon: 0 }
 
 // Grid constants — keep in sync with the IsoMetricGrid props below.
 const GRID_SIZE = { x: 20, y: 20 }
-const CELL_SIZE  = 10
+const CELL_SIZE  = 12
 
 export function SimpleSim()
 {
@@ -28,12 +27,17 @@ export function SimpleSim()
     const sun_ambient_ref = useRef<THREE.AmbientLight>(null)
     const sun_directional_ref = useRef<THREE.DirectionalLight>(null)
 
+    useThree(({ scene }) =>
+    {
+        scene.background = new THREE.Color(0xeeeeff)
+    })
+
     useFrame((_state, delta) =>
     {
         const new_datetime = new Date(datetime.getTime() + (delta * speed))
         set_datetime(new_datetime)
 
-        const sun_args = sun_light_colour_and_intensity_from_datetime_and_latlon(new_datetime, lat_lon)
+        const sun_args = sun_light_colour_and_intensity_from_datetime_and_latlon(new_datetime, lat_lon, false)
         if (sun_ambient_ref.current)        {
             sun_ambient_ref.current.color = new THREE.Color(sun_args.colour)
             sun_ambient_ref.current.intensity = sun_args.intensity * 0.5
@@ -47,11 +51,11 @@ export function SimpleSim()
 
     const data: CellsData = map_data_cells
 
-    useEffect(() =>
-    {
-        const map_data_compact = generate_map_data_string(GRID_SIZE)
-        console.log("data", map_data_compact)
-    }, [GRID_SIZE])
+    // useEffect(() =>
+    // {
+    //     const map_data_compact = generate_map_data_string(GRID_SIZE)
+    //     console.log("data", map_data_compact)
+    // }, [GRID_SIZE])
 
     return <>
         <IsoCamera grid_size={GRID_SIZE} cell_size={CELL_SIZE} />

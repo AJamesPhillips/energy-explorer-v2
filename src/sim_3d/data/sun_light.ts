@@ -9,16 +9,16 @@
  * @param { lat: number, lon: number } position
  * @returns { colour: string, intensity: number }
  */
-export function sun_light_colour_and_intensity_from_datetime_and_latlon(datetime: Date, { lat, lon }: { lat: number, lon: number }): { colour: string, intensity: number }
+export function sun_light_colour_and_intensity_from_datetime_and_latlon(datetime: Date, { lat, lon }: { lat: number, lon: number }, realistic: boolean): { colour: string, intensity: number }
 {
     // Calculate the position of the sun in the sky based on the datetime and position parameters
     const sun_position = calculate_sun_position(datetime, { lat, lon })
 
     // Determine the colour of the sun light based on the angle of the sun in the sky
-    const sun_colour = determine_sun_colour(sun_position)
+    const sun_colour = determine_sun_colour(sun_position, realistic)
 
     // Determine the intensity of the sun light based on the distance of the sun from being directly overhead
-    const sun_intensity = determine_sun_intensity(sun_position)
+    const sun_intensity = determine_sun_intensity(sun_position, realistic)
 
     return { colour: sun_colour, intensity: sun_intensity }
 }
@@ -114,8 +114,10 @@ const SUN_COLOUR_KEY_FRAMES: [number, number[]][] = [
 ]
 
 
+const MIN_COLOUR_WHEN_NOT_REALISTIC = 0.8
+
 // Function implemented by Claude Sonnet 4.6 on 2026-04-09
-function determine_sun_colour(sun_position: { azimuth: number, elevation: number })
+function determine_sun_colour(sun_position: { azimuth: number, elevation: number }, realistic: boolean)
 {
     const { elevation } = sun_position
 
@@ -140,21 +142,31 @@ function determine_sun_colour(sun_position: { azimuth: number, elevation: number
     const range = upper[0] - lower[0]
     const t = range === 0 ? 0 : (el - lower[0]) / range
 
-    const r = Math.round(lower[1][0]! + t * (upper[1][0]! - lower[1][0]!))
-    const g = Math.round(lower[1][1]! + t * (upper[1][1]! - lower[1][1]!))
-    const b = Math.round(lower[1][2]! + t * (upper[1][2]! - lower[1][2]!))
+    let r = Math.round(lower[1][0]! + t * (upper[1][0]! - lower[1][0]!))
+    let g = Math.round(lower[1][1]! + t * (upper[1][1]! - lower[1][1]!))
+    let b = Math.round(lower[1][2]! + t * (upper[1][2]! - lower[1][2]!))
+
+    if (!realistic)
+    {
+        r = Math.round(MIN_COLOUR_WHEN_NOT_REALISTIC * 255 + (1 - MIN_COLOUR_WHEN_NOT_REALISTIC) * r)
+        g = Math.round(MIN_COLOUR_WHEN_NOT_REALISTIC * 255 + (1 - MIN_COLOUR_WHEN_NOT_REALISTIC) * g)
+        b = Math.round(MIN_COLOUR_WHEN_NOT_REALISTIC * 255 + (1 - MIN_COLOUR_WHEN_NOT_REALISTIC) * b)
+    }
 
     return `rgb(${r}, ${g}, ${b})`
 }
 
 
+const MIN_INTENSITY_WHEN_NOT_REALISTIC = 0.8
+const MIWNR = MIN_INTENSITY_WHEN_NOT_REALISTIC
+
 // Function implemented by Claude Sonnet 4.6 on 2026-04-09
-function determine_sun_intensity(sun_position: { azimuth: number, elevation: number })
+function determine_sun_intensity(sun_position: { azimuth: number, elevation: number }, realistic: boolean)
 {
     const { elevation } = sun_position
 
     // Sun below the horizon — no direct illumination
-    if (elevation <= 0) return 0
+    if (elevation <= 0) return realistic ? 0 : MIWNR
 
     // Air mass (Kasten & Young 1989) — how many atmospheres the light traverses.
     // At zenith AM ≈ 1; at the horizon AM ≈ 38.
@@ -170,5 +182,7 @@ function determine_sun_intensity(sun_position: { azimuth: number, elevation: num
 
     // Normalise so that a zenith sun (transmittance ≈ 0.7) → intensity 1.0
     const ZENITH_TRANSMITTANCE = Math.pow(0.7, Math.pow(1, 0.678)) // ≈ 0.7
-    return Math.min(1, transmittance / ZENITH_TRANSMITTANCE)
+    const intensity = Math.min(1, transmittance / ZENITH_TRANSMITTANCE)
+
+    return realistic ? intensity : MIWNR + (1 - MIWNR) * intensity
 }

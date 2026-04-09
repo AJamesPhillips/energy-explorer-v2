@@ -2,8 +2,8 @@ import type { Position } from "geojson"
 import type { FeatureCollectionWithFilename } from "shpjs"
 import * as THREE from "three"
 
-import { convert_lat_lon_to_sphere as convert_lat_lon_to_sphere_orig } from "../../utils/geo/convert_lat_lon_to_sphere"
-import { CONSTANTS } from "../CONSTANTS"
+import { convert_lat_lon_to_sphere as convert_lat_lon_to_sphere_orig } from "../../../utils/geo/convert_lat_lon_to_sphere"
+import { CONSTANTS } from "../../CONSTANTS"
 import { create_country_surface } from "./create_country_surface"
 
 

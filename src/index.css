@@ -38,6 +38,19 @@ html, body, #app, #app_html {
     display: flex;
     gap: 20px;
     flex-direction: row;
+    pointer-events: none;
+}
+#select_perspective
+{
+    /* we have to re-enable them after #app_html disables them */
+    pointer-events: initial;
+}
+#graph_viewer
+{
+    /* we have to re-enable them after #app_html disables them */
+    pointer-events: initial;
+    width: 100%;
+    overflow-x: auto;
 }
 
 #app_options_panel
@@ -65,6 +78,9 @@ html, body, #app, #app_html {
     cursor: pointer;
 
     position: relative;
+
+    /* we have to re-enable them after #app_html disables them */
+    pointer-events: initial;
 }
 #app_options_panel .app_option.selected
 {

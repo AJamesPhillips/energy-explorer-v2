@@ -1,7 +1,7 @@
 import shp from "shpjs"
 import * as THREE from "three"
 
-import { CommonDependencies } from "../interface"
+import { CommonDependencies } from "../../interface"
 import { create_country_area_visuals } from "./create_country_area_visuals"
 import { respond_to_pointer_events } from "./respond_to_pointer_events"
 

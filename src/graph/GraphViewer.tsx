@@ -235,7 +235,7 @@ export function GraphViewer(props: GraphViewerProps): JSX.Element
     const svg_h = max_node_bottom + SVG_PADDING
 
     return (
-        <div ref={container_ref} style={{ width: "100%", overflowX: "auto" }}>
+        <div ref={container_ref} id="graph_viewer">
             <svg
                 width={svg_w}
                 height={svg_h}
