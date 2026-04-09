@@ -6,18 +6,14 @@ import {
 } from "core/data/values/datetime_lat_lon"
 import { LatLon, LatLonDataSeries } from "core/data/values/LatLon"
 
-
+import { IDatetimeRange } from "../../../lib/core/src/data/interface"
+import { DatetimeRange } from "../../../lib/core/src/data/values/DatetimeRange"
 import { log_time } from "../utils/log_time"
-import { datetime_range_2018 } from "./_2018"
 
 
-export async function get_temporal_spatial_capacity_factor_data_from_csv_url(url: string): Promise<DataSeries<DatetimeRangeLatLonKey, number, DatetimeRangeLatLonMultipleKeys>>
+export async function get_temporal_spatial_capacity_factor_data_from_csv_url(args: { url: string, datetime_range?: IDatetimeRange }): Promise<DataSeries<DatetimeRangeLatLonKey, number, DatetimeRangeLatLonMultipleKeys>>
 {
-    if (url.startsWith("https://raw.githubusercontent.com/") && location.hostname === "localhost")
-    {
-        // If running on localhost, rewrite the URL to use the vite proxy
-        url = url.replace("https://raw.githubusercontent.com/", "/github/")
-    }
+    const { url } = args
 
     const response = await get_raw_data_from_url(url)
     if (response.error !== null) throw response.error
@@ -68,14 +64,29 @@ export async function get_temporal_spatial_capacity_factor_data_from_csv_url(url
     }
     log_time(`Finished parsing ${lines.length} lines from ${url}.`)
 
+    let { datetime_range } = args
     // Check dates match the datetime range
-    const datetime_range_time_stamps = datetime_range_2018.get_time_stamps()
-    if (!date_timestamps.every((ts, index) => ts === datetime_range_time_stamps[index]))
+    if (datetime_range)
     {
-        throw new Error(`Date timestamps from ${url} do not match the expected datetime range.  Expected: ${datetime_range_time_stamps.length}, got: ${date_timestamps.length}.  Make sure the data is for the year 2018 and has an hourly resolution.`)
+        const datetime_range_time_stamps = datetime_range.get_time_stamps()
+        if (!date_timestamps.every((ts, index) => ts === datetime_range_time_stamps[index]))
+        {
+            throw new Error(`Date timestamps from ${url} do not match the expected datetime range.  Expected: ${datetime_range_time_stamps.length}, got: ${date_timestamps.length}.  Make sure the data is for the year 2018 and has an hourly resolution.`)
+        }
+    }
+    else
+    {
+        if (date_timestamps.length === 0) throw new Error(`No date timestamps found in data from ${url}`)
+
+        // Make a new datetime range based on the date timestamps
+        datetime_range = new DatetimeRange({
+            start: new Date(date_timestamps[0]!),
+            end: new Date(date_timestamps[date_timestamps.length - 1]!),
+            time_stamps: date_timestamps,
+        })
     }
 
-    const get_index = factory_IndexManager_for_datetime_range_lat_lon(datetime_range_2018, lat_lon_data_series!, true)
+    const get_index = factory_IndexManager_for_datetime_range_lat_lon(datetime_range, lat_lon_data_series!, true)
     return new DataSeries<DatetimeRangeLatLonKey, number, DatetimeRangeLatLonMultipleKeys>(values, get_index)
 }
 

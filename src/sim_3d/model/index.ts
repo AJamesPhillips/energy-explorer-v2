@@ -1,6 +1,7 @@
 import { IDataMap } from "core/data/values/DataMap"
 import { DatetimeRange } from "core/data/values/DatetimeRange"
 import { ILatLon } from "core/data/values/LatLon"
+import { factory_change_date } from "core/utils/datetime"
 
 import { ModelData, ModelRunOutput, ModelScenario, StoragePowerPlant, UserChoices } from "./interface"
 
@@ -13,7 +14,7 @@ export function run_model(model_data: ModelData, model_scenario: ModelScenario, 
 
     // Get the last datetime index in the model_data.datetime_range given the
     // model_scenario.datetime_range.end
-    const change_datetime_minus_1 = DatetimeRange.factory_change_date(datetime_range.repeat_every, -1)
+    const change_datetime_minus_1 = DatetimeRange.factory_change_date(datetime_range.repeat_every!, -1)
     const end_datetime = new Date(model_scenario.datetime_range.end)
     change_datetime_minus_1(end_datetime)
     const end_datetime_index = datetime_range.get_index_of(end_datetime.getTime())
@@ -34,7 +35,7 @@ export function run_model(model_data: ModelData, model_scenario: ModelScenario, 
         hourly_capacity_factor_solar_generation: solar_generation
     } = model_data
 
-    const change_datetime_plus_1 = DatetimeRange.factory_change_date(datetime_range.repeat_every, 1)
+    const change_datetime_plus_1 = factory_change_date(datetime_range.repeat_every!, 1)
     while (current_datetime_index <= end_datetime_index)
     {
         const current_date = timestamps[current_datetime_index]!

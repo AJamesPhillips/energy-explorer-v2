@@ -13,20 +13,31 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 
-    --z-index-options-panel: 2;
     --z-index-sim: 1;
+    --z-index-app-html: 2;
 }
 
-body {
+html, body, #app, #app_html {
     margin: 0;
+    min-width: 100%;
+    min-height: 100vh;
+    width: fit-content;
+    height: fit-content;
 }
 
 #app
 {
-    width: 100%;
-    min-width: fit-content;
-    min-height: 100dvh;
     background-color: #f3f3f3;
+}
+
+#app_html
+{
+    position: relative;
+    z-index: var(--z-index-app-html);
+
+    display: flex;
+    gap: 20px;
+    flex-direction: row;
 }
 
 #app_options_panel
@@ -37,8 +48,6 @@ body {
 
     max-width: 150px;
     padding: 20px;
-
-    z-index: var(--z-index-options-panel);
 }
 
 #app_options_panel .app_option
@@ -81,7 +90,6 @@ body {
     justify-content: flex-end;
     margin-bottom: 1em;
     padding: 10px;
-    z-index: var(--z-index-options-panel);
 }
 
 #app_main_view

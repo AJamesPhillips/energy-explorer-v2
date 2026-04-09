@@ -1,5 +1,4 @@
-
-import { useEffect, useState } from "preact/hooks"
+import { useEffect, useState } from "react"
 
 import pub_sub from "../state/pub_sub"
 import { new_random_id } from "../utils/new_random_id"

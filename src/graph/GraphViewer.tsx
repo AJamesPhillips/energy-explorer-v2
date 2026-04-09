@@ -177,9 +177,8 @@ export function GraphViewer(props: GraphViewerProps): JSX.Element
     // const { graph, apex_component_id, display_depth, display_width, start_depth = 0 } = props
     const { persectives, start_depth = 0 } = props
 
-    if (persectives.length === 0) return <Loading />
-    const graph = persectives[0]!.graph
-    const graph_for_rendering = useMemo(() => build_graph_for_rendering(graph, graph.apex_id), [graph])
+    const graph = persectives[0]?.graph
+    const graph_for_rendering = useMemo(() => graph && build_graph_for_rendering(graph, graph.apex_id), [graph])
 
     // const { max_depth: display_depth, max_width: display_width } = graph
     const display_depth = 100
@@ -209,6 +208,10 @@ export function GraphViewer(props: GraphViewerProps): JSX.Element
         observer.observe(el)
         return () => observer.disconnect()
     }, [])
+
+
+    if (!graph || !graph_for_rendering) return <Loading />
+
 
     // Locate the requested apex node inside the graph, falling back to root.
     const apex = find_graph_node(graph_for_rendering, graph.apex_id) ?? graph_for_rendering

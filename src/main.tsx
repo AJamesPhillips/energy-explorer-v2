@@ -1,5 +1,5 @@
-import { render } from "preact"
-import { useEffect, useMemo, useState } from "preact/hooks"
+import { useEffect, useMemo, useState } from "react"
+import { createRoot } from "react-dom/client"
 import * as z from "zod"
 
 import "./monkey_patch"
@@ -38,7 +38,7 @@ const all_ids_to_fetch: { id: IdAndMaybeVersion, compute_value: boolean }[] = [
 
 function App ()
 {
-    const [view, set_view] = useState<ViewType>("knowledge_graph")
+    const [view, set_view] = useState<ViewType>("simulation")
     const [perspective_ids, set_perspective_ids] = useState<PerspectiveType[]>([
         perspective_id_2009_mackay,
         perspective_id_general
@@ -51,7 +51,7 @@ function App ()
     }
 
 
-    const [components, set_components] = useState<DataComponentForGraph[] | undefined>(cached_components(true))
+    const [components, set_components] = useState(cached_components({ bust_cache: false }))
 
     useEffect(() =>
     {
@@ -122,7 +122,9 @@ function App ()
     return <>
         <Evaluator />
 
-        <div style={{ display: "flex", gap: "20px", flexDirection: "row", width: "100%" }}>
+        {(view === "simulation" || view === "digital_twin") && <EnergyExplorerSimV2 view={view} />}
+
+        <div id="app_html">
 
             <Options selected={view} on_select={set_view} />
 
@@ -137,7 +139,6 @@ function App ()
                 <div id="app_main_view">
                     {view === "balance_sheet" && <BalanceSheet persectives={persectives} components_map={components_map_by_idv} />}
                     {view === "knowledge_graph" && <GraphViewer persectives={persectives} />}
-                    {(view === "simulation" || view === "digital_twin") && <EnergyExplorerSimV2 starting_view={view} />}
                 </div>
             </div>
 
@@ -148,8 +149,8 @@ function App ()
     </>
 }
 
-render(<App />, document.getElementById("app")!)
-
+const root = createRoot(document.getElementById("app")!)
+root.render(<App />)
 
 interface DataComponentAsJSONForGraph extends DataComponentAsJSON
 {
@@ -157,10 +158,10 @@ interface DataComponentAsJSONForGraph extends DataComponentAsJSON
     multiple_versions: { latest_version: number } | undefined
 }
 
-function cached_components(bust_cache = false): DataComponentForGraph[] | undefined
+function cached_components(args: { bust_cache?: boolean } = {}): DataComponentForGraph[] | undefined
 {
     const cached = localStorage.getItem("components")
-    if (!cached || bust_cache) return undefined
+    if (!cached || args.bust_cache) return undefined
 
     try
     {

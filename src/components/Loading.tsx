@@ -1,4 +1,4 @@
-import { useEffect, useState } from "preact/hooks"
+import { useEffect, useState } from "react"
 
 
 function get_dots (dots_time_interval_ms: number)

@@ -1,4 +1,5 @@
-import { useEffect } from "preact/hooks"
+import { useEffect } from "react"
+
 import { LimitedViewType } from "../interface"
 import pub_sub from "../state/pub_sub"
 import "./GUI.css"

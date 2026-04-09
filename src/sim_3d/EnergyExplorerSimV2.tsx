@@ -1,4 +1,5 @@
-import { useEffect, useRef } from "preact/hooks"
+import { Canvas } from "@react-three/fiber"
+import * as THREE from "three"
 
 import { DataMap } from "core/data/values/DataMap"
 import { DatetimeRange } from "core/data/values/DatetimeRange"
@@ -16,31 +17,21 @@ import { create_common_dependencies } from "./scene/create_common_dependencies"
 import { create_sun } from "./scene/create_sun"
 import { create_earth } from "./scene/earth"
 import { get_model_data, load_and_render_model_data } from "./scene/spatial_data/load_and_render_model_data"
+import { SimpleSim } from "./simple_sim/SimpleSim"
 import { handle_window_resize } from "./utils/handle_window_resize"
 
 
 
-export const EnergyExplorerSimV2 = (props: { starting_view: LimitedViewType }) =>
+export const EnergyExplorerSimV2 = (props: { view: LimitedViewType }) =>
 {
-    const canvas_ref = useRef<HTMLCanvasElement>(null)
-
-    useEffect(() =>
-    {
-        document.body.style.overflow = "hidden"
-        if (!canvas_ref.current) return
-
-        const clean_up_sim = setup_sim(canvas_ref.current, props.starting_view)
-
-        return () =>
-        {
-            document.body.style.overflow = "auto"
-            clean_up_sim()
-        }
-    }, [props.starting_view])
-
     return <>
-        <canvas ref={canvas_ref} id="scene-3d"/>
-        <GUI view={props.starting_view} />
+        <Canvas
+            scene={{ background: new THREE.Color() }}
+            id="scene-3d"
+        >
+            <SimpleSim />
+        </Canvas>
+        <GUI view={props.view} />
     </>
 }
 

@@ -1,4 +1,3 @@
-import preact from "@preact/preset-vite"
 import { resolve } from "path"
 import { defineConfig } from "vite"
 import glsl from "vite-plugin-glsl"
@@ -28,7 +27,6 @@ export default defineConfig({
     },
     plugins:
     [
-        preact(),
         restart({ restart: [ "../public/**", ] }), // Restart server on file changes to public/
         glsl(), // Handle shader files
         copy_assets_files_plugin(asset_white_list),

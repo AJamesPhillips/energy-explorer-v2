@@ -1,5 +1,5 @@
 {
-  "name": "wikisim-template-typescript-preact",
+  "name": "energy-explorer-v2",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -9,21 +9,24 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@react-three/drei": "10.7.7",
     "@react-three/fiber": "9.5.0",
     "earcut": "3.0.2",
     "h3-js": "4.2.1",
     "lil-gui": "0.20.0",
-    "preact": "10.19.6",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
     "shpjs": "6.1.0",
     "three": "0.179.1",
     "zod": "4.1.8"
   },
   "devDependencies": {
-    "@preact/preset-vite": "2.8.2",
     "@types/chai": "5.2.2",
     "@types/earcut": "3.0.0",
     "@types/geojson": "7946.0.16",
     "@types/mocha": "10.0.10",
+    "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3",
     "@types/shpjs": "3.4.7",
     "@types/three": "0.178.1",
     "chai": "5.2.1",

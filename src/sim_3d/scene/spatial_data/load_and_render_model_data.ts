@@ -2,7 +2,7 @@ import * as THREE from "three"
 
 import { DataSeries } from "core/data/values/DataSeries"
 
-import { datetime_range_2018 } from "../../data/_2018"
+import { datetime_range_2018_hourly } from "../../data/_2018"
 import { uk_demand_gw_by_hour_2018 } from "../../data/power_demand/uk"
 import { uk_hourly_capacity_factor_solar_generation_2018 } from "../../data/power_generation/solar_pv"
 import { uk_hourly_capacity_factor_wind_generation_2018 } from "../../data/power_generation/wind_turbine"
@@ -35,10 +35,10 @@ export async function get_model_data(): Promise<ModelData>
             {
                 validate: data_count =>
                 {
-                    if (data_count !== datetime_range_2018.size()) return [`DataSeries length ${data_count} must match the datetime range size ${datetime_range_2018.size()}`]
+                    if (data_count !== datetime_range_2018_hourly.size()) return [`DataSeries length ${data_count} must match the datetime range size ${datetime_range_2018_hourly.size()}`]
                     return []
                 },
-                get_index: datetime_range_2018.get_index_of.bind(datetime_range_2018),
+                get_index: datetime_range_2018_hourly.get_index_of.bind(datetime_range_2018_hourly),
             },
         )
         const hourly_capacity_factor_solar_generation = await uk_hourly_capacity_factor_solar_generation_2018()
@@ -46,7 +46,7 @@ export async function get_model_data(): Promise<ModelData>
 
         resolve({
             region_name: "UK",
-            datetime_range: datetime_range_2018,
+            datetime_range: datetime_range_2018_hourly,
             onshore_lat_lons,
             offshore_lat_lons,
             hourly_electricity_demand_mw,

@@ -100,7 +100,7 @@ export function GraphNode(props: { node: PlacedNode })
                 fontWeight="bold"
                 fill="#222"
                 cursor="default"
-                pointer-events="none"
+                pointerEvents="none"
             >
                 {title_short}
             </text> */}
@@ -112,7 +112,7 @@ export function GraphNode(props: { node: PlacedNode })
                     dominantBaseline="middle"
                     fontSize={11}
                     fill="#444"
-                    pointer-events="none"
+                    pointerEvents="none"
                 >
                     {diff_text.line1}
                 </text>
@@ -123,7 +123,7 @@ export function GraphNode(props: { node: PlacedNode })
                     dominantBaseline="middle"
                     fontSize={11}
                     fill="#444"
-                    pointer-events="none"
+                    pointerEvents="none"
                 >
                     {diff_text.line2}
                 </text>
@@ -135,7 +135,7 @@ export function GraphNode(props: { node: PlacedNode })
                 dominantBaseline="middle"
                 fontSize={11}
                 fill="#444"
-                pointer-events="none"
+                pointerEvents="none"
             >
                 {/* {numeric_value.toFixed(0)} */}
             </text>}

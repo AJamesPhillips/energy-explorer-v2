@@ -1,11 +1,15 @@
 
-# WikiSim template simulation - typescript, preact & three.js
+# Energy Explorer v2 - WikiSim
+
+This intends to improve upon: [Energy Explorer (v1)](https://wikisim.org/wiki/1080) by
+being:
+* rewritten to be completely open source so that all the internal code can be reviewed
+
 
 ## Getting Started
 
-    git clone git@github.com:wikisim/template-sim-typescript-preact-three.git your-new-sim-name --recursive
-    cd your-new-sim-name
-    git remote rm origin
+    git clone git@github.com:AJamesPhillips/energy-explorer-v2.git --recursive
+    cd energy-explorer-v2
     pnpm install
     pnpm run dev
 
