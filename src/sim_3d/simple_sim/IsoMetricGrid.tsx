@@ -1,5 +1,5 @@
 import { ThreeEvent } from "@react-three/fiber"
-import { useCallback, useEffect, useMemo, useRef } from "react"
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import * as THREE from "three"
 
 import { CellsData, LandOrSea } from "./interface"
@@ -42,6 +42,7 @@ export function IsoMetricGrid(props: IsoMetricGridProps)
     const urban_mesh_ref = useRef<THREE.InstancedMesh>(null)
     const suburban_mesh_ref = useRef<THREE.InstancedMesh>(null)
     const hover_ref = useRef<THREE.Group>(null)
+    const [hover_visible, set_hover_visible] = useState(false)
 
 
     const tiles = useMemo<TileInfo[]>(() =>
@@ -227,6 +228,7 @@ export function IsoMetricGrid(props: IsoMetricGridProps)
         mesh.instanceMatrix.needsUpdate = true
     }, [urban_tiles, cell_size])
 
+
     // Place house instances on suburban tiles.
     useEffect(() =>
     {
@@ -276,14 +278,14 @@ export function IsoMetricGrid(props: IsoMetricGridProps)
         if (hover_ref.current)
         {
             hover_ref.current.position.set(tile.x * cell_size, 0, tile.y * cell_size)
-            hover_ref.current.visible = true
         }
+        set_hover_visible(true)
         on_hover_tile?.({ x: tile.x, y: tile.y, cell: tile.cell })
     }, [tiles, on_hover_tile, cell_size])
 
     const on_pointer_leave = useCallback(() =>
     {
-        if (hover_ref.current) hover_ref.current.visible = false
+        set_hover_visible(false)
         on_hover_tile?.(null)
     }, [on_hover_tile])
 
@@ -313,7 +315,7 @@ export function IsoMetricGrid(props: IsoMetricGridProps)
                 args={[suburban_geo, suburban_mat, suburban_tiles.length * BUILDINGS_PER_SUBURBAN]}
             />
         )}
-        <group ref={hover_ref} visible={false}>
+        <group ref={hover_ref} visible={hover_visible}>
             <lineSegments args={[hover_outline_geo, hover_outline_mat]} />
             <mesh args={[hover_glow_geo, hover_glow_mat]} />
         </group>
