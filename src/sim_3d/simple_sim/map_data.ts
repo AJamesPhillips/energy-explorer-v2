@@ -5,25 +5,25 @@ import { get_land_or_sea_for_letter, LetterType } from "./map_data_compact"
 // Note this comes from running `generate_map_data_string({ x: 20, y: 40 })` and
 // then dropping the last 20 rows of deep offshore sea
 const map_data = `
-rrrwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwffffffff
-ffffffffffffffffffff
+rrrwwwwwwwwgggggwwww
+wwwwwwwwwwwwfsffffff
+fffsusffffffffffffff
 ffffffffffgggggggggg
 gggggggggggggggggggg
-gggggggggggggggggggg
-gggggggggggggggggggg
-gggggggggggggggggggg
-gggggggeeeeeeeeeaaau
-uuuusssssssssssssooo
+ggssggggffffgggggggg
+ggwwwwwggggggsuasggg
+ggsggggggggggggagggg
+gggggggeeeeeeggausss
+uggussggeeeggggooogg
 oooooooooooooooooooo
 oooooooooooooooooooo
 oooooooooooooooooooo
-oooooooooooooooooooo
-oooooooooooooooooooo
-oooooooooooooooooodd
-dddddddddddddddddddd
-dddddddddddddddddddd
-dddddddddddddddddddd
+oooooooooddooooooooo
+oooooooodddooooooooo
+ooooooodddddddoooooo
+dddddddddddddooooodd
+ddddoddddddddddddddd
+dddoodddddddddoodddd
 dddddddddddddddddddd
 `.trim()
 
