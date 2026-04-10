@@ -4,6 +4,7 @@ import * as THREE from "three"
 
 import { CellsData, LandOrSea } from "./interface"
 import { tile_colour } from "./tile"
+import { SolarFarm } from "./tiles/SolarFarm"
 import { WindTurbine } from "./tiles/WindTurbine"
 
 
@@ -127,6 +128,11 @@ export function IsoMetricGrid(props: IsoMetricGridProps)
 
     const wind_turbine_tiles = useMemo(
         () => tiles.filter(t => data[t.x]?.[t.y]?.has_wind_turbine),
+        [tiles, data],
+    )
+
+    const solar_farm_tiles = useMemo(
+        () => tiles.filter(t => data[t.x]?.[t.y]?.has_solar_farm),
         [tiles, data],
     )
 
@@ -296,6 +302,8 @@ export function IsoMetricGrid(props: IsoMetricGridProps)
         on_hover_tile?.(null)
     }, [on_hover_tile])
 
+    // some cooment
+
     return <>
         <instancedMesh
             ref={mesh_ref}
@@ -305,6 +313,7 @@ export function IsoMetricGrid(props: IsoMetricGridProps)
             onPointerLeave={on_pointer_leave}
         />
         <WindTurbine tiles={wind_turbine_tiles} cell_size={cell_size} />
+        <SolarFarm tiles={solar_farm_tiles} cell_size={cell_size} />
         {woodland_tiles.length > 0 && (
             <instancedMesh
                 ref={tree_mesh_ref}

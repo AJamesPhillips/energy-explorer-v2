@@ -39,6 +39,7 @@ export const map_data_cells: CellsData = map_data
                 const cell_data: CellData = {
                     ...get_land_or_sea_for_letter(cell as LetterType),
                     has_wind_turbine: false,
+                    has_solar_farm: false,
                 }
                 acc[x]![y] = cell_data
             })

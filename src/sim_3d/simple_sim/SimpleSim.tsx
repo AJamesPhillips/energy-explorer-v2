@@ -1,9 +1,9 @@
 import { OrthographicCamera } from "@react-three/drei"
-import { useFrame, useThree } from "@react-three/fiber"
+import { Canvas, useFrame, useThree } from "@react-three/fiber"
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import * as THREE from "three"
 
-import { uk_land_coverage_simplified } from "../data/land_coverage/uk/data"
+import { uk_coverage } from "../data/coverage/uk/data"
 import uk_daily_power_demand_profiles from "../data/power_demand/uk/daily_profiles.json"
 import { uk_month_hourly_and_location_average_capacity_factor_solar_generation_2018 } from "../data/power_generation/solar_pv"
 import { uk_month_hourly_and_location_average_capacity_factor_wind_generation_2018 } from "../data/power_generation/wind_turbine"
@@ -15,13 +15,46 @@ import { PowerStatus } from "./PowerStatus"
 
 const start_datetime = new Date("2018-06-01T00:00:00.000Z")
 const speed = 1000 * 60 * 60
-const lat_lon = { lat: 50, lon: 0 }
 
 // Grid constants — keep in sync with the IsoMetricGrid props below.
 const GRID_SIZE = { x: 20, y: 20 }
+// The visual grid was made from dropping half of the cells
+const DROPPED_AREA = 2
+const KM2_PER_CELL = uk_coverage.total_uk.total_area_km2 / (GRID_SIZE.x * GRID_SIZE.y * DROPPED_AREA)
+// claimed power density
+const land_wind_turbines_w_per_m2 = 2
+const offshore_wind_turbines_w_per_m2 = 3
+
 const CELL_SIZE  = 12
 
 export function SimpleSim()
+{
+    const power_demand_series = useMemo(() => uk_daily_power_demand_profiles["2010"].average_demand.data, [])
+    const [power_demand, set_power_demand] = useState(power_demand_series[3]![2]! as number / 1e3)
+
+    const [data, set_data] = useState<CellsData>(() => map_data_cells)
+
+    return <>
+        <Canvas id="scene-3d">
+            <SimpleSim3d
+                data={data}
+                set_data={set_data}
+                power_demand={power_demand}
+            />
+        </Canvas>
+
+        <SimpleSimUI power_demand={power_demand} />
+    </>
+}
+
+
+interface SimpleSim3dProps
+{
+    data: CellsData
+    set_data: React.Dispatch<React.SetStateAction<CellsData>>
+    power_demand: number
+}
+function SimpleSim3d(props: SimpleSim3dProps)
 {
     const [datetime, set_datetime] = useState(start_datetime)
     const sun_ambient_ref = useRef<THREE.AmbientLight>(null)
@@ -35,7 +68,7 @@ export function SimpleSim()
     useFrame((_state, delta) =>
     {
         const new_datetime = new Date(datetime.getTime() + (delta * speed))
-        set_datetime(new_datetime)
+        // set_datetime(new_datetime)
 
         // const sun_args = sun_light_colour_and_intensity_from_datetime_and_latlon(new_datetime, lat_lon, false)
         const sun_args = {
@@ -54,11 +87,9 @@ export function SimpleSim()
         }
     })
 
-    const [data, set_data] = useState<CellsData>(() => map_data_cells)
-
     const on_click_tile = useCallback(({ x, y }: { x: number; y: number }) =>
     {
-        set_data(prev =>
+        props.set_data(prev =>
         {
             const cell = prev[x]?.[y]
             if (!cell) return prev
@@ -66,33 +97,28 @@ export function SimpleSim()
                 ...prev,
                 [x]: {
                     ...prev[x],
-                    [y]: { ...cell, has_wind_turbine: !cell.has_wind_turbine },
+                    [y]: { ...cell, has_solar_farm: !cell.has_solar_farm },
                 },
             }
         })
     }, [])
-
-    // useEffect(() =>
-    // {
-    //     const map_data_compact = generate_map_data_string(GRID_SIZE)
-    //     console.log("data", map_data_compact)
-    // }, [GRID_SIZE])
 
     return <>
         <IsoCamera grid_size={GRID_SIZE} cell_size={CELL_SIZE} />
         <ambientLight ref={sun_ambient_ref} />
         <directionalLight ref={sun_directional_ref} position={[ 15, 5, 7 ]} />
 
-        <IsoMetricGrid size={GRID_SIZE} cell_size={CELL_SIZE} data={data} on_click_tile={on_click_tile} />
+        <IsoMetricGrid size={GRID_SIZE} cell_size={CELL_SIZE} data={props.data} on_click_tile={on_click_tile} />
         <Data />
     </>
 }
 
 
-export function SimpleSimUI()
+
+function SimpleSimUI(props: { power_demand: number })
 {
     return <>
-        <PowerStatus demand={35} supply={37} />
+        <PowerStatus demand={props.power_demand} supply={37} />
     </>
 }
 
@@ -100,10 +126,9 @@ export function SimpleSimUI()
 
 function Data ()
 {
-    const power_demand = useMemo(() => uk_daily_power_demand_profiles["2010"].average_demand.data, [])
+
     const wind = useMemo(() => uk_month_hourly_and_location_average_capacity_factor_wind_generation_2018(), [])
     const solar = useMemo(() => uk_month_hourly_and_location_average_capacity_factor_solar_generation_2018(), [])
-    const coverage = uk_land_coverage_simplified
 
     // console.log("coverage", coverage)
 
