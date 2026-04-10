@@ -1,0 +1,18 @@
+
+
+.text_shortage
+{
+    font-size: 15px;
+    text-align: center;
+    margin-top: -20;
+    transition: font-size 0.2s ease, color 0.2s ease;
+}
+.text_shortage.surplus
+{
+    color: lightgrey;
+}
+.text_shortage.shortage
+{
+    font-size: 25px;
+    color: red;
+}

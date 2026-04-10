@@ -10,14 +10,15 @@ export type LandOrSea = {
     subtype: OffshoreAreaType
 }
 
-export interface CellData
+export type CellData = LandOrSea &
 {
+    has_wind_turbine: boolean
     // altitude_m: number
 }
 
 export interface CellsData
 {
     [x: number]: {
-        [y: number]: CellData & LandOrSea
+        [y: number]: CellData
     }
 }

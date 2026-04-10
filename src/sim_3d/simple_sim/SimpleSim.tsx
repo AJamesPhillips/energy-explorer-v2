@@ -1,15 +1,16 @@
 import { OrthographicCamera } from "@react-three/drei"
 import { useFrame, useThree } from "@react-three/fiber"
-import { useEffect, useMemo, useRef, useState } from "react"
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import * as THREE from "three"
 
 import { uk_land_coverage_simplified } from "../data/land_coverage/uk/data"
 import uk_daily_power_demand_profiles from "../data/power_demand/uk/daily_profiles.json"
 import { uk_month_hourly_and_location_average_capacity_factor_solar_generation_2018 } from "../data/power_generation/solar_pv"
 import { uk_month_hourly_and_location_average_capacity_factor_wind_generation_2018 } from "../data/power_generation/wind_turbine"
-import { IsoMetricGrid } from "./IsoMetricGrid"
 import { CellsData } from "./interface"
+import { IsoMetricGrid } from "./IsoMetricGrid"
 import { map_data_cells } from "./map_data"
+import { PowerStatus } from "./PowerStatus"
 
 
 const start_datetime = new Date("2018-06-01T00:00:00.000Z")
@@ -53,7 +54,23 @@ export function SimpleSim()
         }
     })
 
-    const data: CellsData = map_data_cells
+    const [data, set_data] = useState<CellsData>(() => map_data_cells)
+
+    const on_click_tile = useCallback(({ x, y }: { x: number; y: number }) =>
+    {
+        set_data(prev =>
+        {
+            const cell = prev[x]?.[y]
+            if (!cell) return prev
+            return {
+                ...prev,
+                [x]: {
+                    ...prev[x],
+                    [y]: { ...cell, has_wind_turbine: !cell.has_wind_turbine },
+                },
+            }
+        })
+    }, [])
 
     // useEffect(() =>
     // {
@@ -66,8 +83,16 @@ export function SimpleSim()
         <ambientLight ref={sun_ambient_ref} />
         <directionalLight ref={sun_directional_ref} position={[ 15, 5, 7 ]} />
 
-        <IsoMetricGrid size={GRID_SIZE} cell_size={CELL_SIZE} data={data} />
+        <IsoMetricGrid size={GRID_SIZE} cell_size={CELL_SIZE} data={data} on_click_tile={on_click_tile} />
         <Data />
+    </>
+}
+
+
+export function SimpleSimUI()
+{
+    return <>
+        <PowerStatus demand={35} supply={37} />
     </>
 }
 

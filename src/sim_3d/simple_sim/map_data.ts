@@ -1,4 +1,4 @@
-import { CellsData, LandOrSea } from "./interface"
+import { CellData, CellsData } from "./interface"
 import { get_land_or_sea_for_letter, LetterType } from "./map_data_compact"
 
 
@@ -36,8 +36,12 @@ export const map_data_cells: CellsData = map_data
             cells.forEach((cell, x) =>
             {
                 if (!acc[x]) acc[x] = {}
-                acc[x]![y] = get_land_or_sea_for_letter(cell as LetterType)
+                const cell_data: CellData = {
+                    ...get_land_or_sea_for_letter(cell as LetterType),
+                    has_wind_turbine: false,
+                }
+                acc[x]![y] = cell_data
             })
 
             return acc
-        }, {} as Record<number, Record<number, LandOrSea>>)
+        }, {} as Record<number, Record<number, CellData>>)
