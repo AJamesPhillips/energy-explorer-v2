@@ -5,7 +5,10 @@ import * as THREE from "three"
 import { CellsData, LandOrSea } from "./interface"
 import { tile_colour } from "./tile"
 import { SolarFarm } from "./tiles/SolarFarm"
+import { SuburbanTiles } from "./tiles/Suburban"
+import { UrbanTiles } from "./tiles/Urban"
 import { WindTurbine } from "./tiles/WindTurbine"
+import { Woodland } from "./tiles/Woodland"
 
 
 
@@ -32,18 +35,11 @@ interface IsoMetricGridProps
     /** Fired with null when the pointer leaves the grid entirely. */
     on_hover_tile?: (tile: TileEvent | null) => void
 }
-const TREES_PER_TILE = 3
-const BUILDINGS_PER_URBAN = 3
-const BUILDINGS_PER_SUBURBAN = 3
-
 export function IsoMetricGrid(props: IsoMetricGridProps)
 {
     const { size, cell_size, data, on_click_tile, on_hover_tile } = props
 
     const mesh_ref = useRef<THREE.InstancedMesh>(null)
-    const tree_mesh_ref = useRef<THREE.InstancedMesh>(null)
-    const urban_mesh_ref = useRef<THREE.InstancedMesh>(null)
-    const suburban_mesh_ref = useRef<THREE.InstancedMesh>(null)
     const hover_ref = useRef<THREE.Group>(null)
     const [hover_visible, set_hover_visible] = useState(false)
 
@@ -67,32 +63,6 @@ export function IsoMetricGrid(props: IsoMetricGridProps)
         return {
             geometry: make_tile_geometry(cell_size),
             material: new THREE.MeshStandardMaterial({ vertexColors: true }),
-        }
-    }, [cell_size])
-
-    const { tree_geo, tree_mat } = useMemo(() =>
-    {
-        const h = cell_size * 0.3
-        const r = cell_size * 0.12
-        return {
-            tree_geo: new THREE.ConeGeometry(r, h, 6),
-            tree_mat: new THREE.MeshStandardMaterial({ color: 0x1a4a1a }),
-        }
-    }, [cell_size])
-
-    const { urban_geo, urban_mat } = useMemo(() =>
-    {
-        return {
-            urban_geo: new THREE.BoxGeometry(cell_size * 0.22, cell_size * 0.45, cell_size * 0.22),
-            urban_mat: new THREE.MeshStandardMaterial({ color: 0x8899aa }),
-        }
-    }, [cell_size])
-
-    const { suburban_geo, suburban_mat } = useMemo(() =>
-    {
-        return {
-            suburban_geo: new THREE.BoxGeometry(cell_size * 0.32, cell_size * 0.18, cell_size * 0.32),
-            suburban_mat: new THREE.MeshStandardMaterial({ color: 0xAB5154 }),
         }
     }, [cell_size])
 
@@ -140,17 +110,11 @@ export function IsoMetricGrid(props: IsoMetricGridProps)
     {
         geometry.dispose()
         material.dispose()
-        tree_geo.dispose()
-        tree_mat.dispose()
-        urban_geo.dispose()
-        urban_mat.dispose()
-        suburban_geo.dispose()
-        suburban_mat.dispose()
         hover_outline_geo.dispose()
         hover_glow_geo.dispose()
         hover_outline_mat.dispose()
         hover_glow_mat.dispose()
-    }, [geometry, material, tree_geo, tree_mat, urban_geo, urban_mat, suburban_geo, suburban_mat, hover_outline_geo, hover_glow_geo, hover_outline_mat, hover_glow_mat])
+    }, [geometry, material, hover_outline_geo, hover_glow_geo, hover_outline_mat, hover_glow_mat])
 
 
     // Push instance matrices and colours to the GPU whenever the tile set changes.
@@ -175,105 +139,6 @@ export function IsoMetricGrid(props: IsoMetricGridProps)
         if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true
     }, [tiles, cell_size])
 
-    // Place tree instances on woodland tiles.
-    useEffect(() =>
-    {
-        const mesh = tree_mesh_ref.current
-        if (!mesh) return
-
-        const dummy = new THREE.Object3D()
-        const tile_top_y = cell_size * 0.03  // half the tile height (0.06 * cell_size / 2)
-        const cone_half_h = cell_size * 0.15 // half of cone height (0.3 * cell_size / 2)
-
-        woodland_tiles.forEach(({ x, y }, ti) =>
-        {
-            for (let i = 0; i < TREES_PER_TILE; i++)
-            {
-                const idx = ti * TREES_PER_TILE + i
-                const ox    = (seeded_rand(x, y, i * 3)     - 0.5) * cell_size * 0.55
-                const oz    = (seeded_rand(x, y, i * 3 + 1) - 0.5) * cell_size * 0.55
-                const scale = 0.7 + seeded_rand(x, y, i * 3 + 2) * 0.6
-
-                dummy.position.set(
-                    x * cell_size + ox,
-                    tile_top_y + cone_half_h * scale,
-                    y * cell_size + oz,
-                )
-                dummy.scale.setScalar(scale)
-                dummy.updateMatrix()
-                mesh.setMatrixAt(idx, dummy.matrix)
-            }
-        })
-
-        mesh.instanceMatrix.needsUpdate = true
-    }, [woodland_tiles, cell_size])
-
-    // Place office-block instances on urban tiles.
-    useEffect(() =>
-    {
-        const mesh = urban_mesh_ref.current
-        if (!mesh) return
-
-        const dummy = new THREE.Object3D()
-        const tile_top_y = cell_size * 0.03
-        const half_h = cell_size * 0.225  // half of 0.45 * cell_size
-
-        urban_tiles.forEach(({ x, y }, ti) =>
-        {
-            for (let i = 0; i < BUILDINGS_PER_URBAN; i++)
-            {
-                const idx = ti * BUILDINGS_PER_URBAN + i
-                const ox    = (seeded_rand(x, y, i * 3 + 100)     - 0.5) * cell_size * 0.6
-                const oz    = (seeded_rand(x, y, i * 3 + 101) - 0.5) * cell_size * 0.6
-                const scale = 0.5 + seeded_rand(x, y, i * 3 + 102) * 1.0  // 0.5 – 1.5
-
-                dummy.position.set(
-                    x * cell_size + ox,
-                    tile_top_y + half_h * scale,
-                    y * cell_size + oz,
-                )
-                dummy.scale.setScalar(scale)
-                dummy.updateMatrix()
-                mesh.setMatrixAt(idx, dummy.matrix)
-            }
-        })
-
-        mesh.instanceMatrix.needsUpdate = true
-    }, [urban_tiles, cell_size])
-
-
-    // Place house instances on suburban tiles.
-    useEffect(() =>
-    {
-        const mesh = suburban_mesh_ref.current
-        if (!mesh) return
-
-        const dummy = new THREE.Object3D()
-        const tile_top_y = cell_size * 0.03
-        const half_h = cell_size * 0.09  // half of 0.18 * cell_size
-
-        suburban_tiles.forEach(({ x, y }, ti) =>
-        {
-            for (let i = 0; i < BUILDINGS_PER_SUBURBAN; i++)
-            {
-                const idx = ti * BUILDINGS_PER_SUBURBAN + i
-                const ox    = (seeded_rand(x, y, i * 3 + 200)     - 0.5) * cell_size * 0.55
-                const oz    = (seeded_rand(x, y, i * 3 + 201) - 0.5) * cell_size * 0.55
-                const scale = 0.75 + seeded_rand(x, y, i * 3 + 202) * 0.5  // 0.75 – 1.25
-
-                dummy.position.set(
-                    x * cell_size + ox,
-                    tile_top_y + half_h * scale,
-                    y * cell_size + oz,
-                )
-                dummy.scale.setScalar(scale)
-                dummy.updateMatrix()
-                mesh.setMatrixAt(idx, dummy.matrix)
-            }
-        })
-
-        mesh.instanceMatrix.needsUpdate = true
-    }, [suburban_tiles, cell_size])
 
     const on_click = useCallback((e: ThreeEvent<MouseEvent>) =>
     {
@@ -302,7 +167,6 @@ export function IsoMetricGrid(props: IsoMetricGridProps)
         on_hover_tile?.(null)
     }, [on_hover_tile])
 
-    // some cooment
 
     return <>
         <instancedMesh
@@ -312,26 +176,13 @@ export function IsoMetricGrid(props: IsoMetricGridProps)
             onPointerMove={on_pointer_move}
             onPointerLeave={on_pointer_leave}
         />
+        <Woodland tiles={woodland_tiles} cell_size={cell_size} />
+        <SuburbanTiles tiles={suburban_tiles} cell_size={cell_size} />
+        <UrbanTiles tiles={urban_tiles} cell_size={cell_size} />
+
         <WindTurbine tiles={wind_turbine_tiles} cell_size={cell_size} />
         <SolarFarm tiles={solar_farm_tiles} cell_size={cell_size} />
-        {woodland_tiles.length > 0 && (
-            <instancedMesh
-                ref={tree_mesh_ref}
-                args={[tree_geo, tree_mat, woodland_tiles.length * TREES_PER_TILE]}
-            />
-        )}
-        {urban_tiles.length > 0 && (
-            <instancedMesh
-                ref={urban_mesh_ref}
-                args={[urban_geo, urban_mat, urban_tiles.length * BUILDINGS_PER_URBAN]}
-            />
-        )}
-        {suburban_tiles.length > 0 && (
-            <instancedMesh
-                ref={suburban_mesh_ref}
-                args={[suburban_geo, suburban_mat, suburban_tiles.length * BUILDINGS_PER_SUBURBAN]}
-            />
-        )}
+
         <group ref={hover_ref} visible={hover_visible}>
             <lineSegments args={[hover_outline_geo, hover_outline_mat]} />
             <mesh args={[hover_glow_geo, hover_glow_mat]} />
@@ -372,14 +223,4 @@ function make_tile_geometry(cell_size: number): THREE.BoxGeometry
 
     geo.setAttribute("color", new THREE.BufferAttribute(bevel_colors, 3))
     return geo
-}
-
-/**
- * Cheap deterministic pseudo-random in [0, 1) based on tile coordinates and
- * a seed index. Uses a sine hash so no external dependency is needed.
- */
-function seeded_rand(x: number, y: number, i: number): number
-{
-    const n = Math.sin(x * 127.1 + y * 311.7 + i * 74.3) * 43758.5453
-    return n - Math.floor(n)
 }

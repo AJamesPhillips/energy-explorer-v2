@@ -1,13 +1,11 @@
-
-
-import { useFrame } from "@react-three/fiber";
-import { useEffect, useMemo, useRef } from "react";
-import * as THREE from "three";
+import { useFrame } from "@react-three/fiber"
+import { useEffect, useMemo, useRef } from "react"
+import * as THREE from "three"
 
 
 interface WindTurbineProps
 {
-    tiles: Array<{ x: number; y: number }>
+    tiles: Array<{ x: number, y: number }>
     cell_size: number
 }
 

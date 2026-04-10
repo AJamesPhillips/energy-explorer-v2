@@ -1,10 +1,10 @@
-import { useMemo } from "react";
-import * as THREE from "three";
+import { useMemo } from "react"
+import * as THREE from "three"
 
 
 interface SolarFarmProps
 {
-    tiles: Array<{ x: number; y: number }>
+    tiles: Array<{ x: number, y: number }>
     cell_size: number
 }
 export function SolarFarm({ tiles, cell_size }: SolarFarmProps)
