@@ -8,6 +8,13 @@ import type { DatetimeRange } from "core/data/values/DatetimeRange"
 import type { ILatLon, ILatLonWithIsOnshore } from "core/data/values/LatLon"
 
 
+export interface PowerStats
+{
+    demand_gw: number
+    supply_gw: number
+}
+
+
 export interface PowerPlant
 {
     name: string

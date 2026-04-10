@@ -1,11 +1,12 @@
+import { PowerStats } from "../model/interface"
 import "./PowerStatus.css"
 
 
-export function PowerStatus ({ demand, supply }: { demand: number, supply: number })
+export function PowerStatus ({ power: { demand_gw, supply_gw } }: { power: PowerStats })
 {
-    const diff = supply - demand
+    const diff = supply_gw - demand_gw
     const is_surplus = diff >= 0
-    const status_text = is_surplus ? `Surplus of ${diff} MW` : `Deficit of ${-diff} MW`
+    const status_text = is_surplus ? `Surplus of ${diff} GW` : `Deficit of ${-diff} GW`
     const status_color = is_surplus ? "green" : "red"
 
     return (
@@ -24,7 +25,7 @@ export function PowerStatus ({ demand, supply }: { demand: number, supply: numbe
             }}
             title={status_text}
         >
-            <span>{demand}</span>
+            <span>{demand_gw}</span>
             <span style={{ fontSize: 20 }}>GW</span>
             <span style={{ color: status_color }}>{is_surplus ? "+" : ""}{diff}</span>
             <div className={"text_shortage" + (is_surplus ? " surplus" : " shortage")}>

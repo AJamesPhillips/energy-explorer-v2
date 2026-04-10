@@ -11,7 +11,6 @@ import { WindTurbine } from "./tiles/WindTurbine"
 import { Woodland } from "./tiles/Woodland"
 
 
-
 interface TileInfo
 {
     x: number

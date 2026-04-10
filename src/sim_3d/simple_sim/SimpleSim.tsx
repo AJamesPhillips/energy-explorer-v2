@@ -7,7 +7,8 @@ import { uk_coverage } from "../data/coverage/uk/data"
 import uk_daily_power_demand_profiles from "../data/power_demand/uk/daily_profiles.json"
 import { uk_month_hourly_and_location_average_capacity_factor_solar_generation_2018 } from "../data/power_generation/solar_pv"
 import { uk_month_hourly_and_location_average_capacity_factor_wind_generation_2018 } from "../data/power_generation/wind_turbine"
-import { CellsData } from "./interface"
+import { PowerStats } from "../model/interface"
+import { CellData, CellsData } from "./interface"
 import { IsoMetricGrid } from "./IsoMetricGrid"
 import { map_data_cells } from "./map_data"
 import { PowerStatus } from "./PowerStatus"
@@ -30,20 +31,29 @@ const CELL_SIZE  = 12
 export function SimpleSim()
 {
     const power_demand_series = useMemo(() => uk_daily_power_demand_profiles["2010"].average_demand.data, [])
-    const [power_demand, set_power_demand] = useState(power_demand_series[3]![2]! as number / 1e3)
+    const [power, set_power] = useState<PowerStats>({
+        demand_gw: Math.round(power_demand_series[3]![2]! as number / 1e3),
+        supply_gw: 0,
+    })
 
     const [data, set_data] = useState<CellsData>(() => map_data_cells)
+
+    // useEffect(() =>
+    // {
+    //     let supply_gw = 0
+
+    // }, [data])
 
     return <>
         <Canvas id="scene-3d">
             <SimpleSim3d
                 data={data}
                 set_data={set_data}
-                power_demand={power_demand}
+                power_demand={power.demand_gw}
             />
         </Canvas>
 
-        <SimpleSimUI power_demand={power_demand} />
+        <SimpleSimUI power={power} />
     </>
 }
 
@@ -97,7 +107,7 @@ function SimpleSim3d(props: SimpleSim3dProps)
                 ...prev,
                 [x]: {
                     ...prev[x],
-                    [y]: { ...cell, has_solar_farm: !cell.has_solar_farm },
+                    [y]: cycle_cell_contents(cell)
                 },
             }
         })
@@ -115,10 +125,10 @@ function SimpleSim3d(props: SimpleSim3dProps)
 
 
 
-function SimpleSimUI(props: { power_demand: number })
+function SimpleSimUI(props: { power: PowerStats })
 {
     return <>
-        <PowerStatus demand={props.power_demand} supply={37} />
+        <PowerStatus power={props.power} />
     </>
 }
 
@@ -168,4 +178,40 @@ function IsoCamera({ grid_size, cell_size }: { grid_size: { x: number, y: number
             far={dist * 4}
         />
     )
+}
+
+
+function cycle_cell_contents(cell: CellData): CellData
+{
+    if (cell.type === "sea")
+    {
+        if (!cell.has_wind_turbine)
+        {
+            return { ...cell, has_wind_turbine: true }
+        }
+        else
+        {
+            return { ...cell, has_wind_turbine: false }
+        }
+    }
+    else if (cell.type === "land")
+    {
+        if (!cell.has_solar_farm && !cell.has_wind_turbine)
+        {
+            return { ...cell, has_solar_farm: true }
+        }
+        else if (!cell.has_wind_turbine)
+        {
+            return { ...cell, has_solar_farm: true, has_wind_turbine: true }
+        }
+        else if (cell.has_solar_farm && cell.has_wind_turbine)
+        {
+            return { ...cell, has_solar_farm: false, has_wind_turbine: true }
+        }
+        else
+        {
+            return { ...cell, has_solar_farm: false, has_wind_turbine: false }
+        }
+    }
+    return cell
 }

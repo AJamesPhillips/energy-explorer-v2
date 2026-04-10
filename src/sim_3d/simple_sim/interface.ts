@@ -12,6 +12,8 @@ export type LandOrSea = {
 
 export type CellData = LandOrSea &
 {
+    x: number
+    y: number
     has_wind_turbine: boolean
     has_solar_farm: boolean
     // has_hydro: boolean
