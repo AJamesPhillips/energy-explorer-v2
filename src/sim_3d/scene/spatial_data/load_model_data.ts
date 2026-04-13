@@ -1,4 +1,3 @@
-import * as THREE from "three"
 
 import { DataSeries } from "core/data/values/DataSeries"
 
@@ -8,20 +7,10 @@ import { uk_hourly_capacity_factor_solar_generation_2018 } from "../../data/powe
 import { uk_hourly_capacity_factor_wind_generation_2018 } from "../../data/power_generation/wind_turbine"
 import { get_spatial_data_grid } from "../../data/spatial_grid/uk"
 import { ModelData } from "../../model/interface"
-import { CommonDependencies } from "../interface"
-import { create_data_area_visuals } from "./create_data_area_visuals"
-
-
-export async function load_and_render_model_data(deps: CommonDependencies, earth_mesh: THREE.Mesh)
-{
-    const model_data = await get_model_data()
-    create_data_area_visuals(model_data, deps, earth_mesh)
-}
-
 
 
 let async_model_data: Promise<ModelData> | undefined = undefined
-export async function get_model_data(): Promise<ModelData>
+export async function load_model_data(): Promise<ModelData>
 {
     if (async_model_data) return async_model_data
 

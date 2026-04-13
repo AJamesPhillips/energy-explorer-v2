@@ -18,9 +18,10 @@ const ATMOSPHERE_SCALE = 1.03 // 1.015 is actual scale, but 1.03 looks better
 interface EarthProps
 {
     sun_direction: THREE.Vector3
+    children?: React.ReactNode
 }
 
-export function Earth({ sun_direction }: EarthProps)
+export function Earth({ sun_direction, children }: EarthProps)
 {
     const earth_mesh = useRef<THREE.Mesh>(null!)
     const { day: day_texture, night: night_texture, specular: specular_clouds_texture } = useTexture({
@@ -82,6 +83,7 @@ export function Earth({ sun_direction }: EarthProps)
                 fragmentShader={earth_fragment_shader}
                 uniforms={earth_uniforms}
             />
+            {children}
         </mesh>
         <mesh scale={[ATMOSPHERE_SCALE, ATMOSPHERE_SCALE, ATMOSPHERE_SCALE]}>
             <sphereGeometry args={[CONSTANTS.earth_radius, 64, 64]} />

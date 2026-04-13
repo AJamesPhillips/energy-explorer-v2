@@ -5,8 +5,9 @@ import * as THREE from "three"
 import { OrbitControls as OrbitControlsImplementation } from "three/examples/jsm/Addons.js"
 
 import { CONSTANTS } from "../scene/CONSTANTS"
-import { Earth } from "../scene/earth"
+import { Earth } from "../scene/earth/Earth"
 import "../scene/lil-gui.css"
+import { SpatialData } from "../scene/spatial_data/SpatialData"
 import { clamp } from "../utils/clamp"
 import { StarsV2 } from "./StarsV2"
 import { Sun } from "./Sun"
@@ -60,12 +61,14 @@ export const DigitalTwin = (props: {}) =>
         <ambientLight intensity={0.5} />
         <directionalLight position={[ 5, 5, 5 ]} intensity={0.5} />
 
+        <StarsV2 />
         <Sun
             sun_direction={sun_direction}
             set_sun_direction={set_sun_direction}
         />
-        <Earth sun_direction={sun_direction} />
-        <StarsV2 />
+        <Earth sun_direction={sun_direction}>
+            <SpatialData />
+        </Earth>
         {/*
         load_and_render_model_data(common_dependencies, earth_mesh)
         load_and_render_countries(common_dependencies, earth_mesh)
