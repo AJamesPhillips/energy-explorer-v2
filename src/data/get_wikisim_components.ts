@@ -61,7 +61,7 @@ export async function get_wikisim_components(ids: { id: IdAndMaybeVersion, compu
         })
         if (result.error !== null) throw new Error(`Error evaluating component with id ${component.id.to_str()}: ${result.error}`)
 
-        component.computed_value = JSON.parse(result.result).value
+        component.computed_value = result.result
     }
 
     set_components(components)

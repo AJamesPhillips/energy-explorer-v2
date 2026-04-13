@@ -60,9 +60,29 @@ export function get_color_for_relative_difference(
 
 export function get_numeric_result_value(component: DataComponentForGraph): number
 {
-    const raw = component.computed_value || component.result_value
+    let raw = component.computed_value
+
+    if (raw)
+    {
+        const parsed = parseFloat(raw)
+        if (!isNaN(parsed)) return parsed
+
+        try
+        {
+            const parsed = JSON.parse(raw)
+            if (typeof parsed === "number") return parsed
+
+            if (typeof parsed.value === "number") return parsed.value
+        }
+        catch
+        {
+            //
+        }
+    }
+
+    raw = component.result_value
     // console.log("component.computed_value: ", component.computed_value)
-    return Number(raw ?? 0)
+    return parseFloat(raw ?? "0")
 }
 
 
