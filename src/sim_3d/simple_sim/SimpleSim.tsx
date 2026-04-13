@@ -17,7 +17,6 @@ import { PowerStatus } from "./PowerStatus"
 const start_datetime = new Date("2018-06-01T00:00:00.000Z")
 const speed = 1000 * 60 * 60
 
-// Grid constants — keep in sync with the IsoMetricGrid props below.
 const GRID_SIZE = { x: 20, y: 20 }
 // The visual grid was made from dropping half of the cells
 const DROPPED_AREA = 2

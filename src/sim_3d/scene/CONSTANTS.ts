@@ -26,7 +26,7 @@ export const CONSTANTS =
         rotation_speed:
         {
             base: 0.3,
-            max: 0.1,
+            max: 0.02,
         },
     },
     sun_distance,
