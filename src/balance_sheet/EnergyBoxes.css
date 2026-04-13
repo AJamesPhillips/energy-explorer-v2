@@ -1,0 +1,31 @@
+
+
+.energy_box_stack
+{
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    padding: 0 10px;
+}
+
+.energy_box_stack .energy_box_stack_header
+{
+    text-align: center;
+    margin-bottom: 14px;
+
+}
+.energy_box_stack .energy_box_stack_header .energy_box_stack_title
+{
+    font-weight: bold;
+}
+
+.energy_box_stack .energy_box_stack_footer
+{
+    text-align: center;
+    margin-top: 8px;
+
+}
+.energy_box_stack .energy_box_stack_footer .energy_box_stack_title
+{
+    font-weight: bold;
+}

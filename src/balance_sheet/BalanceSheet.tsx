@@ -1,7 +1,7 @@
-import { DataComponentsByIdv } from "core/data/interface"
+import { DataComponentsByIdo, DataComponentsByIdv } from "core/data/interface"
 
 import Loading from "../components/Loading"
-import { Perspective } from "../data/interface"
+import { DataComponentForGraph, Perspective } from "../data/interface"
 import "./BalanceSheet.css"
 import { EnergyBoxStack } from "./EnergyBoxes"
 import {
@@ -12,14 +12,15 @@ import {
 interface BalanceSheetProps
 {
     persectives: Perspective[]
-    components_map: DataComponentsByIdv | undefined
+    components_map_by_idv: DataComponentsByIdv<DataComponentForGraph> | undefined
+    components_map_by_ido: DataComponentsByIdo<DataComponentForGraph> | undefined
 }
 export function BalanceSheet(props: BalanceSheetProps)
 {
-    const { persectives, components_map } = props
+    const { persectives, components_map_by_idv, components_map_by_ido } = props
 
 
-    if (!components_map) return <Loading />
+    if (!components_map_by_idv || !components_map_by_ido) return <Loading />
 
 
     return <div id="balance_sheet">
@@ -33,6 +34,7 @@ export function BalanceSheet(props: BalanceSheetProps)
                 <EnergyBoxStack
                     key={p.id}
                     name={perspective_id_to_name_map[p.id]}
+                    total_kwh_per_day_person={get_total_kwh_per_day_person(components_map_by_ido[p.id], "sink")}
                     factors={p.sinks}
                     is_comparison={index > 0}
                 />
@@ -42,6 +44,7 @@ export function BalanceSheet(props: BalanceSheetProps)
                 <EnergyBoxStack
                     key={p.id}
                     name={perspective_id_to_name_map[p.id]}
+                    total_kwh_per_day_person={get_total_kwh_per_day_person(components_map_by_ido[p.id], "source")}
                     factors={p.sources}
                     is_comparison={index > 0}
                 />
@@ -50,4 +53,16 @@ export function BalanceSheet(props: BalanceSheetProps)
 
         {/* <GraphViewer components={components} perspective={perspective} /> */}
     </div>
+}
+
+
+function get_total_kwh_per_day_person(component: DataComponentForGraph | undefined, type: "sink" | "source"): number | undefined
+{
+    if (!component) return undefined
+
+    if (!component.computed_value) return undefined
+
+    const parsed = JSON.parse(component.computed_value)
+    if (type === "sink") return parseInt(parsed.total_demand)
+    else return parseInt(parsed.total_supply)
 }

@@ -38,8 +38,9 @@ const all_ids_to_fetch: { id: IdAndMaybeVersion, compute_value: boolean }[] = [
 
 function App ()
 {
+    const [view, set_view] = useState<ViewType>("balance_sheet")
     // const [view, set_view] = useState<ViewType>("digital_twin")
-    const [view, set_view] = useState<ViewType>("simulation")
+    // const [view, set_view] = useState<ViewType>("simulation")
     const [perspective_ids, set_perspective_ids] = useState<PerspectiveType[]>([
         perspective_id_2009_mackay,
         perspective_id_general
@@ -138,7 +139,11 @@ function App ()
                 </div>
 
                 <div id="app_main_view">
-                    {view === "balance_sheet" && <BalanceSheet persectives={persectives} components_map={components_map_by_idv} />}
+                    {view === "balance_sheet" && <BalanceSheet
+                        persectives={persectives}
+                        components_map_by_idv={components_map_by_idv}
+                        components_map_by_ido={components_map_by_ido}
+                    />}
                     {view === "knowledge_graph" && <GraphViewer persectives={persectives} />}
                 </div>
             </div>

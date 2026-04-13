@@ -1,6 +1,7 @@
 import { format_number_to_significant_figures } from "core/data/format/format_number_to_significant_figures"
 
 import { EnergyFactor } from "../data/interface"
+import "./EnergyBoxes.css"
 
 
 export function EnergyBoxes(props: { factors: EnergyFactor[] })
@@ -28,17 +29,23 @@ export function EnergyBoxes(props: { factors: EnergyFactor[] })
 
 
 
-export function EnergyBoxStack(props: { name: string, factors: EnergyFactor[], is_comparison: boolean })
+export function EnergyBoxStack(props: { name: string, total_kwh_per_day_person: number | undefined, factors: EnergyFactor[], is_comparison: boolean })
 {
-    return <div style={{ display: "flex", justifyContent: "space-between", flexDirection: "column", padding: "0 10px" }}>
-        <div style={{ textAlign: "center", marginBottom: 14, fontWeight: "bold" }}>{props.name}</div>
+    return <div className="energy_box_stack">
+        <div className="energy_box_stack_header">
+            <div className="energy_box_stack_title">{props.name}</div>
+            {/* <div className="energy_box_stack_subtitle">{props.total_kwh_per_day_person} kWh/d/p</div> */}
+        </div>
         <div style={{ display: "flex", justifyContent: "end", flexDirection: "column" }}>
             {props.factors.map((factor, i) => <FactorToBox
                 key={i}
                 factor={factor}
                 is_comparison={props.is_comparison}
             />)}
-            <div style={{ textAlign: "center", marginTop: 8, fontWeight: "bold" }}>{props.name}</div>
+            <div className="energy_box_stack_footer">
+                <div className="energy_box_stack_title">{props.name}</div>
+                <div className="energy_box_stack_subtitle">{props.total_kwh_per_day_person} kWh/d/p</div>
+            </div>
         </div>
     </div>
 }

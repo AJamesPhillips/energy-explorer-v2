@@ -38,6 +38,8 @@ html, body, #app, #app_html {
     display: flex;
     gap: 20px;
     flex-direction: row;
+    /** We disabled pointer events so that for the 3d views, the pointer events
+        can pass through to them */
     pointer-events: none;
 }
 #select_perspective
