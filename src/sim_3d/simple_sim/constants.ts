@@ -1,7 +1,0 @@
-
-
-export const CONSTANTS = {
-    TREES_PER_TILE: 3,
-    BUILDINGS_PER_URBAN_TILE: 3,
-    BUILDINGS_PER_SUBURBAN_TILE: 3,
-}
