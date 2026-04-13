@@ -77,9 +77,5 @@ export function Sun(props: SunProps)
             color={0xffffff}
             intensity={1.5}
         />
-        <mesh position={props.sun_direction.clone().multiplyScalar(CONSTANTS.sun_distance)}>
-            <sphereGeometry args={[0.5, 16, 16]} />
-            <meshBasicMaterial color={0xffffff} />
-        </mesh>
     </>
 }
