@@ -4,13 +4,13 @@ import { Graph } from "core/data/utils/graph"
 import { PerspectiveType } from "../balance_sheet/SelectPerspective"
 
 
-export interface DataComponentForGraph extends DataComponent
+export interface DataComponentExtended extends DataComponent
 {
     computed_value: string | undefined
     multiple_versions: { latest_version: number } | undefined
 }
 
-export type GraphWithComputedValues = Graph<DataComponentForGraph>
+export type GraphWithComputedValues = Graph<DataComponentExtended>
 
 
 export type EnergyFactorName = (

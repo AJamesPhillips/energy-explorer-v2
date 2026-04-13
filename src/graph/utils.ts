@@ -1,7 +1,7 @@
 import { component_is_number } from "core/data/component_is"
 import { DataComponent } from "core/data/interface"
 
-import { DataComponentForGraph } from "../data/interface"
+import { DataComponentExtended } from "../data/interface"
 
 
 /** Renders a DataComponent to a single-line display string. */
@@ -17,8 +17,8 @@ export function render_component(component: DataComponent): string
  *   relative_difference = absolute_difference / |alternative.result_value|
  */
 export function compute_differences(
-    component: DataComponentForGraph,
-    alternative: DataComponentForGraph | undefined,
+    component: DataComponentExtended,
+    alternative: DataComponentExtended | undefined,
 ): { absolute: number, relative: number } | undefined | false
 {
     if (!component_is_number(component) && component.computed_value === undefined) return false
@@ -58,7 +58,7 @@ export function get_color_for_relative_difference(
 }
 
 
-export function get_numeric_result_value(component: DataComponentForGraph): number
+export function get_numeric_result_value(component: DataComponentExtended): number
 {
     let raw = component.computed_value
 

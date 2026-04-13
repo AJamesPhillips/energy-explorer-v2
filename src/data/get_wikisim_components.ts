@@ -5,11 +5,11 @@ import { evaluate_code_in_browser_sandbox } from "core/evaluator/implementation/
 import { load_dependencies_into_runtime } from "core/evaluator/load_dependencies_into_runtime"
 import { get_supabase } from "core/supabase/browser"
 
-import { DataComponentForGraph } from "./interface"
+import { DataComponentExtended } from "./interface"
 
 
 
-export async function get_wikisim_components(ids: { id: IdAndMaybeVersion, compute_value: boolean }[], set_components: (components: DataComponentForGraph[]) => void): Promise<void>
+export async function get_wikisim_components(ids: { id: IdAndMaybeVersion, compute_value: boolean }[], set_components: (components: DataComponentExtended[]) => void): Promise<void>
 {
     const response = await request_versioned_data_component_and_dependencies({
         get_supabase,
@@ -19,7 +19,7 @@ export async function get_wikisim_components(ids: { id: IdAndMaybeVersion, compu
 
     if (response.error !== null) return Promise.reject(response.error)
 
-    const components: DataComponentForGraph[] = response.data.map(component =>
+    const components: DataComponentExtended[] = response.data.map(component =>
     {
         return {
             ...component,

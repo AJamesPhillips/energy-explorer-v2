@@ -1,11 +1,11 @@
-import { DataComponentForGraph } from "../data/interface"
+import { DataComponentExtended } from "../data/interface"
 
 
 export interface GraphForRendering
 {
-    component: DataComponentForGraph
+    component: DataComponentExtended
     children: GraphForRendering[]
-    alternative: DataComponentForGraph | undefined
+    alternative: DataComponentExtended | undefined
 }
 
 

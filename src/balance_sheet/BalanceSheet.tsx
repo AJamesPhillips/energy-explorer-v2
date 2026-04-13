@@ -1,7 +1,7 @@
 import { DataComponentsByIdo, DataComponentsByIdv } from "core/data/interface"
 
 import Loading from "../components/Loading"
-import { DataComponentForGraph, Perspective } from "../data/interface"
+import { DataComponentExtended, Perspective } from "../data/interface"
 import "./BalanceSheet.css"
 import { EnergyBoxStack } from "./EnergyBoxes"
 import {
@@ -12,8 +12,8 @@ import {
 interface BalanceSheetProps
 {
     persectives: Perspective[]
-    components_map_by_idv: DataComponentsByIdv<DataComponentForGraph> | undefined
-    components_map_by_ido: DataComponentsByIdo<DataComponentForGraph> | undefined
+    components_map_by_idv: DataComponentsByIdv<DataComponentExtended> | undefined
+    components_map_by_ido: DataComponentsByIdo<DataComponentExtended> | undefined
 }
 export function BalanceSheet(props: BalanceSheetProps)
 {
@@ -56,7 +56,7 @@ export function BalanceSheet(props: BalanceSheetProps)
 }
 
 
-function get_total_kwh_per_day_person(component: DataComponentForGraph | undefined, type: "sink" | "source"): number | undefined
+function get_total_kwh_per_day_person(component: DataComponentExtended | undefined, type: "sink" | "source"): number | undefined
 {
     if (!component) return undefined
 

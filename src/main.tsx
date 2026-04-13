@@ -24,7 +24,7 @@ import { Disclaimer } from "./components/Disclaimer"
 import { Options, ViewType } from "./components/Options"
 import { get_wikisim_components } from "./data/get_wikisim_components"
 import { other_ids_performance_boost, top_ids_to_fetch } from "./data/ids"
-import { DataComponentForGraph, Perspective } from "./data/interface"
+import { DataComponentExtended, Perspective } from "./data/interface"
 import { GraphViewer } from "./graph/GraphViewer"
 import "./index.css"
 import { EnergyExplorerSimV2 } from "./sim_3d/EnergyExplorerSimV2"
@@ -164,7 +164,7 @@ interface DataComponentAsJSONForGraph extends DataComponentAsJSON
     multiple_versions: { latest_version: number } | undefined
 }
 
-function cached_components(args: { bust_cache?: boolean } = {}): DataComponentForGraph[] | undefined
+function cached_components(args: { bust_cache?: boolean } = {}): DataComponentExtended[] | undefined
 {
     const cached = localStorage.getItem("components")
     if (!cached || args.bust_cache) return undefined
@@ -175,7 +175,7 @@ function cached_components(args: { bust_cache?: boolean } = {}): DataComponentFo
         const validators = make_field_validators(z)
         if (Array.isArray(parsed)) return parsed.map(j =>
         {
-            const hydrated: DataComponentForGraph = {
+            const hydrated: DataComponentExtended = {
                 ...hydrate_data_component_from_json(j, validators),
                 computed_value: j.computed_value,
                 multiple_versions: j.multiple_versions,
@@ -192,7 +192,7 @@ function cached_components(args: { bust_cache?: boolean } = {}): DataComponentFo
 }
 
 
-function cache_components(components: DataComponentForGraph[])
+function cache_components(components: DataComponentExtended[])
 {
     try
     {
