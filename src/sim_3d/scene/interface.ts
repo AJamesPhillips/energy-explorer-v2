@@ -16,6 +16,8 @@ export interface Constants
         zoom: {
             min: number
             max: number
+            min_speed: number
+            max_speed: number
         }
     }
 

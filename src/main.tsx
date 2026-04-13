@@ -38,8 +38,8 @@ const all_ids_to_fetch: { id: IdAndMaybeVersion, compute_value: boolean }[] = [
 
 function App ()
 {
-    const [view, set_view] = useState<ViewType>("balance_sheet")
-    // const [view, set_view] = useState<ViewType>("digital_twin")
+    // const [view, set_view] = useState<ViewType>("balance_sheet")
+    const [view, set_view] = useState<ViewType>("digital_twin")
     // const [view, set_view] = useState<ViewType>("simulation")
     const [perspective_ids, set_perspective_ids] = useState<PerspectiveType[]>([
         perspective_id_2009_mackay,

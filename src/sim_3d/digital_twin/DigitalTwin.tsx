@@ -1,11 +1,13 @@
 import { OrbitControls, PerspectiveCamera } from "@react-three/drei"
-import { useThree } from "@react-three/fiber"
+import { useFrame, useThree } from "@react-three/fiber"
+import { useRef, useState } from "react"
 import * as THREE from "three"
+import { OrbitControls as OrbitControlsImplementation } from "three/examples/jsm/Addons.js"
 
-import { useState } from "react"
 import { CONSTANTS } from "../scene/CONSTANTS"
 import { Earth } from "../scene/earth"
 import "../scene/lil-gui.css"
+import { clamp } from "../utils/clamp"
 import { StarsV2 } from "./StarsV2"
 import { Sun } from "./Sun"
 
@@ -13,6 +15,8 @@ import { Sun } from "./Sun"
 
 export const DigitalTwin = (props: {}) =>
 {
+    const orbit_controls = useRef<OrbitControlsImplementation>(null)
+
     useThree(({ scene }) =>
     {
         scene.background = new THREE.Color(0x000011)
@@ -20,26 +24,38 @@ export const DigitalTwin = (props: {}) =>
 
     const [sun_direction, set_sun_direction] = useState(new THREE.Vector3())
 
+    useFrame(() =>
+    {
+        if (orbit_controls.current)
+        {
+            // Slow down zooming when close to earth
+            const distance = orbit_controls.current.getDistance()
+            const distance_from_earth_surface = distance - CONSTANTS.earth_radius
+            const zoom_speed = exponential_zoom_speed(distance_from_earth_surface)
+            orbit_controls.current.zoomSpeed = zoom_speed
+        }
+    })
+
     return <>
         <OrbitControls
+            ref={orbit_controls as any}
             makeDefault
             enableDamping={true}
-            rotateSpeed={0.5}
+            rotateSpeed={1.0}
             // Update controls min/max distance based on sun distance and earth radius
             minDistance={CONSTANTS.controls.zoom.min}
             maxDistance={CONSTANTS.controls.zoom.max}
         />
         <PerspectiveCamera
             makeDefault
-            position={[5, 0, 0]}
-            // position={[12, 5, 4]} // show whole earth
-            // Focus on UK
-            // camera.position.x = 1.8
-            // camera.position.y = 2.65
-            // camera.position.z = 0
-            // camera.position.x = 1.340
-            // camera.position.y = 1.617
-            // camera.position.z = 0.192
+            // Show whole earth from far
+            // position={[12, 5, 4]}
+            // Show whole earth up close
+            // position={[5, 0, 0]}
+            // Focus on UK from far
+            // position={[1.8, 2.65, 0]}
+            // Focus on UK up close
+            position={[1.420, 2.02, 0.045]}
         />
         <ambientLight intensity={0.5} />
         <directionalLight position={[ 5, 5, 5 ]} intensity={0.5} />
@@ -60,6 +76,13 @@ export const DigitalTwin = (props: {}) =>
 }
 
 
+function exponential_zoom_speed(distance_from_earth_surface: number)
+{
+    const { zoom } = CONSTANTS.controls
+    let speed = Math.pow(distance_from_earth_surface / 10, 0.7)
+    speed = clamp(speed, zoom.min_speed, zoom.max_speed)
+    return speed
+}
 
 
 // const user_choices: UserChoices = {

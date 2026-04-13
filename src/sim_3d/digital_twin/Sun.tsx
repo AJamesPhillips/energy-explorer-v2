@@ -35,7 +35,7 @@ export function Sun(props: SunProps)
     })
 
 
-    // // Lens flare
+    // Lens flare
     const { texture_lens_flare0, texture_lens_flare1 } = useTexture({
         texture_lens_flare0: "./lenses/lens_flare0.png",
         texture_lens_flare1: "./lenses/lens_flare1.png",

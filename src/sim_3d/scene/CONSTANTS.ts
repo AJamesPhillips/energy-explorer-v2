@@ -16,6 +16,8 @@ export const CONSTANTS: Constants =
             // spatial data surface
             min: earth_radius + 0.11,
             max: sun_distance - 0.1,
+            min_speed: 0.01,
+            max_speed: 0.7,
         },
     },
 
