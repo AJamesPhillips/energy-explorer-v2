@@ -6,6 +6,7 @@ import { useState } from "react"
 import { CONSTANTS } from "../scene/CONSTANTS"
 import { Earth } from "../scene/earth"
 import "../scene/lil-gui.css"
+import { StarsV2 } from "./StarsV2"
 import { Sun } from "./Sun"
 
 
@@ -48,6 +49,7 @@ export const DigitalTwin = (props: {}) =>
             set_sun_direction={set_sun_direction}
         />
         <Earth sun_direction={sun_direction} />
+        <StarsV2 />
         {/*
         load_and_render_model_data(common_dependencies, earth_mesh)
         load_and_render_countries(common_dependencies, earth_mesh)
