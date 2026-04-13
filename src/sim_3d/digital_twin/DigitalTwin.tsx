@@ -16,7 +16,16 @@ import { Sun } from "./Sun"
 
 export const DigitalTwin = () =>
 {
+    return <Canvas id="scene-3d">
+        <DigitalTwinInner />
+    </Canvas>
+}
+
+
+function DigitalTwinInner()
+{
     const orbit_controls = useRef<OrbitControlsImplementation>(null)
+
 
     useThree(({ scene }) =>
     {
@@ -43,7 +52,8 @@ export const DigitalTwin = () =>
         }
     })
 
-    return <Canvas id="scene-3d">
+
+    return <>
         <OrbitControls
             ref={orbit_controls as any}
             makeDefault
@@ -81,7 +91,7 @@ export const DigitalTwin = () =>
         draw_earth_grid(common_dependencies, earth_mesh)
         get_run_display_model()
         */}
-    </Canvas>
+    </>
 }
 
 
