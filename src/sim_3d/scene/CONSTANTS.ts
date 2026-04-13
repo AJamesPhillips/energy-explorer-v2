@@ -1,4 +1,3 @@
-import { Constants } from "./interface"
 
 
 const earth_radius = 2 // Radius of the Earth in arbitrary units
@@ -7,7 +6,7 @@ const spatial_data_surface_radius = earth_radius + 0.009
 // Slightly above the surface for visibility
 const country_surface_radius = earth_radius + 0.010
 const sun_distance = 20 // Distance of Sun from the Earth in arbitrary units
-export const CONSTANTS: Constants =
+export const CONSTANTS =
 {
     controls: {
         zoom: {
@@ -21,7 +20,15 @@ export const CONSTANTS: Constants =
         },
     },
 
-    earth_radius,
+    earth:
+    {
+        radius: earth_radius,
+        rotation_speed:
+        {
+            base: 0.3,
+            max: 0.1,
+        },
+    },
     sun_distance,
 
     countries: {

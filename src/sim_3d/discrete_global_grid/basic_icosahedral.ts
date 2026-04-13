@@ -1,11 +1,8 @@
 import * as THREE from "three"
 
 import { BufferGeometryUtils } from "three/examples/jsm/Addons.js"
-import { CommonDependencies } from "../scene/interface"
 import {
-    add_gui_rotation_controls,
-    add_subscription_to_gui_rotation_change,
-    iteratively_find_best_rotation_fit_to_dymaxion,
+    add_subscription_to_gui_rotation_change
 } from "./basic_icosahedral_optimise_dymaxion"
 import { BasicIcosahedralGridConfig } from "./interface"
 import { log_dgg_stats } from "./stats"
@@ -29,7 +26,7 @@ const shared = {
 
 const optimise_dymaxion_rotational_alignment = false
 
-export function draw_standard_icosahedron_grid(earth_mesh: THREE.Mesh, { scene, gui }: CommonDependencies, config: BasicIcosahedralGridConfig)
+export function draw_standard_icosahedron_grid(earth_mesh: THREE.Mesh, config: BasicIcosahedralGridConfig)
 {
     config.align_with_dymaxion = config.align_with_dymaxion ?? true
     const orig_geometry = new THREE.IcosahedronGeometry(config.radius, config.subdivisions)
@@ -66,14 +63,12 @@ export function draw_standard_icosahedron_grid(earth_mesh: THREE.Mesh, { scene, 
         // Optimise alignment with Dymaxion map
         if (optimise_dymaxion_rotational_alignment)
         {
-            add_gui_rotation_controls(shared, gui)
-
             add_subscription_to_gui_rotation_change(() => {
                 globe_grid_mesh.rotation.copy(shared.rotation)
             })
 
             // At the moment, only setup to run optimisation when subdivisions is 0
-            if (config.subdivisions === 0) iteratively_find_best_rotation_fit_to_dymaxion(shared, geometry, globe_grid_mesh, scene, config)
+            // if (config.subdivisions === 0) iteratively_find_best_rotation_fit_to_dymaxion(shared, geometry, globe_grid_mesh, scene, config)
         }
     }
 

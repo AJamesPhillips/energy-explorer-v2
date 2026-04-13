@@ -14,7 +14,7 @@ import { Sun } from "./Sun"
 
 
 
-export const DigitalTwin = (props: {}) =>
+export const DigitalTwin = () =>
 {
     const orbit_controls = useRef<OrbitControlsImplementation>(null)
 
@@ -27,13 +27,19 @@ export const DigitalTwin = (props: {}) =>
 
     useFrame(() =>
     {
-        if (orbit_controls.current)
+        const controls = orbit_controls.current
+        if (controls)
         {
             // Slow down zooming when close to earth
-            const distance = orbit_controls.current.getDistance()
-            const distance_from_earth_surface = distance - CONSTANTS.earth_radius
+            const distance = controls.getDistance()
+            const distance_from_earth_surface = distance - CONSTANTS.earth.radius
             const zoom_speed = exponential_zoom_speed(distance_from_earth_surface)
-            orbit_controls.current.zoomSpeed = zoom_speed
+            controls.zoomSpeed = zoom_speed
+
+            // Dynamically change the pan (rotation) speed depending on camera's
+            // distance from the Earth's surface
+            const user_rotation_input_sensitivity = THREE.MathUtils.mapLinear(distance, controls.minDistance, 5, 0.01, 0.2)
+            controls.rotateSpeed = user_rotation_input_sensitivity
         }
     })
 

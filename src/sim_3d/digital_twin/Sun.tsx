@@ -1,9 +1,10 @@
+import { useTexture } from "@react-three/drei"
 import { useFrame } from "@react-three/fiber"
 import { useEffect, useRef } from "react"
 import * as THREE from "three"
-
-import { useTexture } from "@react-three/drei"
 import { Lensflare, LensflareElement } from "three/examples/jsm/Addons.js"
+
+import { deg_to_rad } from "../../utils/angle"
 import { CONSTANTS } from "../scene/CONSTANTS"
 
 
@@ -15,20 +16,24 @@ interface SunProps
 export function Sun(props: SunProps)
 {
     const light_ref = useRef<THREE.PointLight>(null)
-    const sun_spherical = useRef(new THREE.Spherical(1, Math.PI * 0.5, 0))
+    const sun_spherical = useRef(new THREE.Spherical(1, Math.PI * 0.5, deg_to_rad(90)))
+
+    useEffect(() =>
+    {
+        if (!sun_spherical.current) return
+        // Sun direction
+        const sun_direction = props.sun_direction.clone()
+        sun_direction.setFromSpherical(sun_spherical.current)
+        props.set_sun_direction(sun_direction)
+    }, [sun_spherical])
 
     // Update
     useFrame(() =>
     {
-        // Sun direction
-        const sun_direction = props.sun_direction.clone()
-        sun_direction.setFromSpherical(sun_spherical.current!)
-        props.set_sun_direction(sun_direction)
-
         if (light_ref.current)
         {
             light_ref.current.position
-                .copy(sun_direction)
+                .copy(props.sun_direction)
                 .multiplyScalar(CONSTANTS.sun_distance)
         }
 

@@ -1,13 +1,11 @@
 import * as THREE from "three"
 
-import { CommonDependencies } from "../scene/interface"
-import { draw_standard_icosahedron_grid } from "./basic_icosahedral"
 import { draw_fibonacci_points_grid } from "./fibonacci"
 import { draw_h3_grid } from "./h3"
 import { GridConfig } from "./interface"
 
 
-export function draw_earth_grid(deps: CommonDependencies, earth_mesh: THREE.Mesh)
+export function draw_earth_grid(earth_mesh: THREE.Mesh)
 {
     const radius = 2.05
     // Example configurations - comparing different approaches
@@ -46,7 +44,7 @@ export function draw_earth_grid(deps: CommonDependencies, earth_mesh: THREE.Mesh
 
     configs.forEach(config => {
         if (config.type === "standard-icosahedron") {
-            draw_standard_icosahedron_grid(earth_mesh, deps, config)
+            // draw_standard_icosahedron_grid(earth_mesh, deps, config)
         } else if (config.type === "h3") {
             draw_h3_grid(earth_mesh, config)
         } else if (config.type === "fibonacci") {

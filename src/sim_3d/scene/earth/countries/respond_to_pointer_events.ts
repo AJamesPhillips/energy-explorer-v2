@@ -2,10 +2,10 @@ import * as THREE from "three"
 
 import pub_sub from "../../../state/pub_sub"
 import { new_random_id } from "../../../utils/new_random_id"
-import { CommonDependencies } from "../../interface"
+import { CONSTANTS } from "../../CONSTANTS"
 
 
-export const respond_to_pointer_events = ({ camera, CONSTANTS }: CommonDependencies, earth_mesh: THREE.Mesh, country_surfaces_group: THREE.Group) =>
+export const respond_to_pointer_events = (earth_mesh: THREE.Mesh, country_surfaces_group: THREE.Group) =>
 {
     // Mouse interaction setup
     const raycaster = new THREE.Raycaster()
@@ -20,7 +20,7 @@ export const respond_to_pointer_events = ({ camera, CONSTANTS }: CommonDependenc
         pointer.x = (event.clientX / window.innerWidth) * 2 - 1
         pointer.y = -(event.clientY / window.innerHeight) * 2 + 1
 
-        raycaster.setFromCamera(pointer, camera)
+        // raycaster.setFromCamera(pointer, camera)
 
         // For now we have added all countries to the Earth mesh to ensure their
         // position is correct relative to the Earth when it is rotated.

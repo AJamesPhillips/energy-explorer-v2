@@ -60,24 +60,19 @@ export function Earth({ sun_direction, children }: EarthProps)
         earth_uniforms.u_sun_direction.value.copy(sun_direction)
         atmosphere_uniforms.u_sun_direction.value.copy(sun_direction)
 
-
         const controls = state.controls as OrbitControls | null
         if (controls)
         {
-            // Dynamically change the pan (rotation) speed depending on camera's
-            // distance from the Earth's surface
-            const user_rotation_input_sensitivity = THREE.MathUtils.mapLinear(controls.getDistance(), controls.minDistance, 5, 0.01, 0.2)
-            controls.rotateSpeed = user_rotation_input_sensitivity
-
             // Rotate Earth depending on level of zoom
-            const earth_rotate_speed = 0.03 * THREE.MathUtils.smoothstep(controls.getDistance(), controls.minDistance, controls.maxDistance * 0.7)
+            let earth_rotate_speed = CONSTANTS.earth.rotation_speed.base * THREE.MathUtils.smoothstep(controls.getDistance() - 0.5, controls.minDistance, controls.maxDistance * 0.7)
+            earth_rotate_speed = Math.min(earth_rotate_speed, CONSTANTS.earth.rotation_speed.max)
             earth_mesh.current.rotation.y += (delta * earth_rotate_speed)
         }
     })
 
     return <>
         <mesh ref={earth_mesh}>
-            <sphereGeometry args={[CONSTANTS.earth_radius, 64, 64]} />
+            <sphereGeometry args={[CONSTANTS.earth.radius, 64, 64]} />
             <shaderMaterial
                 vertexShader={earth_vertex_shader}
                 fragmentShader={earth_fragment_shader}
@@ -86,7 +81,7 @@ export function Earth({ sun_direction, children }: EarthProps)
             {children}
         </mesh>
         <mesh scale={[ATMOSPHERE_SCALE, ATMOSPHERE_SCALE, ATMOSPHERE_SCALE]}>
-            <sphereGeometry args={[CONSTANTS.earth_radius, 64, 64]} />
+            <sphereGeometry args={[CONSTANTS.earth.radius, 64, 64]} />
             <shaderMaterial
                 side={THREE.BackSide}
                 transparent={true}

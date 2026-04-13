@@ -1,12 +1,10 @@
 import shp from "shpjs"
 import * as THREE from "three"
 
-import { CommonDependencies } from "../../interface"
 import { create_country_area_visuals } from "./create_country_area_visuals"
-import { respond_to_pointer_events } from "./respond_to_pointer_events"
 
 
-export function load_and_render_countries (deps: CommonDependencies, earth_mesh: THREE.Mesh)
+export function load_and_render_countries (earth_mesh: THREE.Mesh)
 {
     shp("http://localhost:5174/data/countries/ne_110m_admin_0_countries/ne_110m_admin_0_countries.shp")
     .then(geojson =>
@@ -18,6 +16,6 @@ export function load_and_render_countries (deps: CommonDependencies, earth_mesh:
 
         // console .log(`Loaded ${geojson.features.length} countries`)
 
-        respond_to_pointer_events(deps, earth_mesh, country_surfaces_group)
+        // respond_to_pointer_events(deps, earth_mesh, country_surfaces_group)
     })
 }
