@@ -1,7 +1,8 @@
-import { LatLon } from "core/data/values/LatLon"
+import { ILatLonWithIsOnshore, LatLon } from "core/data/values/LatLon"
 
-import { ILatLonWithIsOnshore } from "../../../src/model/interface"
-import { get_raw_data_from_url, HttpDataOrError } from "../fetch_cache_parse"
+import { HttpDataOrError } from "../fetch_cache_parse"
+import offshore_lat_lons_csv from "./offshore_lat_lons.csv?raw"
+import onshore_lat_lons_csv from "./onshore_lat_lons.csv?raw"
 
 
 class LatLonWithIsOnshore extends LatLon implements ILatLonWithIsOnshore
@@ -29,7 +30,8 @@ export async function get_spatial_data_grid(): Promise<{ onshore_lat_lons: ILatL
 
 export async function get_onshore_lat_lons(): Promise<ILatLonWithIsOnshore[]>
 {
-    const lat_lon_strs = await get_raw_data_from_url("/data/spatial_grid/onshore_lat_lons.csv")
+    // const lat_lon_strs: HttpDataOrError = await get_raw_data_from_url("/data/spatial_grid/onshore_lat_lons.csv")
+    const lat_lon_strs: HttpDataOrError = { data: onshore_lat_lons_csv, error: null }
     const lat_lons = process_lat_lon_strs(lat_lon_strs, true)
     return lat_lons
 }
@@ -37,7 +39,8 @@ export async function get_onshore_lat_lons(): Promise<ILatLonWithIsOnshore[]>
 
 export async function get_offshore_lat_lons(): Promise<ILatLonWithIsOnshore[]>
 {
-    const lat_lon_strs = await get_raw_data_from_url("/data/spatial_grid/offshore_lat_lons.csv")
+    // const lat_lon_strs: HttpDataOrError = await get_raw_data_from_url("/data/spatial_grid/offshore_lat_lons.csv")
+    const lat_lon_strs: HttpDataOrError = { data: offshore_lat_lons_csv, error: null }
     const lat_lons = process_lat_lon_strs(lat_lon_strs, false)
     return lat_lons
 }

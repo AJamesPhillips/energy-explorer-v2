@@ -112,6 +112,12 @@ export async function get_raw_data_from_url(url: string): Promise<HttpDataOrErro
     const response = await fetch(url)
     if (!response.ok) return { error: `Failed to fetch data from ${url}`, data: null }
 
+    if (response.headers.get("content-type") === "text/html")
+    {
+        const error_text = await response.text()
+        return { error: `Failed to fetch data from ${url}.  Server responded with HTML: ${error_text}`, data: null }
+    }
+
     const data = await response.text()
     await cache_set(url, data)
     return { error: null, data }
