@@ -1,5 +1,5 @@
 import { OrbitControls, PerspectiveCamera } from "@react-three/drei"
-import { useFrame, useThree } from "@react-three/fiber"
+import { Canvas, useFrame, useThree } from "@react-three/fiber"
 import { useRef, useState } from "react"
 import * as THREE from "three"
 import { OrbitControls as OrbitControlsImplementation } from "three/examples/jsm/Addons.js"
@@ -43,7 +43,7 @@ export const DigitalTwin = () =>
         }
     })
 
-    return <>
+    return <Canvas id="scene-3d">
         <OrbitControls
             ref={orbit_controls as any}
             makeDefault
@@ -81,7 +81,7 @@ export const DigitalTwin = () =>
         draw_earth_grid(common_dependencies, earth_mesh)
         get_run_display_model()
         */}
-    </>
+    </Canvas>
 }
 
 
