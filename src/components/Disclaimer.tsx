@@ -29,7 +29,7 @@ export function Disclaimer()
             const timeout = setTimeout(() =>
             {
                 set_show_nothing(true)
-            }, 500) // match with the CSS transition duration
+            }, 300) // match with the CSS transition duration
 
             return () => clearTimeout(timeout)
         }
@@ -40,12 +40,10 @@ export function Disclaimer()
 
 
     return <div className={"disclaimer " + (disclaimer_shown ? "hidden" : "")}>
-        {!disclaimer_shown && <div className="disclaimer-background" onPointerDown={on_click}/>}
-
-        <div className="disclaimer-text-holder">
+        <div className="disclaimer-text-holder" onPointerDown={on_click}>
             <div
                 className="disclaimer-text"
-                onClick={on_click}
+                onPointerDown={e => e.stopPropagation()}
             >
                 <h2>🚧 Energy Explorer v2 🚧</h2>
 
