@@ -33,7 +33,7 @@
     "jsdom": "26.1.0",
     "mocha": "11.7.1",
     "tsx": "4.20.3",
-    "typescript": "5.2.2",
+    "typescript": "6.0.3",
     "vite": "5.2.0",
     "vite-plugin-glsl": "1.5.1",
     "vite-plugin-restart": "1.0.0"

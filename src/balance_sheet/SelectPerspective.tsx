@@ -78,7 +78,11 @@ export function SelectPerspective(props: SelectPerspectiveProps)
 
 
                     return (
-                        <li key={option.id} style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                        <li
+                            //@ts-ignore - otherwise it shows the error "Property 'key' does not exist on type 'DetailedHTMLProps<LiHTMLAttributes<HTMLLIElement>, HTMLLIElement>'.ts(2322)"
+                            key={option.id}
+                            style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
+                        >
                             <label style={{ display: "flex", alignItems: "center", gap: "0.4rem", flex: 1, cursor: "pointer" }}>
                                 <input
                                     type="radio"
@@ -127,7 +131,11 @@ export function SelectPerspective(props: SelectPerspectiveProps)
                     {
                         const label = drop_down_options.find(o => o.id === id)?.label ?? id
                         return (
-                            <span key={id} style={{ display: "flex", alignItems: "center", gap: "0.3rem" }}>
+                            <span
+                                //@ts-ignore - otherwise it shows the error "Property 'key' does not exist on type 'DetailedHTMLProps<HTMLAttributes<HTMLSpanElement>, HTMLSpanElement>'.ts(2322)"
+                                key={id}
+                                style={{ display: "flex", alignItems: "center", gap: "0.3rem" }}
+                            >
                                 {i > 0 && <span style={{ color: "#0066cc", fontWeight: 700 }}>→</span>}
                                 <span>
                                     {/* {order_badges[i]}{" "} */}

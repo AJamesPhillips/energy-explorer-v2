@@ -39,14 +39,20 @@ export function SolarFarm({ tiles, cell_size }: SolarFarmProps)
 
     return <>
         {tiles.map(({ x, y }) => (
-            <group key={`${x}-${y}`} position={[x * cell_size, tile_top_y, y * cell_size]}>
+            <group
+                key={`${x}-${y}`}
+                position={[x * cell_size, tile_top_y, y * cell_size]}
+            >
                 {offsets.map(([ox, oz], i) =>
                 {
                     const bottom_y = leg_h
                     const panel_center_y = bottom_y + (panel_h / 2) * Math.cos(tilt)
                     const panel_center_z = oz + (panel_h / 2) * Math.sin(tilt)
                     return (
-                        <group key={i} position={[ox, 0, oz]}>
+                        <group
+                            key={i}
+                            position={[ox, 0, oz]}
+                        >
                             {/* Tilted panel */}
                             <mesh
                                 geometry={panel_geo}

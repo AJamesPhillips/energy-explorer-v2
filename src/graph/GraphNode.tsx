@@ -16,7 +16,7 @@ const MAX_TITLE_CHARS = 40
 const MIN_REL_DIFF = 0.01
 const MAX_REL_DIFF = 0.25
 
-export function GraphNode(props: { node: PlacedNode })
+export function GraphNode(props: { node: PlacedNode, key?: string })
 {
     const { node } = props
     const x = node.cx - NODE_W / 2

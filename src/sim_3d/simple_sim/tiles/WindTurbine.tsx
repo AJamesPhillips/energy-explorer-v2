@@ -66,7 +66,10 @@ export function WindTurbine({ tiles, cell_size }: WindTurbineProps)
 
     return <>
         {tiles.map(({ x, y }, i) => (
-            <group key={`${x}-${y}`} position={[x * cell_size, 0, y * cell_size]}>
+            <group
+                key={`${x}-${y}`}
+                position={[x * cell_size, 0, y * cell_size]}
+            >
                 {/* Tower */}
                 <mesh
                     geometry={tower_geo}
@@ -84,7 +87,10 @@ export function WindTurbine({ tiles, cell_size }: WindTurbineProps)
                     {/* Rotor disc — blades rotate around X axis (turbine faces +X) */}
                     <group ref={el => { rotor_refs.current[i] = el }}>
                         {[0, 1, 2].map(bi => (
-                            <group key={bi} rotation={[bi * Math.PI * 2 / 3, 0, 0]}>
+                            <group
+                                key={bi}
+                                rotation={[bi * Math.PI * 2 / 3, 0, 0]}
+                            >
                                 <mesh
                                     geometry={blade_geo}
                                     material={blade_mat}

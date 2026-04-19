@@ -70,7 +70,11 @@ export function Messages()
 
     return <div>
         {messages.map(({ id, message, disappearing }) => (
-            <div key={id} className={"message " + (disappearing ? "disappearing" : "")}>
+            <div
+                //@ts-ignore - otherwise it shows the error "Property 'key' does not exist on type 'DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>'.ts(2322)"
+                key={id}
+                className={"message " + (disappearing ? "disappearing" : "")}
+            >
                 {message}
             </div>
         ))}

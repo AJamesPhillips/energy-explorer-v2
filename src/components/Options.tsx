@@ -36,6 +36,7 @@ export function Options ({ selected, on_select }: { selected: string, on_select:
 {
     return <div id="app_options_panel">
         {options.map(option => <div
+            //@ts-ignore - otherwise it shows the error "Property 'key' does not exist on type 'DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>'.ts(2322)"
             key={option.id}
             onClick={() => on_select(option.id)}
             className={"app_option " + (option.id === selected ? "selected" : "")}

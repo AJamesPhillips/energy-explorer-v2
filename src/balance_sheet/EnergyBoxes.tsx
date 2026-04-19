@@ -13,14 +13,14 @@ export function EnergyBoxes(props: { factors: EnergyFactor[] })
     return <div style={{ display: "flex", justifyContent: "center", gap: "20px", flexDirection: "row" }}>
         <div style={{ display: "flex", justifyContent: "end", flexDirection: "column" }}>
             {sinks.map((factor, i) => <FactorToBox
-                key={i}
+                id={i}
                 factor={factor}
             />)}
         </div>
 
         <div style={{ display: "flex", justifyContent: "end", flexDirection: "column" }}>
             {sources.map((factor, i) => <FactorToBox
-                key={i}
+                id={i}
                 factor={factor}
             />)}
         </div>
@@ -38,7 +38,7 @@ export function EnergyBoxStack(props: { name: string, total_kwh_per_day_person: 
         </div>
         <div style={{ display: "flex", justifyContent: "end", flexDirection: "column" }}>
             {props.factors.map((factor, i) => <FactorToBox
-                key={i}
+                id={i}
                 factor={factor}
                 is_comparison={props.is_comparison}
             />)}
