@@ -11,14 +11,19 @@ import { SpatialData } from "../scene/spatial_data/SpatialData"
 import { clamp } from "../utils/clamp"
 import { StarsV2 } from "./StarsV2"
 import { Sun } from "./Sun"
+import { WelcomeMessage } from "./WelcomeMessage"
 
 
 
 export const DigitalTwin = () =>
 {
-    return <Canvas id="scene-3d">
-        <DigitalTwinInner />
-    </Canvas>
+    return <>
+        <Canvas id="scene-3d">
+            <DigitalTwinInner />
+        </Canvas>
+
+        <WelcomeMessage />
+    </>
 }
 
 

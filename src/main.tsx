@@ -20,7 +20,6 @@ import {
     PerspectiveType,
     SelectPerspective
 } from "./balance_sheet/SelectPerspective"
-import { Disclaimer } from "./components/Disclaimer"
 import { Options, ViewType } from "./components/Options"
 import { get_wikisim_components } from "./data/get_wikisim_components"
 import { other_ids_performance_boost, top_ids_to_fetch } from "./data/ids"
@@ -149,9 +148,6 @@ function App ()
             </div>
 
         </div>
-
-
-        <Disclaimer />
     </>
 }
 

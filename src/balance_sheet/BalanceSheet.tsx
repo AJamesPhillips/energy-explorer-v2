@@ -7,6 +7,7 @@ import { EnergyBoxStack } from "./EnergyBoxes"
 import {
     perspective_id_to_name_map
 } from "./SelectPerspective"
+import { WelcomeMessage } from "./WelcomeMessage"
 
 
 interface BalanceSheetProps
@@ -24,6 +25,8 @@ export function BalanceSheet(props: BalanceSheetProps)
 
 
     return <div id="balance_sheet">
+        <WelcomeMessage />
+
         <div style={{
             display: "flex",
             // justifyContent: "center",

@@ -12,6 +12,7 @@ import { CellData, CellsData } from "./interface"
 import { IsoMetricGrid } from "./IsoMetricGrid"
 import { map_data_cells } from "./map_data"
 import { PowerStatus } from "./PowerStatus"
+import { WelcomeMessage } from "./WelcomeMessage"
 
 
 const start_datetime = new Date("2018-06-01T00:00:00.000Z")
@@ -52,6 +53,7 @@ export function SimpleSim()
             />
         </Canvas>
 
+        <WelcomeMessage />
         <SimpleSimUI power={power} />
     </>
 }
