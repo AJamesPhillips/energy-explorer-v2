@@ -175,10 +175,11 @@ function cached_components(args: { bust_cache?: boolean } = {}): DataComponentEx
         const validators = make_field_validators(z)
         if (Array.isArray(parsed)) return parsed.map(j =>
         {
+            const { computed_value, multiple_versions, ...rest } = j
             const hydrated: DataComponentExtended = {
-                ...hydrate_data_component_from_json(j, validators),
-                computed_value: j.computed_value,
-                multiple_versions: j.multiple_versions,
+                ...hydrate_data_component_from_json(rest, validators),
+                computed_value,
+                multiple_versions,
             }
             return hydrated
         })
@@ -198,10 +199,11 @@ function cache_components(components: DataComponentExtended[])
     {
         const json = components.map(c =>
         {
+            const { computed_value, multiple_versions, ...rest } = c
             const json: DataComponentAsJSONForGraph = {
-                ...flatten_new_or_data_component_to_json(c),
-                computed_value: c.computed_value,
-                multiple_versions: c.multiple_versions,
+                ...flatten_new_or_data_component_to_json(rest),
+                computed_value,
+                multiple_versions,
             }
             return json
         })
