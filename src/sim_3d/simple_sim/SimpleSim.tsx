@@ -19,14 +19,22 @@ const start_datetime = new Date("2018-06-01T00:00:00.000Z")
 const speed = 1000 * 60 * 60
 
 const GRID_SIZE = { x: 20, y: 20 }
-// The visual grid was made from dropping half of the cells
+// The visual grid was made from dropping half of the cells (all deep sea cells)
 const DROPPED_AREA = 2
 const KM2_PER_CELL = uk_coverage.total_uk.total_area_km2 / (GRID_SIZE.x * GRID_SIZE.y * DROPPED_AREA)
+const M2_PER_CELL = KM2_PER_CELL * 1e6
+function w_per_m2_to_gw_per_cell(w_per_m2: number): number
+{
+    return w_per_m2 * M2_PER_CELL / 1e9
+}
 // claimed power density
 const land_wind_turbines_w_per_m2 = 2
 const offshore_wind_turbines_w_per_m2 = 3
+const solar_urban_w_per_m2 = 22  // https://www.withouthotair.com/c6/page_39.shtml#:~:text=22%20W/m2
+const solar_farm_w_per_m2 = 5  // https://www.withouthotair.com/c6/page_41.shtml#:~:text=5%20W/m2
 
-const CELL_SIZE  = 12
+const CELL_SIZE = 12
+
 
 export function SimpleSim()
 {
@@ -49,12 +57,13 @@ export function SimpleSim()
             <SimpleSim3d
                 data={data}
                 set_data={set_data}
-                power_demand={power.demand_gw}
+                // power={power}
+                set_power={set_power}
             />
         </Canvas>
 
         <WelcomeMessage />
-        <SimpleSimUI power={power} />
+        <PowerStatus power={power} />
     </>
 }
 
@@ -63,7 +72,8 @@ interface SimpleSim3dProps
 {
     data: CellsData
     set_data: React.Dispatch<React.SetStateAction<CellsData>>
-    power_demand: number
+    // power: PowerStats
+    set_power: React.Dispatch<React.SetStateAction<PowerStats>>
 }
 function SimpleSim3d(props: SimpleSim3dProps)
 {
@@ -104,15 +114,24 @@ function SimpleSim3d(props: SimpleSim3dProps)
         {
             const cell = prev[x]?.[y]
             if (!cell) return prev
+
+            const new_cell = cycle_cell_contents(cell)
+
             return {
                 ...prev,
                 [x]: {
                     ...prev[x],
-                    [y]: cycle_cell_contents(cell)
+                    [y]: new_cell
                 },
             }
         })
     }, [])
+
+    useEffect(() =>
+    {
+        const new_power = calculate_power_from_data(props.data)
+        props.set_power(new_power)
+    }, [props.data])
 
     return <>
         <IsoCamera grid_size={GRID_SIZE} cell_size={CELL_SIZE} />
@@ -121,15 +140,6 @@ function SimpleSim3d(props: SimpleSim3dProps)
 
         <IsoMetricGrid size={GRID_SIZE} cell_size={CELL_SIZE} data={props.data} on_click_tile={on_click_tile} />
         <Data />
-    </>
-}
-
-
-
-function SimpleSimUI(props: { power: PowerStats })
-{
-    return <>
-        <PowerStatus power={props.power} />
     </>
 }
 
@@ -215,4 +225,46 @@ function cycle_cell_contents(cell: CellData): CellData
         }
     }
     return cell
+}
+
+
+function calculate_power_from_data(data: CellsData): PowerStats
+{
+    let supply_gw = 0
+
+    Object.values(data).forEach(column =>
+    {
+        Object.values(column).forEach(cell_ =>
+        {
+            const cell = cell_ as CellData
+
+            if (cell.type === "sea" && cell.has_wind_turbine)
+            {
+                supply_gw += w_per_m2_to_gw_per_cell(offshore_wind_turbines_w_per_m2)
+            }
+            else if (cell.type === "land")
+            {
+                if (cell.has_wind_turbine)
+                {
+                    supply_gw += w_per_m2_to_gw_per_cell(land_wind_turbines_w_per_m2)
+                }
+                if (cell.has_solar_farm)
+                {
+                    if (cell.subtype === "suburban" || cell.subtype === "urban")
+                    {
+                        supply_gw += w_per_m2_to_gw_per_cell(solar_urban_w_per_m2)
+                    }
+                    else
+                    {
+                        supply_gw += w_per_m2_to_gw_per_cell(solar_farm_w_per_m2)
+                    }
+                }
+            }
+        })
+    })
+
+    return {
+        demand_gw: 0,
+        supply_gw,
+    }
 }
