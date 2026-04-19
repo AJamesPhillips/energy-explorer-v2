@@ -184,7 +184,7 @@ function IsoCamera({ grid_size, cell_size }: { grid_size: { x: number, y: number
 
 function cycle_cell_contents(cell: CellData): CellData
 {
-    if (cell.type === "sea")
+    if (cell.type === "sea" && cell.subtype === "shallow")
     {
         if (!cell.has_wind_turbine)
         {
@@ -195,7 +195,7 @@ function cycle_cell_contents(cell: CellData): CellData
             return { ...cell, has_wind_turbine: false }
         }
     }
-    else if (cell.type === "land")
+    else if (cell.type === "land" && (cell.subtype !== "wetland" && cell.subtype !== "inland_water"))
     {
         if (!cell.has_solar_farm && !cell.has_wind_turbine)
         {
