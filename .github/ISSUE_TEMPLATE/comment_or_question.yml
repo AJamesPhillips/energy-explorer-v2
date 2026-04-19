@@ -1,24 +1,8 @@
-name: Comment or Question
+name: 💬 Comment or Question
 description: A comment or question about this simulation.
-title: "I liked ... / I was curious about ..."
+title: "[COMMENT / QUESTION]: I liked ... / I was curious about ..."
 labels: ["comment", "question"]
 body:
-  # - type: dropdown
-  #   id: type
-  #   attributes:
-  #     label: "Is this a comment or a question?"
-  #     options:
-  #       - Comment
-  #       - Question
-
-  # - type: checkboxes
-  #   id: confirmations
-  #   attributes:
-  #     label: "I can confirm:"
-  #     options:
-  #       - label: "**Please confirm you have read [\"our community requirements\"](https://wikisim.org/help/community-requirements#commenting) before posting**"
-  #         required: true
-
   - type: textarea
     id: comment_or_question
     attributes:

@@ -1,6 +1,6 @@
-name: "🎁 Request feature / improvement"
-description: Suggest an improvement or highlight a potential problem with the simulation.
-title: "[Request / Improvement]: "
+name: "🐛 Report a bug"
+description: Highlight a potential problem with the simulation.
+title: "[BUG]: "
 labels: [enhancement, feedback]
 body:
   # - type: markdown
@@ -29,8 +29,8 @@ body:
     id: details
     attributes:
       label: Details
-      description: Please provide more details, including why you would or you think others might find this is useful.
-      placeholder: I would like to be able to ... / When I run the simulation, I noticed that...
+      description: Please provide more details, including what you were doing when it happened.
+      placeholder: When I did XYZ  in the simulation I noticed that ABC displayed the wrong number.  Here's a screen shot / screen recording...
     # validations:
     #   required: false
 
