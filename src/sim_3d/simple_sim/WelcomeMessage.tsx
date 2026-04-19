@@ -1,9 +1,9 @@
-import { InfoBox } from "../../components/InfoBox"
+import { OnceOffInfoBox } from "../../components/InfoBox"
 
 
 export function WelcomeMessage()
 {
-    return <InfoBox
+    return <OnceOffInfoBox
         id="simple_sim_welcome_message"
         message={
             <>

@@ -110,6 +110,13 @@ html, body, #app, #app_html {
     padding: 10px;
 }
 
+#app_top_bar_side
+{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
 #app_main_view
 {
     margin: 0 auto;

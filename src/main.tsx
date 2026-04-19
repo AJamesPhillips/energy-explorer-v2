@@ -14,6 +14,7 @@ import { DataComponentAsJSON } from "core/supabase"
 
 import { BalanceSheet } from "./balance_sheet/BalanceSheet"
 import { factors_up_to } from "./balance_sheet/EnergyBoxesHelper"
+import { SelectCountry } from "./balance_sheet/SelectCountry"
 import {
     perspective_id_2009_mackay,
     perspective_id_general,
@@ -131,10 +132,13 @@ function App ()
 
             <div style={{ display: "flex", gap: "20px", flexDirection: "column", flexGrow: 1 }}>
                 <div id="app_top_bar">
-                    <SelectPerspective
-                        perspectives={perspective_ids}
-                        on_change={set_perspective_ids}
-                    />
+                    <div id="app_top_bar_side">
+                        <SelectCountry selected_country_ISO2="GB" />
+                        <SelectPerspective
+                            perspectives={perspective_ids}
+                            on_change={set_perspective_ids}
+                        />
+                    </div>
                 </div>
 
                 <div id="app_main_view">

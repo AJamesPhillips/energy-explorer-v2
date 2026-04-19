@@ -1,0 +1,14 @@
+
+#select_country
+{
+    display: flex;
+    justify-content: right;
+    gap: 2px;
+    align-items: center;
+
+    font-size: 18px;
+
+    /* we have to re-enable them after #app_html disables them */
+    pointer-events: initial;
+    cursor: pointer;
+}

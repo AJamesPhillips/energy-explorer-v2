@@ -2,47 +2,49 @@ import { JSX, useCallback, useEffect, useState } from "react"
 
 import "./InfoBox.css"
 
+const HIDE_ALL_IN_DEV = false //true
 
-interface WelcomeInfoProps
+
+interface InfoBoxProps
 {
-    id: string
     message: string | JSX.Element
+    on_close: () => void
+    confirmation_button?: ((p: { on_click: (() => void) }) => JSX.Element)
 }
-export function InfoBox(props: WelcomeInfoProps)
+export function InfoBox(props: InfoBoxProps)
 {
-    const local_storage_info_box_shown = boolean_local_storage(props.id)
-    const [info_box_shown, set_info_box_shown] = useState(local_storage_info_box_shown)
-    const [show_nothing, set_show_nothing] = useState(true || local_storage_info_box_shown)
+    const [hiding, set_hiding] = useState(false)
+    const [show_nothing, set_show_nothing] = useState(HIDE_ALL_IN_DEV || false)
 
     const on_click = useCallback(() =>
     {
-        set_info_box_shown(true)
-    }, [])
-
-    const on_click_dont_show_again = useCallback(() =>
-    {
-        set_info_box_shown(true)
-        localStorage.setItem(props.id, new Date().toISOString())
+        set_hiding(true)
     }, [])
 
     useEffect(() =>
     {
-        if (info_box_shown)
+        if (hiding)
         {
             const timeout = setTimeout(() =>
             {
                 set_show_nothing(true)
+                props.on_close()
             }, 300) // match with the CSS transition duration
 
             return () => clearTimeout(timeout)
         }
-    }, [info_box_shown])
+    }, [hiding])
 
 
     if (show_nothing) return null
 
 
-    return <div className={"info_box " + (info_box_shown ? "hidden" : "")}>
+    const confirmation_button = props.confirmation_button
+        ? props.confirmation_button({ on_click })
+        : <DefaultConfirmationButton on_click={on_click}/>
+
+
+    return <div className={"info_box " + (hiding ? "hidden" : "")}>
         <div className="info_box_text_holder" onPointerDown={on_click}>
             <div
                 className="info_box_text"
@@ -50,15 +52,61 @@ export function InfoBox(props: WelcomeInfoProps)
             >
                 {props.message}
 
-                <button onClick={on_click}>
-                    Got it!
-                </button>
-
-                <input type="checkbox" id="info_box_checkbox" onChange={on_click_dont_show_again}/>
-                <label htmlFor="info_box_checkbox">Don't show this again</label>
+                {confirmation_button}
             </div>
         </div>
     </div>
+}
+
+
+function DefaultConfirmationButton(props: { on_click: () => void })
+{
+    return <button onClick={props.on_click}>
+        Got it!
+    </button>
+}
+
+
+interface OnceOffInfoBoxProps
+{
+    id: string
+    message: string | JSX.Element
+    on_close?: () => void
+    confirmation_button?: ((p: { on_click: (() => void) }) => JSX.Element)
+}
+export function OnceOffInfoBox(props: OnceOffInfoBoxProps)
+{
+    const local_storage_info_box_shown = boolean_local_storage(props.id)
+
+    if (local_storage_info_box_shown) return null
+
+
+    function confirmation_button_fn(p: { on_click: () => void })
+    {
+        return <>
+            <button onClick={p.on_click}>
+                Got it!
+            </button>
+
+            <input
+                type="checkbox"
+                id="info_box_checkbox"
+                onChange={() =>
+                {
+                    p.on_click()
+                    localStorage.setItem(props.id, new Date().toISOString())
+                }}
+            />
+            <label htmlFor="info_box_checkbox">Don't show this again</label>
+        </>
+    }
+
+
+    return <InfoBox
+        message={props.message}
+        on_close={() => {}}
+        confirmation_button={confirmation_button_fn}
+    />
 }
 
 
