@@ -2,7 +2,7 @@ import { PowerStats } from "../model/interface"
 import "./PowerStatus.css"
 
 
-export function PowerStatus ({ power: { demand_gw, supply_gw } }: { power: PowerStats })
+export function PowerStatus ({ power: { demand_gw, supply_gw }, datetime }: { power: PowerStats, datetime?: number })
 {
     const diff = supply_gw - demand_gw
     const is_surplus = diff >= 0
@@ -25,12 +25,35 @@ export function PowerStatus ({ power: { demand_gw, supply_gw } }: { power: Power
             }}
             title={status_text}
         >
-            <span>{demand_gw}</span>
+            <span>{Math.round(demand_gw)}</span>
             <span style={{ fontSize: 20 }}>GW</span>
-            <span style={{ color: status_color }}>{is_surplus ? "+" : ""}{diff}</span>
+            <span style={{ color: status_color }}>{is_surplus ? "+" : ""}{Math.round(diff)}</span>
             <div className={"text_shortage" + (is_surplus ? " surplus" : " shortage")}>
                 SHORTAGE
             </div>
+            <div>
+                <DatetimeDisplay datetime={datetime} />
+            </div>
+        </div>
+    )
+}
+
+
+
+function DatetimeDisplay({ datetime }: { datetime?: number })
+{
+    if (!datetime) return null
+
+    const date = new Date(datetime)
+    const hours = date.getUTCHours().toString().padStart(2, "0")
+    const minutes = (Math.floor(date.getUTCMinutes() / 30) * 30).toString().padStart(2, "0")
+    // const day = date.getUTCDate().toString().padStart(2, "0")
+    // const month = (date.getUTCMonth() + 1).toString().padStart(2, "0")
+    // const year = date.getUTCFullYear()
+
+    return (
+        <div style={{ fontSize: 16 }}>
+            Time: {`${hours}:${minutes}`}
         </div>
     )
 }
