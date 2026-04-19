@@ -43,8 +43,8 @@ export function EnergyBoxStack(props: { name: string, total_kwh_per_day_person: 
                 is_comparison={props.is_comparison}
             />)}
             <div className="energy_box_stack_footer">
-                <div className="energy_box_stack_title">{props.name}</div>
                 <div className="energy_box_stack_subtitle">{props.total_kwh_per_day_person} kWh/d/p</div>
+                <div className="energy_box_stack_title">{props.name}</div>
             </div>
         </div>
     </div>
