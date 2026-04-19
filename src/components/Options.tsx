@@ -52,7 +52,8 @@ export function Options ({ selected, on_select }: { selected: string, on_select:
                     top: "40%",
                 }}
             >
-                (Coming Soon)
+                🚧 Under 🚧<br/>
+                Construction
             </span>}
         </div>)}
     </div>
