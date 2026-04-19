@@ -7,10 +7,10 @@ const BAKERS_BLUE: [Color, number][] = [
     [new Color(0.263, 0.363, 1).convertSRGBToLinear(), 0],
     [new Color(0.150, 0.250, 1).convertSRGBToLinear(), 0.15],
     [new Color(0.377, 0.477, 1).convertSRGBToLinear(), 0.3],
-    [new Color(0.490, 0.590, 1).convertSRGBToLinear(), 0.5],
-    [new Color(0.603, 0.703, 1).convertSRGBToLinear(), 0.75],
-    [new Color(0.717, 0.817, 1).convertSRGBToLinear(), 1],
-    [new Color(0.830, 0.930, 1).convertSRGBToLinear(), 1],
+    [new Color(0.490, 0.590, 1).convertSRGBToLinear(), 0.45],
+    [new Color(0.603, 0.703, 1).convertSRGBToLinear(), 0.6],
+    [new Color(0.717, 0.817, 1).convertSRGBToLinear(), 0.75],
+    [new Color(0.830, 0.930, 1).convertSRGBToLinear(), 0.9],
     [new Color(1, 1, 1).convertSRGBToLinear(), 1],
 ]
 
