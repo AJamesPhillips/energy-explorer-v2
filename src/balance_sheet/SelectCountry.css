@@ -14,6 +14,23 @@
 }
 
 
+#select_country_button
+{
+    display: inline-flex;
+    /** Give extra space so that on WikiSim the close button doesn't overlap with this */
+    margin-right: 84px;
+
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+
+    background-color: white;
+    padding: 0px 12px;
+    border: 1px solid rgb(204, 204, 204);
+    border-radius: 4px;
+}
+
+
 #countries_list
 {
     overflow-y: scroll;

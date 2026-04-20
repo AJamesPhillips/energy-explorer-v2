@@ -32,7 +32,7 @@ export function SelectCountry(props: SelectCountryProps)
     return (
         <div id="select_country">
             <span
-                style={{ cursor: "pointer", display: "inline-flex", alignItems: "center", gap: "4px", paddingRight: 8 }}
+                id="select_country_button"
                 onClick={() => set_show_info_box(true)}
             >
                 <span style={{ fontSize: "24px" }}>{country?.emoji}</span> <span style={{ fontSize: "18px" }}>❤️</span>
