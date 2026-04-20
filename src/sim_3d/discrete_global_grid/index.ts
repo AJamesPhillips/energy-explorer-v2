@@ -7,7 +7,7 @@ import { GridConfig } from "./interface"
 
 export function draw_earth_grid(earth_mesh: THREE.Mesh)
 {
-    const radius = 2.05
+    // const radius = 2.05
     // Example configurations - comparing different approaches
     const configs: GridConfig[] = [
         // {

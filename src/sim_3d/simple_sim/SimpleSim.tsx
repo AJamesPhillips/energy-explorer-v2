@@ -5,8 +5,8 @@ import * as THREE from "three"
 
 import { uk_coverage } from "../data/coverage/uk/data"
 import uk_daily_power_demand_profiles from "../data/power_demand/uk/daily_profiles.json"
-import { uk_month_hourly_and_location_average_capacity_factor_solar_generation_2018 } from "../data/power_generation/solar_pv"
-import { uk_month_hourly_and_location_average_capacity_factor_wind_generation_2018 } from "../data/power_generation/wind_turbine"
+// import { uk_month_hourly_and_location_average_capacity_factor_solar_generation_2018 } from "../data/power_generation/solar_pv"
+// import { uk_month_hourly_and_location_average_capacity_factor_wind_generation_2018 } from "../data/power_generation/wind_turbine"
 import { PowerStats } from "../model/interface"
 import { CellData, CellsData } from "./interface"
 import { IsoMetricGrid } from "./IsoMetricGrid"
@@ -15,8 +15,8 @@ import { PowerStatus } from "./PowerStatus"
 import { WelcomeMessage } from "./WelcomeMessage"
 
 
-const start_datetime = new Date("2018-06-01T00:00:00.000Z")
-const speed = 1000 * 60 * 60
+// const start_datetime = new Date("2018-06-01T00:00:00.000Z")
+// const speed = 1000 * 60 * 60
 
 const GRID_SIZE = { x: 20, y: 20 }
 // The visual grid was made from dropping half of the cells (all deep sea cells)
@@ -77,7 +77,7 @@ interface SimpleSim3dProps
 }
 function SimpleSim3d(props: SimpleSim3dProps)
 {
-    const [datetime, set_datetime] = useState(start_datetime)
+    // const [datetime, set_datetime] = useState(start_datetime)
     const sun_ambient_ref = useRef<THREE.AmbientLight>(null)
     const sun_directional_ref = useRef<THREE.DirectionalLight>(null)
 
@@ -86,9 +86,9 @@ function SimpleSim3d(props: SimpleSim3dProps)
         scene.background = new THREE.Color(0xeeeeff)
     })
 
-    useFrame((_state, delta) =>
+    useFrame((_state, _delta) =>
     {
-        const new_datetime = new Date(datetime.getTime() + (delta * speed))
+        // const new_datetime = new Date(datetime.getTime() + (delta * speed))
         // set_datetime(new_datetime)
 
         // const sun_args = sun_light_colour_and_intensity_from_datetime_and_latlon(new_datetime, lat_lon, false)
@@ -148,8 +148,8 @@ function SimpleSim3d(props: SimpleSim3dProps)
 function Data ()
 {
 
-    const wind = useMemo(() => uk_month_hourly_and_location_average_capacity_factor_wind_generation_2018(), [])
-    const solar = useMemo(() => uk_month_hourly_and_location_average_capacity_factor_solar_generation_2018(), [])
+    // const wind = useMemo(() => uk_month_hourly_and_location_average_capacity_factor_wind_generation_2018(), [])
+    // const solar = useMemo(() => uk_month_hourly_and_location_average_capacity_factor_solar_generation_2018(), [])
 
     // console.log("coverage", coverage)
 

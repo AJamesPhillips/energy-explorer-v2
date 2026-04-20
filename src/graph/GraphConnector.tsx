@@ -25,11 +25,11 @@ export function Connector(props: {
         `${parent_cx},${parent_bottom}`,
     ].join(" ")
 
-    const arrow_points_end = [
-        `${child_cx - ARROW_SIZE / 2},${child_top - ARROW_SIZE}`,
-        `${child_cx + ARROW_SIZE / 2},${child_top - ARROW_SIZE}`,
-        `${child_cx},${child_top}`,
-    ].join(" ")
+    // const arrow_points_end = [
+    //     `${child_cx - ARROW_SIZE / 2},${child_top - ARROW_SIZE}`,
+    //     `${child_cx + ARROW_SIZE / 2},${child_top - ARROW_SIZE}`,
+    //     `${child_cx},${child_top}`,
+    // ].join(" ")
 
     return <>
         <path d={d} fill="none" stroke="#888" strokeWidth={1.5} />

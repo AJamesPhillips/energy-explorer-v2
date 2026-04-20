@@ -174,7 +174,7 @@ function calculate_average_difference(vertex_meshes_and_expected_positions: Vert
 }
 
 
-function find_better_rotation(shared: { rotation: THREE.Euler }, step_size: number, vertex_meshes_and_expected_positions: VertexMeshAndExpectedPosition[], globe_mesh: THREE.Mesh, config: BasicIcosahedralGridConfig)
+function find_better_rotation(shared: { rotation: THREE.Euler }, step_size: number, vertex_meshes_and_expected_positions: VertexMeshAndExpectedPosition[], globe_mesh: THREE.Mesh, _config: BasicIcosahedralGridConfig)
 {
     const current_difference = calculate_average_difference(vertex_meshes_and_expected_positions)
     let best_new_difference = current_difference

@@ -113,13 +113,13 @@ export function split_into_pent_and_hexagons(geometry: THREE.BufferGeometry): { 
         add_edge(index_z, index_x, face_index)
     }
 
-    // Merge triangles into polygons
-    const visited_faces = new Set<number>()
-    const polygons: number[][] = []
+    // // Merge triangles into polygons
+    // const visited_faces = new Set<number>()
+    // const polygons: number[][] = []
 
     const pentagons: Polygon[] = []
     const hexagons: Polygon[] = []
-    const used_faces = new Set<number>()
+    // const used_faces = new Set<number>()
 
     map_vertex_to_edge.forEach((edges, vertex_index) =>
     {
