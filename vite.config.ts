@@ -5,7 +5,6 @@ import restart from "vite-plugin-restart"
 
 import {
     check_asset_imports_plugin,
-    copy_assets_files_plugin,
 } from "./vite_handle_redirected_files"
 
 
@@ -29,7 +28,7 @@ export default defineConfig({
     [
         restart({ restart: [ "../public/**", ] }), // Restart server on file changes to public/
         glsl(), // Handle shader files
-        copy_assets_files_plugin(asset_white_list),
+        // copy_assets_files_plugin(asset_white_list),
         check_asset_imports_plugin(),
     ],
     resolve: {
@@ -40,11 +39,11 @@ export default defineConfig({
 })
 
 
-function asset_white_list(path: string, entry: string): boolean
-{
-    // For example:
-    // if (entry.endsWith("_boundary.geojson")) return true
-    // if (path.match(/.*src\/assets\/scale_.*\.png/)) return true
+// function asset_white_list(path: string, entry: string): boolean
+// {
+//     // For example:
+//     // if (entry.endsWith("_boundary.geojson")) return true
+//     // if (path.match(/.*src\/assets\/scale_.*\.png/)) return true
 
-    return false
-}
+//     return false
+// }

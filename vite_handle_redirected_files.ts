@@ -48,28 +48,28 @@ export interface WhiteListFilesFunction
 }
 
 
-/**
- * Build plugin: copies whitelisted files from src/assets/ into dist/assets/assets/,
- * preserving directory structure so asset_url() paths resolve correctly in production.
- *
- * The extra nesting (assets/assets/) arises because the hosting site serves dist/ at
- * hostingsite.com/assets/, so document.baseURI is hostingsite.com/assets/index.html and
- * new URL("assets/foo.png", document.baseURI) resolves to hostingsite.com/assets/assets/foo.png.
- */
-export function copy_assets_files_plugin(white_list?: WhiteListFilesFunction): Plugin
-{
-    return {
-        name: "copy-assets-files",
-        apply: "build",
-        closeBundle()
-        {
-            const src_dir = resolve(__dirname, "src/assets")
-            const dest_dir = resolve(__dirname, "dist/assets")
-            mkdirSync(dest_dir, { recursive: true })
-            copy_files(src_dir, src_dir, dest_dir, white_list)
-        }
-    }
-}
+// /**
+//  * Build plugin: copies whitelisted files from src/assets/ into dist/assets/assets/,
+//  * preserving directory structure so asset_url() paths resolve correctly in production.
+//  *
+//  * The extra nesting (assets/assets/) arises because the hosting site serves dist/ at
+//  * hostingsite.com/assets/, so document.baseURI is hostingsite.com/assets/index.html and
+//  * new URL("assets/foo.png", document.baseURI) resolves to hostingsite.com/assets/assets/foo.png.
+//  */
+// export function copy_assets_files_plugin(white_list?: WhiteListFilesFunction): Plugin
+// {
+//     return {
+//         name: "copy-assets-files",
+//         apply: "build",
+//         closeBundle()
+//         {
+//             const src_dir = resolve(__dirname, "src/assets")
+//             const dest_dir = resolve(__dirname, "dist/assets")
+//             mkdirSync(dest_dir, { recursive: true })
+//             copy_files(src_dir, src_dir, dest_dir, white_list)
+//         }
+//     }
+// }
 
 
 /**
