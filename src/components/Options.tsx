@@ -1,3 +1,4 @@
+import { asset_url } from "../utils/asset_url"
 
 export type ViewType = "balance_sheet" | "knowledge_graph" | "simulation" | "digital_twin"
 interface Option
@@ -11,23 +12,23 @@ const options: Option[] = [
     {
         id: "balance_sheet",
         label: "Balance Sheet",
-        img_url: "/imgs/balance_sheet.png"
+        img_url: asset_url("imgs/balance_sheet.png")
     },
     {
         id: "knowledge_graph",
         label: "Knowledge Graph",
-        img_url: "/imgs/knowledge_graph3.jpg"
+        img_url: asset_url("imgs/knowledge_graph3.jpg")
     },
     {
         id: "simulation",
         label: "Simulation",
-        img_url: "/imgs/sim.jpg",
+        img_url: asset_url("imgs/sim.jpg"),
         under_construction: true,
     },
     {
         id: "digital_twin",
         label: "Digital Twin",
-        img_url: "/imgs/digital_twin.jpg",
+        img_url: asset_url("imgs/digital_twin.jpg"),
         under_construction: true,
     }
 ]
