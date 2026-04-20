@@ -12,3 +12,32 @@
     pointer-events: initial;
     cursor: pointer;
 }
+
+
+#countries_list
+{
+    overflow-y: scroll;
+    height: 150px;
+}
+
+.countries_list_first_sub_heading,
+.countries_list_second_sub_heading
+{
+    font-weight: bold;
+    padding-bottom: 10px;
+    font-size: 12px;
+}
+.countries_list_second_sub_heading
+{
+    margin-top: 10px;
+    padding: 10px 0;
+    border-top: 1px solid #ccc;
+}
+
+
+.country_row
+{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
