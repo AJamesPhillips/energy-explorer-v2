@@ -1,12 +1,12 @@
 import { DataComponentsByIdo, DataComponentsByIdv } from "core/data/interface"
 
 import Loading from "../components/Loading"
+import {
+    perspective_id_to_name_map
+} from "../components/SelectPerspective"
 import { DataComponentExtended, Perspective } from "../data/interface"
 import "./BalanceSheet.css"
 import { EnergyBoxStack } from "./EnergyBoxes"
-import {
-    perspective_id_to_name_map
-} from "./SelectPerspective"
 import { WelcomeMessage } from "./WelcomeMessage"
 
 

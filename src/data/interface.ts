@@ -1,7 +1,7 @@
 import { DataComponent } from "core/data/interface"
 import { Graph } from "core/data/utils/graph"
 
-import { PerspectiveType } from "../balance_sheet/SelectPerspective"
+import { PerspectiveType } from "../components/SelectPerspective"
 
 
 export interface DataComponentExtended extends DataComponent

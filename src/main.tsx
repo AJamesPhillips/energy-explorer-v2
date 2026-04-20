@@ -17,14 +17,14 @@ import { DataComponentAsJSON } from "core/supabase"
 
 import { BalanceSheet } from "./balance_sheet/BalanceSheet"
 import { factors_up_to } from "./balance_sheet/EnergyBoxesHelper"
-import { SelectCountry } from "./balance_sheet/SelectCountry"
+import { Options, ViewType } from "./components/Options"
+import { SelectCountry } from "./components/SelectCountry"
 import {
     perspective_id_2009_mackay,
     perspective_id_general,
     PerspectiveType,
     SelectPerspective
-} from "./balance_sheet/SelectPerspective"
-import { Options, ViewType } from "./components/Options"
+} from "./components/SelectPerspective"
 import { get_wikisim_components } from "./data/get_wikisim_components"
 import { other_ids_performance_boost, top_ids_to_fetch } from "./data/ids"
 import { DataComponentExtended, Perspective } from "./data/interface"
