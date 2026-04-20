@@ -44,10 +44,10 @@ export function InfoBox(props: InfoBoxProps)
         : <DefaultConfirmationButton on_click={on_click}/>
 
 
-    return <div className={"info_box " + (hiding ? "hidden" : "")}>
-        <div className="info_box_text_holder" onPointerDown={on_click}>
+    return <div id="info_box" className={(hiding ? "hidden" : "")}>
+        <div id="info_box_text_holder" onPointerDown={on_click}>
             <div
-                className="info_box_text"
+                id="info_box_text"
                 onPointerDown={e => e.stopPropagation()}
             >
                 {props.message}
