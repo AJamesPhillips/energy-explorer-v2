@@ -1,27 +1,27 @@
-import { countries_data, CountryISO2Code } from "./countries_data"
+import { countries_data, CountryISO2Code, CountryISO3Code } from "./countries_data"
 
 
 export interface CountryData
 {
     name: string
-    code: CountryISO2Code
+    code2: CountryISO2Code
+    code3: CountryISO3Code
     emoji: string
     implemented: boolean
+    votes: number
 }
 
 const implemented_countries: Set<CountryISO2Code> = new Set([
     "GB",
 ])
 
-export function get_country_by_code(code: CountryISO2Code): CountryData | undefined
+export const extended_countries_data: CountryData[] = countries_data.map(c => ({
+    ...c,
+    implemented: implemented_countries.has(c.code2),
+    votes: 0,
+}))
+
+export function get_country_by_code(code2: CountryISO2Code): CountryData | undefined
 {
-    const raw_country = countries_data.find(c => c.code === code)
-    if (!raw_country) return undefined
-
-    const implemented = implemented_countries.has(code)
-
-    return {
-        ...raw_country,
-        implemented,
-    }
+    return extended_countries_data.find(c => c.code2 === code2)
 }
