@@ -1,3 +1,6 @@
+import { setup_error_logging } from "./error_logging"
+setup_error_logging()
+
 import { useEffect, useMemo, useState } from "react"
 import { createRoot } from "react-dom/client"
 import * as z from "zod"
