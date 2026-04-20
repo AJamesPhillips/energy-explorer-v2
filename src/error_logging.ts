@@ -6,7 +6,8 @@ import { error_to_string } from "core/errors"
 export function setup_error_logging()
 {
     Sentry.init({
-        dsn: "https://aaa@bbb.ingest.de.sentry.io/123",
+        //
+        dsn: "https://ca1654477f20d4038ce643cb9be15902@o4511203622584320.ingest.de.sentry.io/4511252107886672",
         // Setting this option to true will send default PII data to Sentry.
         // For example, automatic IP address collection on events
         sendDefaultPii: true,
@@ -14,6 +15,8 @@ export function setup_error_logging()
         tracePropagationTargets: [
             "localhost", // For local development
         ],
+        // Enable logs to be sent to Sentry
+        enableLogs: true
     })
 
 
