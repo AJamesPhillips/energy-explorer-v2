@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react"
 
 import { InfoBox } from "../components/InfoBox"
+import { BlueSkyLogo, GitHubLogo, MailLogo } from "../components/svgs"
 import { CountryData, extended_countries_data, get_country_by_code } from "../data/countries"
 import { CountryISO2Code } from "../data/countries_data"
 import "./SelectCountry.css"
@@ -26,36 +27,36 @@ export function SelectCountry(props: SelectCountryProps)
 
     const implemented_countries = filtered_countries.filter(c => c.implemented)
     const unimplemented_countries = filtered_countries.filter(c => !c.implemented)
+        .sort((a, b) => b.votes - a.votes) // show the most voted for unimplemented countries at the top
 
     return (
         <div id="select_country">
             <span
-                style={{ fontSize: "24px" }}
+                style={{ cursor: "pointer", display: "inline-flex", alignItems: "center", gap: "4px", paddingRight: 8 }}
                 onClick={() => set_show_info_box(true)}
             >
-                {country?.emoji}
+                <span style={{ fontSize: "24px" }}>{country?.emoji}</span> <span style={{ fontSize: "18px" }}>❤️</span>
             </span>
 
             {show_info_box && <InfoBox
                 id="select_country"
                 message={
                     <>
-                        <h1>Vote for a Country</h1>
+                        <h1>Vote for a Country ⚡</h1>
+                        {/* <p>
+                            If you want a country added
+                            to the simulation press ⚡ to upvote it.
+                        </p> */}
                         <p>
-                            If you are interested in seeing a particular country added
-                            to the simulation <a href="https://docs.google.com/forms/d/e/1FAIpQLSdKpO2KkvlXnhEoo9VejTID8tfGbHA_BEbZuFrsAku_TahH8w/viewform?entry.1843888779=">subscribe </a> or
-                            send us a message on <a href="https://github.com/AJamesPhillips/energy-explorer-v2/issues/new?title=[REQUEST]%20I%27d%20like%20to%20be%20able%20to%20play%20country%20...">GitHub</a>,
-                            or <a href="https://bsky.app/profile/ajamesphillips.com">BlueSky</a>.
-                            {/* press ⚡ to upvote it */}
-                            Or <a href="https://www.patreon.com/WikiSim">donate to show your support ❤️</a>
+                            I hope you enjoyed and learnt something, if so <a href="https://www.patreon.com/WikiSim">we'd be grateful for your support to let us do more ❤️</a>
                         </p>
 
                         <Filter set_filter_text={set_filter_text} />
 
                         <div id="countries_list">
-                            <div className="countries_list_first_sub_heading">
+                            {implemented_countries.length > 0 && <div className="countries_list_first_sub_heading">
                                 IMPLEMENTED ({implemented_countries.length}):
-                            </div>
+                            </div>}
 
                             {implemented_countries.map(c => <CountryRow
                                 key={c.code2}
@@ -75,8 +76,17 @@ export function SelectCountry(props: SelectCountryProps)
                                 set_user_votes_by_country_code2={set_user_votes_by_country_code2}
                             />)}
                         </div>
+
+                        <SubscribeOrFollow
+                            user_votes_by_country_code2={user_votes_by_country_code2}
+                            initial_user_votes_by_country_code2={initial_user_votes_by_country_code2}
+                        />
                     </>
                 }
+                confirmation_button={({ on_click }) =>
+                {
+                    return <button onClick={on_click}>Close</button>
+                }}
                 on_close={() => set_show_info_box(false)}
             />}
         </div>
@@ -86,7 +96,7 @@ export function SelectCountry(props: SelectCountryProps)
 
 function Filter(props: { set_filter_text: (text: string) => void })
 {
-    return <p style={{ display: "flex" }}>
+    return <p style={{ display: "flex", marginBottom: 0 }}>
         <input
             type="text"
             placeholder="Filter countries..."
@@ -122,6 +132,19 @@ function CountryRow(props: CountryRowProps)
                     [country.code2]: props.user_votes_by_country_code2[country.code2] || false,
                 }
                 new_votes[country.code2] = !new_votes[country.code2]
+
+                if (new_votes[country.code2])
+                {
+                    // This (may) get logged to Sentry as a cheap way for us to
+                    // track if users are upvoting for a country.  We can manually
+                    // go through the logs to check & count which countries are getting upvotes.
+                    console.info(`User upvoted country ${country.code2} ${country.name}`)
+                }
+                else
+                {
+                    delete new_votes[country.code2]
+                }
+
                 props.set_user_votes_by_country_code2(new_votes)
                 set_local_user_votes_by_country_code2(new_votes)
             }}
@@ -132,6 +155,24 @@ function CountryRow(props: CountryRowProps)
 }
 
 
+interface SubscribeOrFollowProps
+{
+    user_votes_by_country_code2: LocalUserVotesByCountryCode2
+    initial_user_votes_by_country_code2: LocalUserVotesByCountryCode2
+}
+function SubscribeOrFollow(props: SubscribeOrFollowProps)
+{
+    const has_voted = JSON.stringify(props.user_votes_by_country_code2) !== JSON.stringify(props.initial_user_votes_by_country_code2)
+
+    return <p id="subscribe_or_follow" className={has_voted ? "visible" : "hidden"}>
+        <a href="https://docs.google.com/forms/d/e/1FAIpQLSdKpO2KkvlXnhEoo9VejTID8tfGbHA_BEbZuFrsAku_TahH8w/viewform?entry.1843888779=">Subscribe <MailLogo height={18} /> </a>
+        to be notified when this country is added... or
+        lend us a hand on <a href="https://github.com/AJamesPhillips/energy-explorer-v2/issues/new?title=[REQUEST]%20I%27d%20like%20to%20be%20able%20to%20play%20country%20...">GitHub <GitHubLogo height={18} /> </a>
+        or <a href="https://bsky.app/profile/ajamesphillips.com">BlueSky <BlueSkyLogo height={18} /></a>
+    </p>
+}
+
+
 function get_local_user_votes_by_country_code2(): LocalUserVotesByCountryCode2
 {
     const votes_str = localStorage.getItem("country_votes")
@@ -139,7 +180,9 @@ function get_local_user_votes_by_country_code2(): LocalUserVotesByCountryCode2
 
     try
     {
-        return JSON.parse(votes_str)
+        const votes = Object.entries(JSON.parse(votes_str))
+            .filter(([_, voted]) => voted)
+        return Object.fromEntries(votes)
     }
     catch (e)
     {

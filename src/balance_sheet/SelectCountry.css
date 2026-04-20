@@ -17,7 +17,10 @@
 #countries_list
 {
     overflow-y: scroll;
-    height: 150px;
+    height: 180px;
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
 }
 
 .countries_list_first_sub_heading,
@@ -40,4 +43,21 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+}
+
+
+#subscribe_or_follow
+{
+    margin-top: 0px;
+    height: 0px;
+    opacity: 0;
+    overflow: hidden;
+
+    transition: margin-top 0.3s ease, height 0.3s ease, opacity 0.3s ease;
+}
+#subscribe_or_follow.visible
+{
+    margin-top: 20px;
+    height: 90px;
+    opacity: 1;
 }
