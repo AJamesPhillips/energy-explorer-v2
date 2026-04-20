@@ -31,6 +31,7 @@ import { DataComponentExtended, Perspective } from "./data/interface"
 import { GraphViewer } from "./graph/GraphViewer"
 import "./index.css"
 import { EnergyExplorerSimV2 } from "./sim_3d/EnergyExplorerSimV2"
+import { Info } from "./sim_3d/simple_sim/Info"
 
 
 const all_ids_to_fetch: { id: IdAndMaybeVersion, compute_value: boolean }[] = [
@@ -136,7 +137,10 @@ function App ()
             <div style={{ display: "flex", gap: "20px", flexDirection: "column", flexGrow: 1 }}>
                 <div id="app_top_bar">
                     <div id="app_top_bar_side">
-                        <SelectCountry selected_country_ISO2="GB" />
+                        <div className="app_controls_row">
+                            <Info />
+                            <SelectCountry selected_country_ISO2="GB" />
+                        </div>
                         <SelectPerspective
                             perspectives={perspective_ids}
                             on_change={set_perspective_ids}

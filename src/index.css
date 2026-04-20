@@ -116,6 +116,20 @@ html, body, #app, #app_html {
     flex-direction: column;
     gap: 10px;
 }
+#app_top_bar_side .app_controls_row
+{
+    display: flex;
+    gap: 8px;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+#app_top_bar_side .app_controls_row > *
+{
+    background-color: white;
+    padding: 0px 12px;
+    border: 1px solid rgb(204, 204, 204);
+    border-radius: 4px;
+}
 
 #app_main_view
 {

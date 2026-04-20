@@ -9,6 +9,9 @@ import "./SelectCountry.css"
 
 type LocalUserVotesByCountryCode2 = Partial<Record<CountryISO2Code, boolean>>
 
+
+const on_wikisim = document.URL.includes("https://wikisim-server.wikisim.deno.net")
+
 interface SelectCountryProps
 {
     selected_country_ISO2: CountryISO2Code
@@ -33,6 +36,7 @@ export function SelectCountry(props: SelectCountryProps)
         <div id="select_country">
             <span
                 id="select_country_button"
+                className={on_wikisim ? "on_wikisim" : ""}
                 onClick={() => set_show_info_box(true)}
             >
                 <span style={{ fontSize: "24px" }}>{country?.emoji}</span> <span style={{ fontSize: "18px" }}>❤️</span>

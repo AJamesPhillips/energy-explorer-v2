@@ -113,6 +113,7 @@ export function OnceOffInfoBox(props: OnceOffInfoBoxProps)
 function boolean_local_storage(key_name: string, time_to_live_ms = 1000 * 60 * 60 * 24 * 365)
 {
     const value = localStorage.getItem(key_name)
+    // return false
     if (!value) return false
 
     const date = Date.parse(value)

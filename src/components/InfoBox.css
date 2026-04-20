@@ -15,6 +15,9 @@
     bottom: 0;
 
     z-index: 999;
+
+    /* we have to re-enable them after #app_html disables them */
+    pointer-events: initial;
 }
 
 #info_box.hidden

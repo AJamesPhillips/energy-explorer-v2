@@ -10,16 +10,28 @@ export function WelcomeMessage()
                 <h1>⚡️Simple Sim⚡️</h1>
 
                 <p>
-                    This is a simplification of the UK showing ⅓ of the
-                    sea in the UK's exclusive economic zone, and our demand and supply of energy.
+                    This is a simplification of the UK's national energy system.
                 </p>
-                <p>
-                    Each grid square is about 35 km × 35 km (≈ 1250 km²).  Click on the grid
-                    to toggle between different energy generation, and see how they contribute
-                    to the overall power supply.
+                <p style={{ backgroundColor: "#fffae6", padding: 8, borderRadius: 4, border: "1px solid #ffe58f" }}>
+                    Click on the grid
+                    to add different energy sources.
+                {/* And click on ℹ️ symbols to get more information */}
                 </p>
+
                 <p>
-                    If you'd like to get involved please send us <a href="mailto:hello@wikisim.org">an email</a> or add a suggestion <a href="https://github.com/AJamesPhillips/energy-explorer-v2/issues">on GitHub</a>.
+                    Why?  To get a better intuitive understanding of the scale of
+                    energy demand and of the area, and resources required for different sources of energy.
+                </p>
+
+
+                {/* <p>
+                    Note: each grid square is about 35 km × 35 km (≈ 1250 km²) and only ⅓ of the
+                    sea in the UK's exclusive economic zone is shown, the real area of the UK
+                    land and sea is twice as large!
+                </p> */}
+
+                <p>
+                    If you enjoy this or want to get involved please <a href="mailto:hello@wikisim.org">email us</a>, <a href="https://github.com/AJamesPhillips/energy-explorer-v2/issues">add code</a> or <a href="https://www.patreon.com/WikiSim">donate ❤️</a>
                 </p>
             </>
         }
