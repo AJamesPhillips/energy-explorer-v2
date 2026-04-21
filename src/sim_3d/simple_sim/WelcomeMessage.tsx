@@ -31,7 +31,11 @@ export function WelcomeMessage()
                 </p> */}
 
                 <p>
-                    If you enjoy this or want to get involved please <a href="mailto:hello@wikisim.org">email us</a>, <a href="https://github.com/AJamesPhillips/energy-explorer-v2/issues">add code</a> or <a href="https://www.patreon.com/WikiSim">donate ❤️</a>
+                    If you enjoy this please share it.<br />
+                    If you want to get involved you can <a href="mailto:hello@wikisim.org">email us, </a>
+                    <a href="https://wikisim.org/wiki/1272">check the data, </a>
+                    <a href="https://github.com/AJamesPhillips/energy-explorer-v2/issues">add code, </a>
+                    or <a href="https://www.patreon.com/WikiSim">donate ❤️</a>
                 </p>
             </>
         }
