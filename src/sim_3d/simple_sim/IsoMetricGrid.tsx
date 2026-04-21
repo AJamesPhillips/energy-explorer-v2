@@ -3,13 +3,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import * as THREE from "three"
 
 import { CellData, CellsData } from "./interface"
+import { IsoMetricGridContentTiles } from "./IsoMetricGridContentTiles"
 import { tile_colour } from "./tile"
-import { OilRigTiles } from "./tiles/OilRig"
-import { SolarFarm } from "./tiles/SolarFarm"
-import { SuburbanTiles } from "./tiles/Suburban"
-import { UrbanTiles } from "./tiles/Urban"
-import { WindTurbine } from "./tiles/WindTurbine"
-import { Woodland } from "./tiles/Woodland"
 
 
 interface IsoMetricGridProps
@@ -66,36 +61,6 @@ export function IsoMetricGrid(props: IsoMetricGridProps)
             hover_glow_mat: new THREE.MeshBasicMaterial({ color: 0xffff44, transparent: true, opacity: 0.12 }),
         }
     }, [cell_size])
-
-    const woodland_tiles = useMemo(
-        () => tiles.filter(cell => cell.type === "land" && cell.subtype === "woodland"),
-        [tiles],
-    )
-
-    const urban_tiles = useMemo(
-        () => tiles.filter(cell => cell.type === "land" && cell.subtype === "urban"),
-        [tiles],
-    )
-
-    const suburban_tiles = useMemo(
-        () => tiles.filter(cell => cell.type === "land" && cell.subtype === "suburban"),
-        [tiles],
-    )
-
-    const wind_turbine_tiles = useMemo(
-        () => tiles.filter(cell => cell.has_wind_turbine),
-        [tiles],
-    )
-
-    const solar_farm_tiles = useMemo(
-        () => tiles.filter(cell => cell.has_solar_farm),
-        [tiles],
-    )
-
-    const oil_rig_tiles = useMemo(
-        () => tiles.filter(cell => cell.has_oil_rig),
-        [tiles],
-    )
 
     useEffect(() => () =>
     {
@@ -159,6 +124,11 @@ export function IsoMetricGrid(props: IsoMetricGridProps)
     }, [on_hover_tile])
 
 
+    // This is a hack to help minimise the chance of this race condition occuring
+    // https://github.com/pmndrs/react-three-fiber/issues/3736
+    const [rendered_once, set_rendered_once] = useState(false)
+    useEffect(() => set_rendered_once(true))
+
     return <>
         <instancedMesh
             ref={mesh_ref}
@@ -167,14 +137,8 @@ export function IsoMetricGrid(props: IsoMetricGridProps)
             onPointerMove={on_pointer_move}
             onPointerLeave={on_pointer_leave}
         />
-        <Woodland tiles={woodland_tiles} cell_size={cell_size} />
-        <SuburbanTiles tiles={suburban_tiles} cell_size={cell_size} />
-        <UrbanTiles tiles={urban_tiles} cell_size={cell_size} />
 
-        <WindTurbine tiles={wind_turbine_tiles} cell_size={cell_size} />
-        <SolarFarm tiles={solar_farm_tiles} cell_size={cell_size} />
-
-        <OilRigTiles tiles={oil_rig_tiles} cell_size={cell_size} />
+        {rendered_once && <IsoMetricGridContentTiles cell_size={cell_size} tiles={tiles} />}
 
         <group ref={hover_ref} visible={hover_visible}>
             <lineSegments args={[hover_outline_geo, hover_outline_mat]} />
