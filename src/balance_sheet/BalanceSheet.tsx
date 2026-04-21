@@ -38,6 +38,7 @@ export function BalanceSheet(props: BalanceSheetProps)
                     key={p.id}
                     name={perspective_id_to_name_map[p.id]}
                     total_kwh_per_day_person={get_total_kwh_per_day_person(components_map_by_ido[p.id], "sink")}
+                    URL={`https://wikisim.org/wiki/${p.id}`}
                     factors={p.sinks}
                     is_comparison={index > 0}
                 />
@@ -48,6 +49,7 @@ export function BalanceSheet(props: BalanceSheetProps)
                     key={p.id}
                     name={perspective_id_to_name_map[p.id]}
                     total_kwh_per_day_person={get_total_kwh_per_day_person(components_map_by_ido[p.id], "source")}
+                    URL={`https://wikisim.org/wiki/${p.id}`}
                     factors={p.sources}
                     is_comparison={index > 0}
                 />
