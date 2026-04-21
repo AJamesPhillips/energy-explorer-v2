@@ -12,15 +12,15 @@ export function EnergyBoxes(props: { factors: EnergyFactor[] })
 
     return <div style={{ display: "flex", justifyContent: "center", gap: "20px", flexDirection: "row" }}>
         <div style={{ display: "flex", justifyContent: "end", flexDirection: "column" }}>
-            {sinks.map((factor, i) => <FactorToBox
-                id={i}
+            {sinks.map(factor => <FactorToBox
+                key={factor.name}
                 factor={factor}
             />)}
         </div>
 
         <div style={{ display: "flex", justifyContent: "end", flexDirection: "column" }}>
-            {sources.map((factor, i) => <FactorToBox
-                id={i}
+            {sources.map(factor => <FactorToBox
+                key={factor.name}
                 factor={factor}
             />)}
         </div>
@@ -29,7 +29,7 @@ export function EnergyBoxes(props: { factors: EnergyFactor[] })
 
 
 
-export function EnergyBoxStack(props: { name: string, total_kwh_per_day_person: number | undefined, factors: EnergyFactor[], is_comparison: boolean })
+export function EnergyBoxStack(props: { key: number, name: string, total_kwh_per_day_person: number | undefined, factors: EnergyFactor[], is_comparison: boolean })
 {
     return <div className="energy_box_stack">
         <div className="energy_box_stack_header">
@@ -37,8 +37,8 @@ export function EnergyBoxStack(props: { name: string, total_kwh_per_day_person: 
             {/* <div className="energy_box_stack_subtitle">{props.total_kwh_per_day_person} kWh/d/p</div> */}
         </div>
         <div style={{ display: "flex", justifyContent: "end", flexDirection: "column" }}>
-            {props.factors.map((factor, i) => <FactorToBox
-                id={i}
+            {props.factors.map(factor => <FactorToBox
+                key={factor.name}
                 factor={factor}
                 is_comparison={props.is_comparison}
             />)}
@@ -60,7 +60,7 @@ const factor_wrap_style: React.CSSProperties = {
 }
 const hf = 5
 
-function FactorToBox(props: { factor: EnergyFactor, is_comparison?: boolean })
+function FactorToBox(props: { key: string, factor: EnergyFactor, is_comparison?: boolean })
 {
     const { factor } = props
 

@@ -35,7 +35,7 @@ export function BalanceSheet(props: BalanceSheetProps)
         }}>
             {persectives.map((p, index) => (
                 <EnergyBoxStack
-                    id={p.id}
+                    key={p.id}
                     name={perspective_id_to_name_map[p.id]}
                     total_kwh_per_day_person={get_total_kwh_per_day_person(components_map_by_ido[p.id], "sink")}
                     factors={p.sinks}
@@ -45,7 +45,7 @@ export function BalanceSheet(props: BalanceSheetProps)
 
             {persectives.map((p, index) => (
                 <EnergyBoxStack
-                    id={p.id}
+                    key={p.id}
                     name={perspective_id_to_name_map[p.id]}
                     total_kwh_per_day_person={get_total_kwh_per_day_person(components_map_by_ido[p.id], "source")}
                     factors={p.sources}
