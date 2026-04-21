@@ -3,7 +3,7 @@ import { JSX, useEffect, useMemo, useRef, useState } from "react"
 import { IdAndVersion } from "core/data/id"
 
 import Loading from "../components/Loading"
-import { GraphWithComputedValues, Perspective } from "../data/interface"
+import { GraphWithComputedValues, PerspectiveKnowledgeGraph } from "../data/interface"
 import { Connector } from "./GraphConnector"
 import { GraphNode } from "./GraphNode"
 import { GraphForRendering, PlacedNode, VisibleNode } from "./interface"
@@ -165,7 +165,7 @@ function place_nodes(
 
 interface GraphViewerProps
 {
-    persectives: Perspective[]
+    persectives: PerspectiveKnowledgeGraph[]
     // graph: GraphForRendering
     // apex_component_id: number
     // display_depth: number

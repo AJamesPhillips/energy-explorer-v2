@@ -4,7 +4,7 @@ import Loading from "../components/Loading"
 import {
     perspective_id_to_name_map
 } from "../components/SelectPerspective"
-import { DataComponentExtended, Perspective } from "../data/interface"
+import { DataComponentExtended, PerspectiveKnowledgeGraph } from "../data/interface"
 import "./BalanceSheet.css"
 import { EnergyBoxStack } from "./EnergyBoxes"
 import { WelcomeMessage } from "./WelcomeMessage"
@@ -12,7 +12,7 @@ import { WelcomeMessage } from "./WelcomeMessage"
 
 interface BalanceSheetProps
 {
-    persectives: Perspective[]
+    persectives: PerspectiveKnowledgeGraph[]
     components_map_by_idv: DataComponentsByIdv<DataComponentExtended> | undefined
     components_map_by_ido: DataComponentsByIdo<DataComponentExtended> | undefined
 }

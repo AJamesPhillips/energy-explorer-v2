@@ -28,7 +28,7 @@ import {
 } from "./components/SelectPerspective"
 import { get_wikisim_components } from "./data/get_wikisim_components"
 import { other_ids_performance_boost, top_ids_to_fetch } from "./data/ids"
-import { DataComponentExtended, Perspective } from "./data/interface"
+import { DataComponentExtended, PerspectiveKnowledgeGraph } from "./data/interface"
 import { GraphViewer } from "./graph/GraphViewer"
 import "./index.css"
 import { Sim3d } from "./sim_3d/Sim3d"
@@ -93,7 +93,7 @@ function App ()
     // Make the knowledge graph
     const parser = useMemo(() => new DOMParser(), [])
 
-    const persectives: Perspective[] = useMemo(() =>
+    const persectives: PerspectiveKnowledgeGraph[] = useMemo(() =>
     {
         if (Object.keys(components_map_by_idv).length === 0) return []
 

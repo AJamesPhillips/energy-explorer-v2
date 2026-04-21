@@ -50,7 +50,7 @@ export interface EnergyFactor
 }
 
 
-export interface Perspective
+export interface PerspectiveKnowledgeGraph
 {
     id: PerspectiveType
     graph: GraphWithComputedValues
