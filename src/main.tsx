@@ -144,7 +144,7 @@ function App ()
     return <>
         <Evaluator />
 
-        {sim_or_dt && <Sim3d view={view} />}
+        {sim_or_dt && <Sim3d view={view} persective={persectives[0]!} population={population.population} />}
 
         <div id="app_html">
 

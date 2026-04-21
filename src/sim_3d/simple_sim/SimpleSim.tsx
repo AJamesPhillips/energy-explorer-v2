@@ -7,6 +7,7 @@ import { uk_coverage } from "../data/coverage/uk/data"
 // import uk_daily_power_demand_profiles from "../data/power_demand/uk/daily_profiles.json"
 // import { uk_month_hourly_and_location_average_capacity_factor_solar_generation_2018 } from "../data/power_generation/solar_pv"
 // import { uk_month_hourly_and_location_average_capacity_factor_wind_generation_2018 } from "../data/power_generation/wind_turbine"
+import { PerspectiveKnowledgeGraph } from "../../data/interface"
 import { PowerStats } from "../model/interface"
 import { CellData, CellsData } from "./interface"
 import { IsoMetricGrid } from "./IsoMetricGrid"
@@ -36,15 +37,32 @@ const solar_built_area_w_per_m2 = 0.633 // W m-2 -- https://wikisim.org/wiki/127
 const CELL_SIZE = 12
 
 
-export function SimpleSim()
+export function SimpleSim(props: { persective: PerspectiveKnowledgeGraph, population: number })
 {
     // const power_demand_series = useMemo(() => uk_daily_power_demand_profiles["2010"].average_demand.data, [])
+
     const [power, set_power] = useState<PowerStats>({
         demand_gw: 0, //Math.round(power_demand_series[3]![2]! as number / 1e3),
         supply_gw: 0,
     })
 
     const [data, set_data] = useState<CellsData>(() => map_data_cells)
+
+    useEffect(() =>
+    {
+        const { id, version } = props.persective.graph.apex_id
+        const id_str = `${id}v${version}`
+        const node = props.persective.graph.nodes[id_str]
+        const computed_value = JSON.parse(node!.component.computed_value!)
+        const kwh_per_day_per_person = computed_value.total_demand
+        const demand_gw = convert_kwh_pd_pp_to_gw({ kwh_per_day_per_person, population: props.population })
+
+        set_power(existing => ({
+            ...existing,
+            demand_gw,
+        }))
+    }, [props.persective.graph, props.population])
+
 
     return <>
         <Canvas id="scene-3d">
@@ -261,4 +279,13 @@ function calculate_power_supply_from_data(data: CellsData): number
     })
 
     return supply_gw
+}
+
+
+const hours_per_day = 24
+function convert_kwh_pd_pp_to_gw(args: { kwh_per_day_per_person: number, population: number })
+{
+    const kwh_per_day = args.kwh_per_day_per_person * args.population
+    const kw = kwh_per_day / hours_per_day
+    return kw / 1e6
 }
