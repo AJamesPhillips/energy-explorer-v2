@@ -1,0 +1,233 @@
+
+
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
+
+const WIDTH = 320
+const HEIGHT = 90
+const PADDING = { top: 10, right: 10, bottom: 22, left: 48 }
+const PLOT_W = WIDTH - PADDING.left - PADDING.right
+const PLOT_H = HEIGHT - PADDING.top - PADDING.bottom
+
+function fmt_pop(n: number): string
+{
+    if (n >= 1e9) return `${(n / 1e9).toFixed(2)}B`
+    if (n >= 1e6) return `${(n / 1e6).toFixed(1)}M`
+    if (n >= 1e3) return `${(n / 1e3).toFixed(0)}K`
+    return `${n}`
+}
+
+export function GraphPopulation(props: { population_by_year: Record<number, number>, population: { population: number, year: number }, set_population: (population: { population: number, year: number }) => void })
+{
+    const { population_by_year, population, set_population } = props
+
+    const known_years = useMemo(() => Object.keys(population_by_year).map(Number).sort((a, b) => a - b), [population_by_year])
+
+    // Project next 10 years from the last two known data points
+    const projected_years = useMemo(() =>
+    {
+        if (known_years.length < 2) return {}
+        const last = known_years[known_years.length - 1]!
+        const second_last = known_years[known_years.length - 2]!
+        const last_pop = population_by_year[last]!
+        const second_last_pop = population_by_year[second_last]!
+        const rate = (last_pop - second_last_pop) / (last - second_last) // per year
+
+        const proj: Record<number, number> = {}
+        for (let y = last + 1; y <= last + 10; y++)
+        {
+            proj[y] = last_pop + rate * (y - last)
+        }
+        return proj
+    }, [known_years, population_by_year])
+
+    const all_years = useMemo(() =>
+        [...known_years, ...Object.keys(projected_years).map(Number)].sort((a, b) => a - b),
+        [known_years, projected_years]
+    )
+
+    const all_pops = useMemo(() =>
+        all_years.map(y => projected_years[y] ?? population_by_year[y]!),
+        [all_years, projected_years, population_by_year]
+    )
+
+    const min_year = all_years[0] ?? 2010
+    const max_year = all_years[all_years.length - 1] ?? 2030
+    const min_pop = Math.min(...all_pops) * 0.97
+    const max_pop = Math.max(...all_pops) * 1.03
+
+    function x_of(year: number) { return ((year - min_year) / (max_year - min_year)) * PLOT_W }
+    function y_of(pop: number) { return PLOT_H - ((pop - min_pop) / (max_pop - min_pop)) * PLOT_H }
+
+    function pop_at_year(year: number): number
+    {
+        if (population_by_year[year] !== undefined) return population_by_year[year]!
+        if (projected_years[year] !== undefined) return projected_years[year]!
+        // interpolate
+        const sorted = all_years
+        for (let i = 0; i < sorted.length - 1; i++)
+        {
+            const y0 = sorted[i]!
+            const y1 = sorted[i + 1]!
+            if (year >= y0 && year <= y1)
+            {
+                const t = (year - y0) / (y1 - y0)
+                const p0 = projected_years[y0] ?? population_by_year[y0]!
+                const p1 = projected_years[y1] ?? population_by_year[y1]!
+                return p0 + t * (p1 - p0)
+            }
+        }
+        return all_pops[all_pops.length - 1]!
+    }
+
+    // Known points polyline
+    const known_points = known_years.map(y => `${x_of(y)},${y_of(population_by_year[y]!)}`)
+    const proj_start_year = known_years[known_years.length - 1]!
+    const proj_years_list = [proj_start_year, ...Object.keys(projected_years).map(Number).sort((a, b) => a - b)]
+    const proj_points = proj_years_list.map(y => `${x_of(y)},${y_of(projected_years[y] ?? population_by_year[y]!)}`)
+
+    // Dragging
+    const svg_ref = useRef<SVGSVGElement>(null)
+    const [dragging, set_dragging] = useState(false)
+
+    const year_from_client_x = useCallback((client_x: number) =>
+    {
+        if (!svg_ref.current) return population.year
+        const rect = svg_ref.current.getBoundingClientRect()
+        const px = client_x - rect.left - PADDING.left
+        const ratio = Math.max(0, Math.min(1, px / PLOT_W))
+        return Math.round(min_year + ratio * (max_year - min_year))
+    }, [min_year, max_year, population.year])
+
+    const handle_move = useCallback((client_x: number) =>
+    {
+        const year = year_from_client_x(client_x)
+        set_population({ year, population: pop_at_year(year) })
+    }, [year_from_client_x, pop_at_year, set_population])
+
+    useEffect(() =>
+    {
+        if (!dragging) return
+        const on_move = (e: MouseEvent | TouchEvent) =>
+        {
+            const client_x = "touches" in e ? e.touches[0]!.clientX : e.clientX
+            handle_move(client_x)
+        }
+        const on_up = () => set_dragging(false)
+        window.addEventListener("mousemove", on_move)
+        window.addEventListener("mouseup", on_up)
+        window.addEventListener("touchmove", on_move)
+        window.addEventListener("touchend", on_up)
+        return () =>
+        {
+            window.removeEventListener("mousemove", on_move)
+            window.removeEventListener("mouseup", on_up)
+            window.removeEventListener("touchmove", on_move)
+            window.removeEventListener("touchend", on_up)
+        }
+    }, [dragging, handle_move])
+
+    const cursor_x = x_of(population.year)
+    const is_projected = population.year > proj_start_year
+
+    const y_tick_count = 3
+    const y_ticks = Array.from({ length: y_tick_count }, (_, i) =>
+    {
+        const pop = min_pop + (i / (y_tick_count - 1)) * (max_pop - min_pop)
+        return { pop, y: y_of(pop) }
+    })
+
+    const x_tick_years = known_years.filter((_, i) => i % Math.ceil(known_years.length / 4) === 0)
+
+    return (
+        <div id="graph_population" style={{ userSelect: "none", pointerEvents: "initial" }}>
+            <div style={{ fontSize: 12, color: "#555", marginBottom: 2, display: "flex", justifyContent: "space-between" }}>
+                <span>Population</span>
+                <span style={{ fontWeight: "bold", color: is_projected ? "#e07020" : "#333" }}>
+                    {fmt_pop(population.population)} ({population.year}{is_projected ? " proj." : ""})
+                </span>
+            </div>
+            <svg
+                ref={svg_ref}
+                width={WIDTH}
+                height={HEIGHT}
+                style={{ display: "block", cursor: "ew-resize", overflow: "visible" }}
+                onMouseDown={e => { set_dragging(true); handle_move(e.clientX) }}
+                onTouchStart={e => { set_dragging(true); handle_move(e.touches[0]!.clientX) }}
+            >
+                <g transform={`translate(${PADDING.left},${PADDING.top})`}>
+                    {/* Y axis ticks */}
+                    {y_ticks.map(({ pop, y }) => (
+                        <g
+                            //@ts-ignore
+                            key={pop}
+                        >
+                            <line x1={-4} y1={y} x2={PLOT_W} y2={y} stroke="#e0e0e0" strokeWidth={1} />
+                            <text x={-6} y={y} textAnchor="end" dominantBaseline="middle" fontSize={9} fill="#888">
+                                {fmt_pop(pop)}
+                            </text>
+                        </g>
+                    ))}
+
+                    {/* X axis ticks */}
+                    {x_tick_years.map(y => (
+                        <g
+                            //@ts-ignore
+                            key={y}
+                        >
+                            <line x1={x_of(y)} y1={PLOT_H} x2={x_of(y)} y2={PLOT_H + 4} stroke="#aaa" strokeWidth={1} />
+                            <text x={x_of(y)} y={PLOT_H + 14} textAnchor="middle" fontSize={9} fill="#888">{y}</text>
+                        </g>
+                    ))}
+                    <text x={x_of(max_year)} y={PLOT_H + 14} textAnchor="end" fontSize={9} fill="#e07020">{max_year}</text>
+
+                    {/* Projected line (dashed) */}
+                    <polyline
+                        points={proj_points.join(" ")}
+                        fill="none"
+                        stroke="#e07020"
+                        strokeWidth={1.5}
+                        strokeDasharray="4 3"
+                        opacity={0.7}
+                    />
+
+                    {/* Known data line */}
+                    <polyline
+                        points={known_points.join(" ")}
+                        fill="none"
+                        stroke="#2a7ae4"
+                        strokeWidth={2}
+                    />
+
+                    {/* Known data points */}
+                    {known_years.map(y => (
+                        <circle
+                            //@ts-ignore
+                            key={y}
+                            cx={x_of(y)}
+                            cy={y_of(population_by_year[y]!)}
+                            r={3}
+                            fill="#2a7ae4"
+                        />
+                    ))}
+
+                    {/* Draggable year cursor */}
+                    <line
+                        x1={cursor_x} y1={0}
+                        x2={cursor_x} y2={PLOT_H}
+                        stroke={is_projected ? "#e07020" : "#444"}
+                        strokeWidth={1.5}
+                        strokeDasharray="3 2"
+                    />
+                    <circle
+                        cx={cursor_x}
+                        cy={y_of(pop_at_year(population.year))}
+                        r={5}
+                        fill={is_projected ? "#e07020" : "#2a7ae4"}
+                        stroke="white"
+                        strokeWidth={1.5}
+                    />
+                </g>
+            </svg>
+        </div>
+    )
+}

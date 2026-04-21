@@ -17,6 +17,7 @@ import { DataComponentAsJSON } from "core/supabase"
 
 import { BalanceSheet } from "./balance_sheet/BalanceSheet"
 import { factors_up_to } from "./balance_sheet/EnergyBoxesHelper"
+import { GraphPopulation } from "./components/GraphPopulation"
 import { Options, ViewType } from "./components/Options"
 import { SelectCountry } from "./components/SelectCountry"
 import {
@@ -75,6 +76,18 @@ function App ()
     }, [])
     const components_map_by_idv = useMemo(() => data_components_by_idv(components), [components])
     const components_map_by_ido = useMemo(() => data_components_by_ido(components), [components])
+
+
+    const population_by_year = useMemo(() =>
+    {
+        return {
+            2010: 60e6,
+            2015: 62e6,
+            2020: 64e6,
+            2035: 68e6,
+        }
+    }, [components])
+    const [population, set_population] = useState({ population: population_by_year[2020], year: 2020 })
 
 
     // Make the knowledge graph
@@ -147,6 +160,11 @@ function App ()
                         {!sim_or_dt && <SelectPerspective
                             perspectives={perspective_ids}
                             on_change={set_perspective_ids}
+                        />}
+                        {sim_or_dt && <GraphPopulation
+                            population_by_year={population_by_year}
+                            population={population}
+                            set_population={set_population}
                         />}
                     </div>
                 </div>
