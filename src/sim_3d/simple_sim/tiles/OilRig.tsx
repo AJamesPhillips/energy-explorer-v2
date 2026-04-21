@@ -1,6 +1,7 @@
 import { useFrame } from "@react-three/fiber"
 import { useEffect, useMemo, useRef } from "react"
 import * as THREE from "three"
+import { CellData, OilRigState } from "../interface"
 
 
 const NUM_SMOKE = 4
@@ -11,19 +12,20 @@ interface SingleOilRigProps
     x: number
     y: number
     cell_size: number
+    state: OilRigState
 }
 
-function SingleOilRig({ x, y, cell_size }: SingleOilRigProps)
+function SingleOilRig({ x, y, cell_size, state }: SingleOilRigProps)
 {
     const s = cell_size
 
     // ── Structural dimensions ──────────────────────────────────────────────
-    const leg_h       = s * 0.55
-    const leg_r       = s * 0.036
-    const leg_spread  = s * 0.27
+    const leg_h       = s * 0.3
+    const leg_r       = s * 0.08
+    const leg_spread  = s * 0.23
 
     const deck_y      = leg_h
-    const deck_h      = s * 0.055
+    const deck_h      = s * 0.2
     const deck_w      = s * 0.72
     const deck_d      = s * 0.60
     const platform_top = deck_y + deck_h
@@ -34,8 +36,9 @@ function SingleOilRig({ x, y, cell_size }: SingleOilRigProps)
     const derrick_r   = s * 0.115
     const derrick_h   = s * 0.52
 
+    const rig_active = state === "extracting"
     const flare_x     = s * 0.28
-    const flare_z     = -s * 0.05
+    const flare_z     = -s * 0.27
     const flare_h     = s * 0.40
     const flare_r     = s * 0.018
     const flare_top_y = platform_top + flare_h
@@ -44,7 +47,7 @@ function SingleOilRig({ x, y, cell_size }: SingleOilRigProps)
     const flame_r     = s * 0.07
 
     // ── Geometries ─────────────────────────────────────────────────────────
-    const leg_geo      = useMemo(() => new THREE.CylinderGeometry(leg_r, leg_r * 1.25, leg_h, 8), [leg_r, leg_h])
+    const leg_geo      = useMemo(() => new THREE.CylinderGeometry(leg_r, leg_r, leg_h, 8), [leg_r, leg_h])
     const deck_geo     = useMemo(() => new THREE.BoxGeometry(deck_w, deck_h, deck_d), [deck_w, deck_h, deck_d])
     const mod_geo      = useMemo(() => new THREE.BoxGeometry(mod_w, mod_h, mod_d), [mod_w, mod_h, mod_d])
     const mod2_geo     = useMemo(() => new THREE.BoxGeometry(mod2_w, mod2_h, mod2_d), [mod2_w, mod2_h, mod2_d])
@@ -52,7 +55,7 @@ function SingleOilRig({ x, y, cell_size }: SingleOilRigProps)
     const derrick_geo  = useMemo(() => new THREE.ConeGeometry(derrick_r, derrick_h, 4), [derrick_r, derrick_h])
     const flare_geo    = useMemo(() => new THREE.CylinderGeometry(flare_r, flare_r, flare_h, 6), [flare_r, flare_h])
     const flame_geo    = useMemo(() => new THREE.ConeGeometry(flame_r, flame_h, 8), [flame_r, flame_h])
-    const smoke_geo    = useMemo(() => new THREE.SphereGeometry(s * 0.038, 6, 6), [s])
+    const smoke_geo    = useMemo(() => new THREE.SphereGeometry(s * 0.08, 6, 6), [s])
 
     // ── Materials ──────────────────────────────────────────────────────────
     const struct_mat   = useMemo(() => new THREE.MeshStandardMaterial({ color: 0xcc9900 }), [])
@@ -71,7 +74,7 @@ function SingleOilRig({ x, y, cell_size }: SingleOilRigProps)
         Array.from({ length: NUM_SMOKE }, () => new THREE.MeshStandardMaterial({
             color:      0x555555,
             transparent: true,
-            opacity:    0.35,
+            opacity:    0,
             depthWrite: false,
         })),
     [])
@@ -93,14 +96,15 @@ function SingleOilRig({ x, y, cell_size }: SingleOilRigProps)
     useFrame(state =>
     {
         const t = state.clock.elapsedTime
+        const o = rig_active ? 1 : 0
 
         // Flame flicker — scale & colour
         if (flame_ref.current)
         {
-            const fy = 0.80 + 0.35 * Math.sin(t * 13.7) + 0.10 * Math.sin(t * 22.3) + 0.05 * Math.sin(t * 7.1)
-            const fx = 0.55 + 0.45 * Math.sin(t * 9.3)
-            const fz = 0.55 + 0.45 * Math.sin(t * 11.7)
-            flame_ref.current.scale.set(fx, fy, fz)
+            const fy = 1 //0.80 + 0.35 * Math.sin(t * 13.7) + 0.10 * Math.sin(t * 22.3) + 0.05 * Math.sin(t * 7.1)
+            const fx = 0.8 + 0.2 * Math.sin(t * 9.3)
+            const fz = 0.8 + 0.2 * Math.sin(t * 11.7)
+            flame_ref.current.scale.set(fx * o, fy * o, fz * o)
             const yellow = (Math.sin(t * 8) + 1) / 2
             ;(flame_ref.current.material as THREE.MeshStandardMaterial).color.setRGB(1, 0.28 + yellow * 0.42, 0)
         }
@@ -110,10 +114,10 @@ function SingleOilRig({ x, y, cell_size }: SingleOilRigProps)
         {
             if (!mesh) return
             const phase = (t * 0.32 + smoke_phases[i]!) % 1
-            mesh.position.y = flare_top_y + flame_h * 0.4 + phase * s * 0.48
+            mesh.position.y = flare_top_y + flame_h * 0.4 + phase * s * 0.6
             mesh.position.x = flare_x + Math.sin(t * 1.1 + i) * s * 0.015
-            mesh.scale.setScalar(0.35 + phase * 1.3)
-            smoke_mats[i]!.opacity = 0.38 * (1 - phase)
+            mesh.scale.setScalar((0.35 + phase * 1.3) * o)
+            smoke_mats[i]!.opacity = 0.78 * (1 - phase)
         })
     })
 
@@ -154,11 +158,15 @@ function SingleOilRig({ x, y, cell_size }: SingleOilRigProps)
 
             {/* Flare tower */}
             <mesh geometry={flare_geo} material={struct_mat}
-                position={[flare_x, platform_top + flare_h / 2, flare_z]} />
+                position={[flare_x, platform_top + flare_h / 2, flare_z]}
+                rotation={[0, 0, -0.2]}
+            />
 
             {/* Animated gas flame */}
             <mesh ref={flame_ref} geometry={flame_geo} material={flame_mat}
-                position={[flare_x, flare_top_y + flame_h / 2, flare_z]} />
+                position={[flare_x, flare_top_y + flame_h / 2 - 0.5, flare_z - 0.6]}
+                rotation={[Math.PI - 0.2, 0, 0]}
+            />
 
             {/* Animated smoke puffs */}
             {smoke_phases.map((_, i) => (
@@ -167,7 +175,7 @@ function SingleOilRig({ x, y, cell_size }: SingleOilRigProps)
                     ref={el => { smoke_ref.current[i] = el }}
                     geometry={smoke_geo}
                     material={smoke_mats[i]}
-                    position={[flare_x, flare_top_y, flare_z]}
+                    position={[flare_x, flare_top_y - 0.5, flare_z - 0.6]}
                 />
             ))}
 
@@ -178,7 +186,7 @@ function SingleOilRig({ x, y, cell_size }: SingleOilRigProps)
 
 interface OilRigTilesProps
 {
-    tiles: Array<{ x: number, y: number }>
+    tiles: Array<CellData>
     cell_size: number
 }
 
@@ -186,13 +194,13 @@ export function OilRigTiles({ tiles, cell_size }: OilRigTilesProps)
 {
     if (tiles.length === 0) return null
 
-    debugger
-
     return <>
-        {tiles.map(({ x, y }) => (
-            <group key={`${x}-${y}`}>
-                <SingleOilRig x={x} y={y} cell_size={cell_size} />
+        {tiles.map(({ x, y, has_oil_rig }) => {
+            const state = has_oil_rig?.state ?? "dormant"
+
+            return <group key={`${x}-${y}`}>
+                <SingleOilRig x={x} y={y} cell_size={cell_size} state={state} />
             </group>
-        ))}
+        })}
     </>
 }

@@ -12,8 +12,6 @@ export function PowerStatus ({ view, power, datetime }: { view: LimitedViewType,
 {
     const [current_supply_gw, set_current_supply_gw] = useState(power.supply_gw)
     const [current_demand_gw, set_current_demand_gw] = useState(power.demand_gw)
-    // const animated_supply = useRef(power.supply_gw)
-    // const animated_demand = useRef(power.demand_gw)
 
     useFrame((_, delta) =>
     {

@@ -1,4 +1,4 @@
-import { CellData, CellsData } from "./interface"
+import { CellData, CellsData, OilRigConfig, OilRigState } from "./interface"
 import { get_land_or_sea_for_letter, LetterType } from "./map_data_compact"
 
 
@@ -28,6 +28,10 @@ dddddddddddddddddddd
 `.trim()
 
 
+/**
+ *   x = oil rig extracting
+ *   z = oil rig dormant
+ */
 const infrastructure_map_data = `
 ____________________
 ____________________
@@ -46,12 +50,12 @@ ____________________
 ____________________
 ____________________
 ____________________
-________________x___
-______x_____________
+_________________z__
 ____________________
+_____x______________
 `.trim()
 
-type InfraColumn = Record<number, { has_oil_rig: boolean}>
+type InfraColumn = Record<number, { has_oil_rig: OilRigConfig }>
 const xy_to_infra: Record<number, InfraColumn> = {}
 infrastructure_map_data.split("\n")
     .forEach((line, y) =>
@@ -60,10 +64,12 @@ infrastructure_map_data.split("\n")
         cells.forEach((cell, x) =>
         {
             if (!xy_to_infra[x]) xy_to_infra[x] = {}
-            const has_oil_rig = cell === "x"
+            const has_oil_rig = cell === "x" || cell === "z"
             if (has_oil_rig)
             {
-                xy_to_infra[x][y] = { has_oil_rig }
+                const state: OilRigState = cell === "x" ? "extracting" : "dormant"
+                const config: OilRigConfig = { state }
+                xy_to_infra[x][y] = { has_oil_rig: config }
             }
         })
     })
@@ -83,7 +89,7 @@ export const map_data_cells: CellsData = map_data
                     y,
                     has_wind_turbine: false,
                     has_solar_farm: false,
-                    has_oil_rig: !!(xy_to_infra[x]![y]?.has_oil_rig),
+                    has_oil_rig: xy_to_infra[x]![y]?.has_oil_rig,
                 }
                 acc[x][y] = cell_data
             })

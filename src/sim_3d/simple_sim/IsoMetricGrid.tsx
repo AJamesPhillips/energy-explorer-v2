@@ -2,7 +2,7 @@ import { ThreeEvent } from "@react-three/fiber"
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import * as THREE from "three"
 
-import { CellsData, LandOrSea } from "./interface"
+import { CellData, CellsData } from "./interface"
 import { tile_colour } from "./tile"
 import { OilRigTiles } from "./tiles/OilRig"
 import { SolarFarm } from "./tiles/SolarFarm"
@@ -12,28 +12,14 @@ import { WindTurbine } from "./tiles/WindTurbine"
 import { Woodland } from "./tiles/Woodland"
 
 
-interface TileInfo
-{
-    x: number
-    y: number
-    cell: LandOrSea
-}
-
-export interface TileEvent
-{
-    x: number
-    y: number
-    cell: LandOrSea
-}
-
 interface IsoMetricGridProps
 {
     size: { x: number, y: number }
     cell_size: number
     data: CellsData
-    on_click_tile?: (tile: TileEvent) => void
+    on_click_tile?: (tile: CellData) => void
     /** Fired with null when the pointer leaves the grid entirely. */
-    on_hover_tile?: (tile: TileEvent | null) => void
+    on_hover_tile?: (tile: CellData | null) => void
 }
 export function IsoMetricGrid(props: IsoMetricGridProps)
 {
@@ -44,15 +30,15 @@ export function IsoMetricGrid(props: IsoMetricGridProps)
     const [hover_visible, set_hover_visible] = useState(false)
 
 
-    const tiles = useMemo<TileInfo[]>(() =>
+    const tiles = useMemo<CellData[]>(() =>
     {
-        const result: TileInfo[] = []
+        const result: CellData[] = []
         for (let y = 0; y < size.y; y++)
         {
             for (let x = 0; x < size.x; x++)
             {
                 const cell = data[x]?.[y]
-                if (cell) result.push({ x, y, cell })
+                if (cell) result.push(cell)
             }
         }
         return result
@@ -82,33 +68,33 @@ export function IsoMetricGrid(props: IsoMetricGridProps)
     }, [cell_size])
 
     const woodland_tiles = useMemo(
-        () => tiles.filter(t => t.cell.type === "land" && t.cell.subtype === "woodland"),
+        () => tiles.filter(cell => cell.type === "land" && cell.subtype === "woodland"),
         [tiles],
     )
 
     const urban_tiles = useMemo(
-        () => tiles.filter(t => t.cell.type === "land" && t.cell.subtype === "urban"),
+        () => tiles.filter(cell => cell.type === "land" && cell.subtype === "urban"),
         [tiles],
     )
 
     const suburban_tiles = useMemo(
-        () => tiles.filter(t => t.cell.type === "land" && t.cell.subtype === "suburban"),
+        () => tiles.filter(cell => cell.type === "land" && cell.subtype === "suburban"),
         [tiles],
     )
 
     const wind_turbine_tiles = useMemo(
-        () => tiles.filter(t => data[t.x]?.[t.y]?.has_wind_turbine),
-        [tiles, data],
+        () => tiles.filter(cell => cell.has_wind_turbine),
+        [tiles],
     )
 
     const solar_farm_tiles = useMemo(
-        () => tiles.filter(t => data[t.x]?.[t.y]?.has_solar_farm),
-        [tiles, data],
+        () => tiles.filter(cell => cell.has_solar_farm),
+        [tiles],
     )
 
     const oil_rig_tiles = useMemo(
-        () => tiles.filter(t => data[t.x]?.[t.y]?.has_oil_rig),
-        [tiles, data],
+        () => tiles.filter(cell => cell.has_oil_rig),
+        [tiles],
     )
 
     useEffect(() => () =>
@@ -131,9 +117,9 @@ export function IsoMetricGrid(props: IsoMetricGridProps)
         const dummy = new THREE.Object3D()
         const color  = new THREE.Color()
 
-        tiles.forEach(({ x, y, cell }, i) =>
+        tiles.forEach((cell, i) =>
         {
-            dummy.position.set(x * cell_size, 0, y * cell_size)
+            dummy.position.set(cell.x * cell_size, 0, cell.y * cell_size)
             dummy.updateMatrix()
             mesh.setMatrixAt(i, dummy.matrix)
             color.set(tile_colour(cell))
@@ -150,7 +136,7 @@ export function IsoMetricGrid(props: IsoMetricGridProps)
         e.stopPropagation()
         if (e.instanceId === undefined) return
         const tile = tiles[e.instanceId]
-        if (tile) on_click_tile?.({ x: tile.x, y: tile.y, cell: tile.cell })
+        if (tile) on_click_tile?.(tile)
     }, [tiles, on_click_tile])
 
     const on_pointer_move = useCallback((e: ThreeEvent<PointerEvent>) =>
@@ -163,7 +149,7 @@ export function IsoMetricGrid(props: IsoMetricGridProps)
             hover_ref.current.position.set(tile.x * cell_size, 0, tile.y * cell_size)
         }
         set_hover_visible(true)
-        on_hover_tile?.({ x: tile.x, y: tile.y, cell: tile.cell })
+        on_hover_tile?.(tile)
     }, [tiles, on_hover_tile, cell_size])
 
     const on_pointer_leave = useCallback(() =>
