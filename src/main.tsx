@@ -125,10 +125,13 @@ function App ()
     }, [components_map_by_idv, perspective_ids.join(",")])
 
 
+    const sim_or_dt = (view === "simulation" || view === "digital_twin")
+
+
     return <>
         <Evaluator />
 
-        {(view === "simulation" || view === "digital_twin") && <EnergyExplorerSimV2 view={view} />}
+        {sim_or_dt && <EnergyExplorerSimV2 view={view} />}
 
         <div id="app_html">
 
@@ -141,10 +144,10 @@ function App ()
                             <Info />
                             <SelectCountry selected_country_ISO2="GB" />
                         </div>
-                        <SelectPerspective
+                        {!sim_or_dt && <SelectPerspective
                             perspectives={perspective_ids}
                             on_change={set_perspective_ids}
-                        />
+                        />}
                     </div>
                 </div>
 

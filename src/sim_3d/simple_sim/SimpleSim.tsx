@@ -60,10 +60,10 @@ export function SimpleSim()
                 // power={power}
                 set_power={set_power}
             />
+            <PowerStatus view="simulation" power={power} />
         </Canvas>
 
         <WelcomeMessage />
-        <PowerStatus power={power} />
     </>
 }
 
