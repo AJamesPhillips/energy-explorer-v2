@@ -28,8 +28,8 @@ function w_per_m2_to_gw_per_cell(w_per_m2: number): number
     return w_per_m2 * M2_PER_CELL / 1e9
 }
 // claimed power density
-const land_wind_turbines_w_per_m2 = 2
-const offshore_wind_turbines_w_per_m2 = 3
+const land_wind_turbines_w_per_m2 = 2 // https://wikisim.org/wiki/1275v1
+const offshore_wind_turbines_w_per_m2 = 3 // https://wikisim.org/wiki/1276
 const solar_farm_w_per_m2 = 5  // https://www.withouthotair.com/c6/page_41.shtml#:~:text=5%20W/m2
 const solar_built_area_w_per_m2 = 0.633 // W m-2 -- https://wikisim.org/wiki/1274
 
