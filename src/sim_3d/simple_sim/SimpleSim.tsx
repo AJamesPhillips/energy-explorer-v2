@@ -30,8 +30,8 @@ function w_per_m2_to_gw_per_cell(w_per_m2: number): number
 // claimed power density
 const land_wind_turbines_w_per_m2 = 2
 const offshore_wind_turbines_w_per_m2 = 3
-const solar_urban_w_per_m2 = 22  // https://www.withouthotair.com/c6/page_39.shtml#:~:text=22%20W/m2
 const solar_farm_w_per_m2 = 5  // https://www.withouthotair.com/c6/page_41.shtml#:~:text=5%20W/m2
+const solar_built_area_w_per_m2 = 0.633 // W m-2 -- https://wikisim.org/wiki/1274
 
 const CELL_SIZE = 12
 
@@ -252,7 +252,7 @@ function calculate_power_from_data(data: CellsData): PowerStats
                 {
                     if (cell.subtype === "suburban" || cell.subtype === "urban")
                     {
-                        supply_gw += w_per_m2_to_gw_per_cell(solar_urban_w_per_m2)
+                        supply_gw += w_per_m2_to_gw_per_cell(solar_built_area_w_per_m2)
                     }
                     else
                     {
