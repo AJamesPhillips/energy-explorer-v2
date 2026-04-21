@@ -157,10 +157,11 @@ function App ()
                             <Info />
                             <SelectCountry selected_country_ISO2="GB" />
                         </div>
-                        {!sim_or_dt && <SelectPerspective
-                            perspectives={perspective_ids}
+                        <SelectPerspective
+                            force_single={sim_or_dt}
+                            selected_perspectives={perspective_ids}
                             on_change={set_perspective_ids}
-                        />}
+                        />
                         {sim_or_dt && <GraphPopulation
                             population_by_year={population_by_year}
                             population={population}

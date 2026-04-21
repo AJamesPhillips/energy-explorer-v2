@@ -1,3 +1,4 @@
+import { useEffect } from "react"
 
 
 export const perspective_id_general = 1239 as const
@@ -17,24 +18,36 @@ const option_ids: PerspectiveType[] = [
     perspective_id_2009_mackay,
     perspective_id_general,
 ]
+const drop_down_options: Option[] = option_ids.map(id => ({
+    id,
+    label: perspective_id_to_name_map[id],
+}))
+
+interface Option
+{
+    id: PerspectiveType
+    label: string
+}
 
 interface SelectPerspectiveProps
 {
-    perspectives: PerspectiveType[]
+    force_single: boolean
+    selected_perspectives: PerspectiveType[]
     on_change: (perspectives: PerspectiveType[]) => void
-    max_perspectives?: number
 }
-
-// const order_badges = ["①", "②", "③", "④", "⑤"]
-
 export function SelectPerspective(props: SelectPerspectiveProps)
 {
-    const { max_perspectives = 2 } = props
+    const max_perspectives = props.force_single ? 1 : 2
+    const { selected_perspectives } = props
 
-    const drop_down_options: { id: PerspectiveType, label: string }[] = option_ids.map(id => ({
-        id,
-        label: perspective_id_to_name_map[id],
-    }))
+    useEffect(() =>
+    {
+        // Ensure the selected_perspectives do not exceed max_perspectives
+        if (selected_perspectives.length <= max_perspectives) return
+        const trimmed_selected_perspectives = selected_perspectives.slice(0, max_perspectives)
+        props.on_change(trimmed_selected_perspectives)
+    }, [selected_perspectives, max_perspectives])
+
 
     function handle_radio(id: PerspectiveType)
     {
@@ -43,39 +56,28 @@ export function SelectPerspective(props: SelectPerspectiveProps)
 
     function handle_checkbox(id: PerspectiveType)
     {
-        const selected = props.perspectives
-        if (selected.includes(id))
+        if (selected_perspectives.includes(id))
         {
-            props.on_change(selected.filter(p => p !== id))
+            props.on_change(selected_perspectives.filter(p => p !== id))
         }
-        else if (selected.length < max_perspectives)
+        else
         {
-            props.on_change([...selected, id])
+            const new_selected_perspectives = [id, ...selected_perspectives].slice(0, max_perspectives)
+            props.on_change(new_selected_perspectives)
         }
     }
 
-    const single_selected = props.perspectives.length === 1
-    const multi_selected = props.perspectives.length > 1
+    const single_selected = selected_perspectives.length === 1
+    const multi_selected = selected_perspectives.length > 1
 
     return (
         <div id="select_perspective">
             <ul style={{ listStyle: "none", padding: 10, margin: 0, border: "1px solid #ccc", borderRadius: 4, display: "flex", flexDirection: "column", gap: "0.5rem", backgroundColor: "#f9f9f9" }}>
                 {drop_down_options.map(option =>
                 {
-                    const selection_index = props.perspectives.indexOf(option.id)
+                    const selection_index = selected_perspectives.indexOf(option.id)
                     const is_selected = selection_index !== -1
-                    const checkbox_disabled = (
-                        (!is_selected && props.perspectives.length >= max_perspectives)
-                        || (is_selected && single_selected)
-                    )
-                    const checkbox_title = single_selected
-                        ? (is_selected
-                            ? "At least one perspective must be selected"
-                            : `Select ${option.label}`)
-                        : checkbox_disabled
-                            ? `Maximum ${max_perspectives} perspectives`
-                            : `Select ${option.label}`
-
+                    const checkbox_title = `Select ${option.label} to compare`
 
                     return (
                         <li
@@ -92,22 +94,13 @@ export function SelectPerspective(props: SelectPerspectiveProps)
                                 />
                                 {option.label}
                             </label>
-                            {/* <span style={{
-                                width: "1.2em",
-                                textAlign: "center",
-                                fontSize: "1.1em",
-                                color: is_selected ? "#0066cc" : "transparent",
-                                userSelect: "none",
-                            }}>
-                                {is_selected ? order_badges[selection_index] : order_badges[0]}
-                            </span> */}
-                            <input
+
+                            {!props.force_single && <input
                                 type="checkbox"
                                 checked={is_selected}
-                                disabled={checkbox_disabled}
                                 onChange={() => handle_checkbox(option.id)}
                                 title={checkbox_title}
-                            />
+                            />}
                         </li>
                     )
                 })}
@@ -127,7 +120,7 @@ export function SelectPerspective(props: SelectPerspectiveProps)
                     flexWrap: "wrap",
                 }}>
                     <span style={{ fontWeight: 600 }}>Comparing:</span>
-                    {props.perspectives.map((id, i) =>
+                    {selected_perspectives.map((id, i) =>
                     {
                         const label = drop_down_options.find(o => o.id === id)?.label ?? id
                         return (
