@@ -1,10 +1,10 @@
 import { OrthographicCamera } from "@react-three/drei"
 import { Canvas, useFrame, useThree } from "@react-three/fiber"
-import { useCallback, useEffect, useMemo, useRef, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import * as THREE from "three"
 
 import { uk_coverage } from "../data/coverage/uk/data"
-import uk_daily_power_demand_profiles from "../data/power_demand/uk/daily_profiles.json"
+// import uk_daily_power_demand_profiles from "../data/power_demand/uk/daily_profiles.json"
 // import { uk_month_hourly_and_location_average_capacity_factor_solar_generation_2018 } from "../data/power_generation/solar_pv"
 // import { uk_month_hourly_and_location_average_capacity_factor_wind_generation_2018 } from "../data/power_generation/wind_turbine"
 import { PowerStats } from "../model/interface"
@@ -38,19 +38,13 @@ const CELL_SIZE = 12
 
 export function SimpleSim()
 {
-    const power_demand_series = useMemo(() => uk_daily_power_demand_profiles["2010"].average_demand.data, [])
+    // const power_demand_series = useMemo(() => uk_daily_power_demand_profiles["2010"].average_demand.data, [])
     const [power, set_power] = useState<PowerStats>({
-        demand_gw: Math.round(power_demand_series[3]![2]! as number / 1e3),
+        demand_gw: 0, //Math.round(power_demand_series[3]![2]! as number / 1e3),
         supply_gw: 0,
     })
 
     const [data, set_data] = useState<CellsData>(() => map_data_cells)
-
-    // useEffect(() =>
-    // {
-    //     let supply_gw = 0
-
-    // }, [data])
 
     return <>
         <Canvas id="scene-3d">
@@ -129,8 +123,11 @@ function SimpleSim3d(props: SimpleSim3dProps)
 
     useEffect(() =>
     {
-        const new_power = calculate_power_from_data(props.data)
-        props.set_power(new_power)
+        const new_power_supply = calculate_power_supply_from_data(props.data)
+        props.set_power(existing => ({
+            supply_gw: new_power_supply,
+            demand_gw: existing.demand_gw,
+        }))
     }, [props.data])
 
     return <>
@@ -228,7 +225,7 @@ function cycle_cell_contents(cell: CellData): CellData
 }
 
 
-function calculate_power_from_data(data: CellsData): PowerStats
+function calculate_power_supply_from_data(data: CellsData): number
 {
     let supply_gw = 0
 
@@ -263,8 +260,5 @@ function calculate_power_from_data(data: CellsData): PowerStats
         })
     })
 
-    return {
-        demand_gw: 0,
-        supply_gw,
-    }
+    return supply_gw
 }
