@@ -58,7 +58,7 @@ function SingleOilRig({ x, y, cell_size, state }: SingleOilRigProps)
     const smoke_geo    = useMemo(() => new THREE.SphereGeometry(s * 0.08, 6, 6), [s])
 
     // ── Materials ──────────────────────────────────────────────────────────
-    const struct_mat   = useMemo(() => new THREE.MeshStandardMaterial({ color: 0xcc9900 }), [])
+    const struct_mat   = useMemo(() => new THREE.MeshStandardMaterial({ color: rig_active ? 0xcc9900 : 0x778899 }), [])
     const module_mat   = useMemo(() => new THREE.MeshStandardMaterial({ color: 0x3d4f61 }), [])
     const derrick_mat  = useMemo(() => new THREE.MeshStandardMaterial({ color: 0x99aabb }), [])
     const helipad_mat  = useMemo(() => new THREE.MeshStandardMaterial({ color: 0x778899 }), [])
@@ -157,7 +157,7 @@ function SingleOilRig({ x, y, cell_size, state }: SingleOilRigProps)
                 position={[-s * 0.05, platform_top + derrick_h / 2, -s * 0.13]} />
 
             {/* Flare tower */}
-            <mesh geometry={flare_geo} material={struct_mat}
+            <mesh geometry={flare_geo} material={derrick_mat}
                 position={[flare_x, platform_top + flare_h / 2, flare_z]}
                 rotation={[0, 0, -0.2]}
             />
