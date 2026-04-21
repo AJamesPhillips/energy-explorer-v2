@@ -1,11 +1,11 @@
 import { DigitalTwin } from "./digital_twin/DigitalTwin"
-import "./EnergyExplorerSimV2.css"
 import { LimitedViewType } from "./interface"
+import "./Sim3d.css"
 import { SimpleSim } from "./simple_sim/SimpleSim"
 
 
 
-export const EnergyExplorerSimV2 = (props: { view: LimitedViewType }) =>
+export const Sim3d = (props: { view: LimitedViewType }) =>
 {
     return <>
         {props.view === "digital_twin" && <DigitalTwin />}

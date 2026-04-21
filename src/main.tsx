@@ -31,7 +31,7 @@ import { other_ids_performance_boost, top_ids_to_fetch } from "./data/ids"
 import { DataComponentExtended, Perspective } from "./data/interface"
 import { GraphViewer } from "./graph/GraphViewer"
 import "./index.css"
-import { EnergyExplorerSimV2 } from "./sim_3d/EnergyExplorerSimV2"
+import { Sim3d } from "./sim_3d/Sim3d"
 import { Info } from "./sim_3d/simple_sim/Info"
 
 
@@ -144,7 +144,7 @@ function App ()
     return <>
         <Evaluator />
 
-        {sim_or_dt && <EnergyExplorerSimV2 view={view} />}
+        {sim_or_dt && <Sim3d view={view} />}
 
         <div id="app_html">
 
