@@ -52,6 +52,7 @@ export function generate_map_data(size: { x: number, y: number }): CellsData
                 y: 0,
                 has_wind_turbine: false,
                 has_solar_farm: false,
+                has_oil_rig: false,
             }
             cells[x]![y] = cell
         }

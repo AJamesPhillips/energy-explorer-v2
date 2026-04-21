@@ -4,6 +4,7 @@ import * as THREE from "three"
 
 import { CellsData, LandOrSea } from "./interface"
 import { tile_colour } from "./tile"
+import { OilRigTiles } from "./tiles/OilRig"
 import { SolarFarm } from "./tiles/SolarFarm"
 import { SuburbanTiles } from "./tiles/Suburban"
 import { UrbanTiles } from "./tiles/Urban"
@@ -105,6 +106,11 @@ export function IsoMetricGrid(props: IsoMetricGridProps)
         [tiles, data],
     )
 
+    const oil_rig_tiles = useMemo(
+        () => tiles.filter(t => data[t.x]?.[t.y]?.has_oil_rig),
+        [tiles, data],
+    )
+
     useEffect(() => () =>
     {
         geometry.dispose()
@@ -181,6 +187,8 @@ export function IsoMetricGrid(props: IsoMetricGridProps)
 
         <WindTurbine tiles={wind_turbine_tiles} cell_size={cell_size} />
         <SolarFarm tiles={solar_farm_tiles} cell_size={cell_size} />
+
+        <OilRigTiles tiles={oil_rig_tiles} cell_size={cell_size} />
 
         <group ref={hover_ref} visible={hover_visible}>
             <lineSegments args={[hover_outline_geo, hover_outline_mat]} />

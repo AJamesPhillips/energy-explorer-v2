@@ -28,6 +28,47 @@ dddddddddddddddddddd
 `.trim()
 
 
+const infrastructure_map_data = `
+____________________
+____________________
+____________________
+____________________
+____________________
+____________________
+____________________
+____________________
+____________________
+____________________
+____________________
+____________________
+____________________
+____________________
+____________________
+____________________
+____________________
+________________x___
+______x_____________
+____________________
+`.trim()
+
+type InfraColumn = Record<number, { has_oil_rig: boolean}>
+const xy_to_infra: Record<number, InfraColumn> = {}
+infrastructure_map_data.split("\n")
+    .forEach((line, y) =>
+    {
+        const cells = line.trim().split("")
+        cells.forEach((cell, x) =>
+        {
+            if (!xy_to_infra[x]) xy_to_infra[x] = {}
+            const has_oil_rig = cell === "x"
+            if (has_oil_rig)
+            {
+                xy_to_infra[x][y] = { has_oil_rig }
+            }
+        })
+    })
+
+
 export const map_data_cells: CellsData = map_data
     .split("\n")
     .reduce((acc, line, y) =>
@@ -42,8 +83,9 @@ export const map_data_cells: CellsData = map_data
                     y,
                     has_wind_turbine: false,
                     has_solar_farm: false,
+                    has_oil_rig: !!(xy_to_infra[x]![y]?.has_oil_rig),
                 }
-                acc[x]![y] = cell_data
+                acc[x][y] = cell_data
             })
 
             return acc

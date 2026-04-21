@@ -37,7 +37,7 @@ export function PowerStatus ({ view, power, datetime }: { view: LimitedViewType,
         <div
             style={{
                 position: "absolute",
-                // Hack to cope with <Html> forcing an absolute position on this element
+                // Hack to cope with drei's <Html> forcing an absolute position on this element
                 top: view === "digital_twin" ? -375 : -100,
                 left: "50%",
                 transform: "translateX(-50%)",

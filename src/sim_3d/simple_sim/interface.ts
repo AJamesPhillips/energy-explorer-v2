@@ -16,6 +16,7 @@ export type CellData = LandOrSea &
     y: number
     has_wind_turbine: boolean
     has_solar_farm: boolean
+    has_oil_rig: boolean
     // has_hydro: boolean
     // altitude_m: number
 }
