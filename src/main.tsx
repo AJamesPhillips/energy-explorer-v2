@@ -46,7 +46,7 @@ function App ()
     // const [view, set_view] = useState<ViewType>("balance_sheet")
     // const [view, set_view] = useState<ViewType>("digital_twin")
     const [view, set_view] = useState<ViewType>("simulation")
-    const [perspective_ids, set_perspective_ids] = useState<PerspectiveType[]>([
+    const [selected_perspectives, set_selected_perspectives] = useState<PerspectiveType[]>([
         perspective_id_2009_mackay,
         perspective_id_general
     ])
@@ -104,10 +104,10 @@ function App ()
             return []
         }
 
-        const perspective_id1 = perspective_ids[1]!
+        const perspective_id1 = selected_perspectives[1]!
         const idv_of_comparison = components_map_by_ido[perspective_id1]?.id
 
-        return perspective_ids.map(perspective_id =>
+        return selected_perspectives.map(perspective_id =>
         {
             const idv_of_interest = components_map_by_ido[perspective_id]?.id
             if (!idv_of_interest)
@@ -135,7 +135,7 @@ function App ()
             }
         })
         .filter(p => !!p)
-    }, [components_map_by_idv, perspective_ids.join(",")])
+    }, [components_map_by_idv, selected_perspectives.join(",")])
 
 
     const sim_or_dt = (view === "simulation" || view === "digital_twin")
@@ -159,8 +159,8 @@ function App ()
                         </div>
                         <SelectPerspective
                             force_single={sim_or_dt}
-                            selected_perspectives={perspective_ids}
-                            on_change={set_perspective_ids}
+                            selected_perspectives={selected_perspectives}
+                            on_change={set_selected_perspectives}
                         />
                         {sim_or_dt && <GraphPopulation
                             population_by_year={population_by_year}
