@@ -23,7 +23,7 @@ const options: Option[] = [
         id: "simulation",
         label: "Simulation",
         img_url: asset_url("imgs/sim.jpg"),
-        under_construction: true,
+        under_construction: false,
     },
     {
         id: "digital_twin",

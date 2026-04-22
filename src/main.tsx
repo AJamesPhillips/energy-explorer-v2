@@ -148,7 +148,9 @@ function App ()
 
         <div id="app_html">
 
-            <Options selected={view} on_select={set_view} />
+            {!!(new URLSearchParams(document.location.search).has("other_mediums")) &&
+                <Options selected={view} on_select={set_view} />
+            }
 
             <div style={{ display: "flex", gap: "20px", flexDirection: "column", flexGrow: 1 }}>
                 <div id="app_top_bar">
