@@ -9,6 +9,7 @@ import { uk_coverage } from "../data/coverage/uk/data"
 // import { uk_month_hourly_and_location_average_capacity_factor_wind_generation_2018 } from "../data/power_generation/wind_turbine"
 import { PerspectiveKnowledgeGraph } from "../../data/interface"
 import { PowerStats } from "../model/interface"
+import { FooterLinks } from "./FooterLinks"
 import { CellData, CellsData } from "./interface"
 import { IsoMetricGrid } from "./IsoMetricGrid"
 import { map_data_cells } from "./map_data"
@@ -76,6 +77,7 @@ export function SimpleSim(props: { persective: PerspectiveKnowledgeGraph, popula
         </Canvas>
 
         <WelcomeMessage />
+        <FooterLinks />
     </>
 }
 
