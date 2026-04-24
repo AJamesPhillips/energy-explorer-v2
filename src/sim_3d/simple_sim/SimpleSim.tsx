@@ -191,8 +191,8 @@ function Data ()
 function IsoCamera({ grid_size, cell_size }: { grid_size: { x: number, y: number }, cell_size: number })
 {
     // Centre of the tile grid in world space (tiles start at origin).
-    const cx = (grid_size.x - 1) * cell_size / 2
-    const cz = (grid_size.y - 1) * cell_size / 2
+    const cx = (grid_size.x - 5) * cell_size / 2
+    const cz = (grid_size.y - 5) * cell_size / 2
 
     // Distance sized so the whole grid fits in view; (1,1,1) direction = iso angle.
     const dist = Math.max(grid_size.x, grid_size.y) * cell_size * 1.5
