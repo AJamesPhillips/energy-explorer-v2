@@ -159,6 +159,8 @@ export type SimplifiedLandAreaType = (
     | "suburban"
 )
 
+export type OffshoreAreaType = "shallow" | "deep"
+
 const map_simplified_area_type: Record<LandAreaType, SimplifiedLandAreaType> = {
     "Broadleaved woodland": "woodland",
     "Coniferous Woodland": "woodland",
@@ -184,6 +186,23 @@ const map_simplified_area_type: Record<LandAreaType, SimplifiedLandAreaType> = {
 }
 
 export type SimplifiedLandAreaTypeAndTotal = SimplifiedLandAreaType | "total_land"
+export type OffshoreAreaTypeAndTotal = OffshoreAreaType | "total_offshore"
+
+export type LandOrSeaType = SimplifiedLandAreaType | OffshoreAreaType
+export const land_or_sea_types: Record<LandOrSeaType, { human_readable: string }> = {
+    woodland: { human_readable: "Woodland" },
+    arable: { human_readable: "Arable" },
+    grassland: { human_readable: "Grassland" },
+    suburban: { human_readable: "Suburban" },
+    urban: { human_readable: "Urban" },
+    rock: { human_readable: "Rock" },
+    wetland: { human_readable: "Wetland" },
+    inland_water: { human_readable: "Inland Water" },
+
+    shallow: { human_readable: "Shallow Sea" },
+    deep: { human_readable: "Deep Sea" },
+}
+
 
 interface LandAreaInfo
 {
@@ -216,8 +235,6 @@ uk_land_coverage_simplified.total_land = {
         .reduce((sum, area_info) => sum + area_info.total_area_km2, 0),
     land_ratio: 1
 }
-
-console.log("uk_land_coverage_simplified", uk_land_coverage_simplified)
 
 // Calculate the ratio of each area type to the total area, for convenience.
 Object.values(uk_land_coverage_simplified).forEach(area_info =>

@@ -15,6 +15,7 @@ import { CellData, CellsData } from "./interface"
 import { IsoMetricGrid } from "./IsoMetricGrid"
 import { map_data_cells } from "./map_data"
 import { PowerStatus } from "./PowerStatus"
+import { VisualKey } from "./VisualKey"
 import { WelcomeMessage } from "./WelcomeMessage"
 
 
@@ -80,6 +81,7 @@ export function SimpleSim(props: { persective: PerspectiveKnowledgeGraph | undef
 
         <PowerStatus view="simulation" power={power} />
         <WelcomeMessage />
+        <VisualKey />
         <FooterLinks />
     </>
 }

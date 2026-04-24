@@ -146,7 +146,7 @@ export function IsoMetricGrid(props: IsoMetricGridProps)
                 return <Instance
                     key={`${x}-${y}`}
                     position={[x * cell_size, 0, y * cell_size]}
-                    color={tile_colour(cell)}
+                    color={tile_colour(cell.subtype)}
                     onClick={on_click_tile ? on_click : undefined}
                     onPointerMove={on_pointer_move}
                     onPointerLeave={on_pointer_leave}

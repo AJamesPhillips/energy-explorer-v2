@@ -1,5 +1,4 @@
-import { SimplifiedLandAreaType } from "../data/land_coverage/uk/data"
-import { OffshoreAreaType } from "../data/offshore_coverage/uk/data"
+import { OffshoreAreaType, SimplifiedLandAreaType } from "../data/land_coverage/uk/data"
 import { LandOrSea } from "./interface"
 
 
