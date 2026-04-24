@@ -33,10 +33,9 @@ export function SelectCountry(props: SelectCountryProps)
         .sort((a, b) => b.votes - a.votes) // show the most voted for unimplemented countries at the top
 
     return (
-        <div id="select_country">
+        <div id="select_country" className={on_wikisim ? "on_wikisim" : ""}>
             <span
                 id="select_country_button"
-                className={on_wikisim ? "on_wikisim" : ""}
                 onClick={() => set_show_info_box(true)}
             >
                 <span style={{ fontSize: "24px" }}>{country?.emoji}</span> <span style={{ fontSize: "18px" }}>❤️</span>
