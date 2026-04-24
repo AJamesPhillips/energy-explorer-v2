@@ -9,11 +9,13 @@ const PADDING = { top: 10, right: 10, bottom: 22, left: 48 }
 const PLOT_W = WIDTH - PADDING.left - PADDING.right
 const PLOT_H = HEIGHT - PADDING.top - PADDING.bottom
 
-function fmt_pop(n: number): string
+function fmt_pop(n: number, detailed = 0): string
 {
-    if (n >= 1e9) return `${(n / 1e9).toFixed(2)}B`
-    if (n >= 1e6) return `${(n / 1e6).toFixed(1)}M`
-    if (n >= 1e3) return `${(n / 1e3).toFixed(0)}K`
+    if (n >= 1e9) return `${(n / 1e9).toFixed(1 + detailed)}B`
+    if (n >= 1e7) return `${(n / 1e6).toFixed(0 + detailed)}M`
+    if (n >= 1e6) return `${(n / 1e6).toFixed(1 + detailed)}M`
+    if (n >= 1e4) return `${(n / 1e3).toFixed(0 + detailed)}K`
+    if (n >= 1e3) return `${(n / 1e3).toFixed(1 + detailed)}K`
     return `${n}`
 }
 
@@ -191,11 +193,11 @@ function InnerGraphPopulation(props: InnerGraphPopulationProps)
     const x_tick_years = known_years.filter((_, i) => i % Math.ceil(known_years.length / 4) === 0)
 
     return (
-        <div id="graph_population">
-            <div style={{ fontSize: 12, color: "#555", marginBottom: 2, display: "flex", justifyContent: "space-between" }}>
+        <div id="graph_population" className="ui_info_box">
+            <div className="ui_info_box_header">
                 <span>Population</span>
                 <span style={{ fontWeight: "bold", color: is_projected ? "#e07020" : "#333" }}>
-                    {fmt_pop(population)} ({year}{is_projected ? " proj." : ""})
+                    {fmt_pop(population, 1)} ({year}{is_projected ? " proj." : ""})
                 </span>
             </div>
             <svg

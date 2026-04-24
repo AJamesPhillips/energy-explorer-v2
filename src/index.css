@@ -15,7 +15,6 @@
 
     --z-index-sim: 1;
     --z-index-app-html: 2;
-    --z-index-footer-links: 2;
 }
 
 html, body, #app, #app_html {
@@ -220,4 +219,22 @@ select {
 option {
     background-color: #ffffff;
     color: #495057;
+}
+
+
+.ui_info_box
+{
+    background-color: white;
+    padding: 6px 12px;
+    border: 1px solid rgb(204, 204, 204);
+    border-radius: 4px;
+}
+
+.ui_info_box .ui_info_box_header
+{
+    font-size: 12px;
+    color: #555;
+    margin-bottom: 2;
+    display: flex;
+    justify-content: space-between;
 }
