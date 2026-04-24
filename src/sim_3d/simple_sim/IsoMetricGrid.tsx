@@ -70,18 +70,19 @@ export function IsoMetricGrid(props: IsoMetricGridProps)
     const box_geo_s = cell_size * 0.95
     // const h = cell_size * 0.06    // height exposes side faces for the bevel shading
     const box_geo_h = cell_size * 0.1
+    const hover_geo_s = box_geo_s * 1.01
+    const hover_geo_h = box_geo_h * 1.01
 
 
     const { hover_outline_geo, hover_glow_geo, hover_outline_mat, hover_glow_mat } = useMemo(() =>
     {
-        const s = cell_size * 0.97
-        const h = cell_size * 0.1
-        const box_for_edges = new THREE.BoxGeometry(s, h, s)
-        const edges = new THREE.EdgesGeometry(box_for_edges)
-        box_for_edges.dispose()
+        const box_for_glow = new THREE.BoxGeometry(hover_geo_s, hover_geo_h, hover_geo_s)
+        const box_for_outline = new THREE.BoxGeometry(hover_geo_s * 1.01, hover_geo_h * 1.01, hover_geo_s * 1.01)
+        const edges = new THREE.EdgesGeometry(box_for_outline)
+        box_for_outline.dispose()
         return {
             hover_outline_geo: edges,
-            hover_glow_geo: new THREE.BoxGeometry(s + cell_size * 0.04, h, s + cell_size * 0.04),
+            hover_glow_geo: box_for_glow,
             hover_outline_mat: new THREE.LineBasicMaterial({ color: 0xffff44 }),
             hover_glow_mat: new THREE.MeshBasicMaterial({ color: 0xffff44, transparent: true, opacity: 0.12 }),
         }
