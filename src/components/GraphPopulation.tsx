@@ -211,10 +211,7 @@ function InnerGraphPopulation(props: InnerGraphPopulationProps)
                 <g transform={`translate(${PADDING.left},${PADDING.top})`}>
                     {/* Y axis ticks */}
                     {y_ticks.map(({ pop, y }) => (
-                        <g
-                            //@ts-ignore
-                            key={pop}
-                        >
+                        <g key={pop}>
                             <line x1={-4} y1={y} x2={PLOT_W} y2={y} stroke="#e0e0e0" strokeWidth={1} />
                             <text x={-6} y={y} textAnchor="end" dominantBaseline="middle" fontSize={9} fill="#888">
                                 {fmt_pop(pop)}
@@ -224,10 +221,7 @@ function InnerGraphPopulation(props: InnerGraphPopulationProps)
 
                     {/* X axis ticks */}
                     {x_tick_years.map(y => (
-                        <g
-                            //@ts-ignore
-                            key={y}
-                        >
+                        <g key={y}>
                             <line x1={x_of(y)} y1={PLOT_H} x2={x_of(y)} y2={PLOT_H + 4} stroke="#aaa" strokeWidth={1} />
                             <text x={x_of(y)} y={PLOT_H + 14} textAnchor="middle" fontSize={9} fill="#888">{y}</text>
                         </g>
@@ -255,7 +249,6 @@ function InnerGraphPopulation(props: InnerGraphPopulationProps)
                     {/* Known data points */}
                     {known_years.map(y => (
                         <circle
-                            //@ts-ignore
                             key={y}
                             cx={x_of(y)}
                             cy={y_of(population_by_year[y]!)}

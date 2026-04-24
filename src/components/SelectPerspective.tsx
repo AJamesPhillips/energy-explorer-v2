@@ -81,7 +81,6 @@ export function SelectPerspective(props: SelectPerspectiveProps)
 
                     return (
                         <li
-                            //@ts-ignore - otherwise it shows the error "Property 'key' does not exist on type 'DetailedHTMLProps<LiHTMLAttributes<HTMLLIElement>, HTMLLIElement>'.ts(2322)"
                             key={option.id}
                             style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
                         >
@@ -125,7 +124,6 @@ export function SelectPerspective(props: SelectPerspectiveProps)
                         const label = drop_down_options.find(o => o.id === id)?.label ?? id
                         return (
                             <span
-                                //@ts-ignore - otherwise it shows the error "Property 'key' does not exist on type 'DetailedHTMLProps<HTMLAttributes<HTMLSpanElement>, HTMLSpanElement>'.ts(2322)"
                                 key={id}
                                 style={{ display: "flex", alignItems: "center", gap: "0.3rem" }}
                             >

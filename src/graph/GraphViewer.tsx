@@ -245,7 +245,6 @@ export function GraphViewer(props: GraphViewerProps): JSX.Element
                 {placed.map((node, i) =>
                     node.parent_cx !== null && node.parent_bottom !== null
                         ? <Connector
-                            //@ts-ignore - otherwise it shows the error "  Property 'key' does not exist on type 'IntrinsicAttributes & { parent_cx: number; parent_bottom: number; child_cx: number; child_top: number; }'.ts(2322)"
                             key={`conn-${i}`}
                             parent_cx={node.parent_cx}
                             parent_bottom={node.parent_bottom}

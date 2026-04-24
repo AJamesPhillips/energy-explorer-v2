@@ -1,6 +1,6 @@
 
 // https://stackoverflow.com/a/64522938/539490
-export {}
+export { }
 
 declare global {
     interface Array<T> {
@@ -50,4 +50,40 @@ if (!Array.prototype.find_last) {
             return undefined
         }
     })
+}
+
+
+// Something is broken in the type system at the moment which causes code like this:
+//
+//     {["1", "2", "3"].map(value => <div key={value}> {value} </div>)}
+//
+// to show a TypeError of:
+//
+//     Type '{ children: string; key: string; className: string; }' is not assignable to type 'DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>'.
+//       Property 'key' does not exist on type 'DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>'.ts(2322)
+//
+// The following types silence this and related errors:
+//
+declare module "react"
+{
+    // Augment all HTML element props to allow `key`
+    interface HTMLAttributes<T>
+    {
+        key?: React.Key;
+    }
+    interface SVGProps<T>
+    {
+        key?: React.Key;
+    }
+}
+
+declare module "react/jsx-runtime"
+{
+    namespace JSX
+    {
+        interface IntrinsicAttributes
+        {
+            key?: import("react").Key;
+        }
+    }
 }
