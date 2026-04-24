@@ -1,3 +1,4 @@
+import { CellData } from "../../simple_sim/interface"
 
 export interface PublishableEvents
 {
@@ -14,4 +15,6 @@ export interface PublishableEvents
     clear_message: {
         id: string
     }
+    on_hover_tile: CellData | null
+    will_update_tile: CellData | null
 }

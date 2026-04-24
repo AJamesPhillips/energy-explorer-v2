@@ -75,6 +75,7 @@ infrastructure_map_data.split("\n")
     })
 
 
+let id = 0
 export const map_data_cells: CellsData = map_data
     .split("\n")
     .reduce((acc, line, y) =>
@@ -85,6 +86,7 @@ export const map_data_cells: CellsData = map_data
                 if (!acc[x]) acc[x] = {}
                 const cell_data: CellData = {
                     ...get_land_or_sea_for_letter(cell as LetterType),
+                    id: id++,
                     x,
                     y,
                     has_wind_turbine: false,

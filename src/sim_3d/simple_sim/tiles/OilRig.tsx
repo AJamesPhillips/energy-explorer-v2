@@ -186,7 +186,7 @@ function SingleOilRig({ x, y, cell_size, state }: SingleOilRigProps)
 
 interface OilRigTilesProps
 {
-    tiles: Array<CellData>
+    tiles: Array<Pick<CellData, "x" | "y" | "has_oil_rig">>
     cell_size: number
 }
 

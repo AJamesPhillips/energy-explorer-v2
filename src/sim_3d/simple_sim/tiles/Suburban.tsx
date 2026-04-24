@@ -7,7 +7,7 @@ import { CONSTANTS } from "../constants"
 
 interface SuburbanTilesProps
 {
-    tiles: Array<{ x: number, y: number }>
+    tiles: Array<{ x: number, y: number, id: number }>
     cell_size: number
 }
 
@@ -25,14 +25,14 @@ export function SuburbanTiles({ tiles, cell_size }: SuburbanTilesProps)
         const tile_top_y = cell_size * 0.03
         const half_h = cell_size * 0.09  // half of 0.18 * cell_size
 
-        tiles.forEach(({ x, y }, index) =>
+        tiles.forEach(({ x, y, id }, index) =>
         {
             for (let i = 0; i < CONSTANTS.BUILDINGS_PER_SUBURBAN_TILE; ++i)
             {
                 const idx = index * CONSTANTS.BUILDINGS_PER_SUBURBAN_TILE + i
-                const ox    = (seeded_rand(x, y, i * 3 + 200)     - 0.5) * cell_size * 0.55
-                const oz    = (seeded_rand(x, y, i * 3 + 201) - 0.5) * cell_size * 0.55
-                const scale = 0.75 + seeded_rand(x, y, i * 3 + 202) * 0.5  // 0.75 – 1.25
+                const ox    = (seeded_rand(id, i * 3 + 200)     - 0.5) * cell_size * 0.55
+                const oz    = (seeded_rand(id, i * 3 + 201) - 0.5) * cell_size * 0.55
+                const scale = 0.75 + seeded_rand(id, i * 3 + 202) * 0.5  // 0.75 – 1.25
 
                 dummy.position.set(
                     x * cell_size + ox,

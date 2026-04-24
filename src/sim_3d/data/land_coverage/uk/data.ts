@@ -188,20 +188,16 @@ const map_simplified_area_type: Record<LandAreaType, SimplifiedLandAreaType> = {
 export type SimplifiedLandAreaTypeAndTotal = SimplifiedLandAreaType | "total_land"
 export type OffshoreAreaTypeAndTotal = OffshoreAreaType | "total_offshore"
 
-export type LandOrSeaType = SimplifiedLandAreaType | OffshoreAreaType
-export const land_or_sea_types: Record<LandOrSeaType, { human_readable: string }> = {
-    woodland: { human_readable: "Woodland" },
-    arable: { human_readable: "Arable" },
-    grassland: { human_readable: "Grassland" },
-    suburban: { human_readable: "Suburban" },
-    urban: { human_readable: "Urban" },
-    rock: { human_readable: "Rock" },
-    wetland: { human_readable: "Wetland" },
-    inland_water: { human_readable: "Inland Water" },
-
-    shallow: { human_readable: "Shallow Sea" },
-    deep: { human_readable: "Deep Sea" },
+export type LandOrSea = {
+    type: "land"
+    subtype: SimplifiedLandAreaType
+} | {
+    type: "sea"
+    subtype: OffshoreAreaType
 }
+
+
+export type LandOrSeaType = SimplifiedLandAreaType | OffshoreAreaType
 
 
 interface LandAreaInfo

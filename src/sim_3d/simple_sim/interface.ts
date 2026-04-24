@@ -1,16 +1,9 @@
-import { OffshoreAreaType, SimplifiedLandAreaType } from "../data/land_coverage/uk/data"
+import { LandOrSea } from "../data/land_coverage/uk/data"
 
-
-export type LandOrSea = {
-    type: "land"
-    subtype: SimplifiedLandAreaType
-} | {
-    type: "sea"
-    subtype: OffshoreAreaType
-}
 
 export type CellData = LandOrSea &
 {
+    id: number
     x: number
     y: number
     has_wind_turbine: boolean
@@ -20,10 +13,10 @@ export type CellData = LandOrSea &
     // altitude_m: number
 }
 
-export interface CellsData
+export interface CellsData<E extends CellData = CellData>
 {
     [x: number]: {
-        [y: number]: CellData
+        [y: number]: E
     }
 }
 

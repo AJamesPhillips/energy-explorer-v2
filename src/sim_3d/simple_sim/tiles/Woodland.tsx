@@ -7,7 +7,7 @@ import { CONSTANTS } from "../constants"
 
 interface WoodlandProps
 {
-    tiles: Array<{ x: number, y: number }>
+    tiles: Array<{ x: number, y: number, id: number }>
     cell_size: number
 }
 
@@ -25,14 +25,14 @@ export function Woodland({ tiles, cell_size }: WoodlandProps)
         const tile_top_y = cell_size * 0.03  // half the tile height (0.06 * cell_size / 2)
         const cone_half_h = cell_size * 0.15 // half of cone height (0.3 * cell_size / 2)
 
-        tiles.forEach(({ x, y }, index) =>
+        tiles.forEach(({ x, y, id }, index) =>
         {
             for (let i = 0; i < CONSTANTS.TREES_PER_TILE; ++i)
             {
                 const idx = index * CONSTANTS.TREES_PER_TILE + i
-                const ox    = (seeded_rand(x, y, i * 3)     - 0.5) * cell_size * 0.7
-                const oz    = (seeded_rand(x, y, i * 3 + 1) - 0.5) * cell_size * 0.7
-                const scale = 0.7 + seeded_rand(x, y, i * 3 + 2) * 0.6
+                const ox    = (seeded_rand(id, i * 3)     - 0.5) * cell_size * 0.7
+                const oz    = (seeded_rand(id, i * 3 + 1) - 0.5) * cell_size * 0.7
+                const scale = 0.7 + seeded_rand(id, i * 3 + 2) * 0.6
 
                 dummy.position.set(
                     x * cell_size + ox,

@@ -7,7 +7,7 @@ import { CONSTANTS } from "../constants"
 
 interface UrbanTilesProps
 {
-    tiles: Array<{ x: number, y: number }>
+    tiles: Array<{ x: number, y: number, id: number }>
     cell_size: number
 }
 
@@ -25,14 +25,14 @@ export function UrbanTiles({ tiles, cell_size }: UrbanTilesProps)
         const tile_top_y = cell_size * 0.03
         const half_h = cell_size * 0.225  // half of 0.45 * cell_size
 
-        tiles.forEach(({ x, y }, index) =>
+        tiles.forEach(({ x, y, id }, index) =>
         {
             for (let i = 0; i < CONSTANTS.BUILDINGS_PER_URBAN_TILE; ++i)
             {
                 const idx = index * CONSTANTS.BUILDINGS_PER_URBAN_TILE + i
-                const ox    = (seeded_rand(x, y, i * 3 + 100)     - 0.5) * cell_size * 0.6
-                const oz    = (seeded_rand(x, y, i * 3 + 101) - 0.5) * cell_size * 0.6
-                const scale = 0.5 + seeded_rand(x, y, i * 3 + 102) * 1.0  // 0.5 – 1.5
+                const ox    = (seeded_rand(id, i * 3 + 100)     - 0.5) * cell_size * 0.6
+                const oz    = (seeded_rand(id, i * 3 + 101) - 0.5) * cell_size * 0.6
+                const scale = 0.5 + seeded_rand(id, i * 3 + 102) * 1.0  // 0.5 – 1.5
 
                 dummy.position.set(
                     x * cell_size + ox,

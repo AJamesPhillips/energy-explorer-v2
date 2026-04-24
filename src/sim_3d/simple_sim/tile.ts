@@ -15,8 +15,8 @@ const subtype_to_colour: Record<LandOrSeaType, string> = {
     deep:         "#0a5096",
 }
 
-export function tile_colour(subtype: LandOrSeaType): string
+export function tile_colour(subtype: LandOrSeaType | undefined): string
 {
-    const colour = subtype_to_colour[subtype]
+    const colour = subtype ? subtype_to_colour[subtype] : ""
     return colour || "#FFFFFF"
 }
