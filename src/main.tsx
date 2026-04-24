@@ -193,7 +193,7 @@ interface DataComponentAsJSONForGraph extends DataComponentAsJSON
 
 function cached_components(args: { bust_cache?: boolean } = {}): DataComponentExtended[] | undefined
 {
-    const cached = localStorage.getItem("components")
+    const cached = localStorage.getItem(get_cache_name())
     if (!cached || args.bust_cache) return undefined
 
     try
@@ -234,10 +234,16 @@ function cache_components(components: DataComponentExtended[])
             }
             return json
         })
-        localStorage.setItem("components", JSON.stringify(json))
+        localStorage.setItem(get_cache_name(), JSON.stringify(json))
     }
     catch (e)
     {
         console.error("Error caching components", e)
     }
+}
+
+
+function get_cache_name()
+{
+    return "components_" + document.location.pathname.replace(/\//g, "_")
 }
