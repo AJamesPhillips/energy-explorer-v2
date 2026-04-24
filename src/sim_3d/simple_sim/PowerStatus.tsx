@@ -35,31 +35,35 @@ export function PowerStatus ({ power, datetime }: { view: LimitedViewType, power
     const status_color = is_surplus ? "green" : "red"
 
     return <>
-        <div
-            style={{
-                position: "absolute",
-                // Hack to cope with drei's <Html> forcing an absolute position on this element
-                top: 20, // view === "digital_twin" ? -375 : -100,
-                left: "50%",
-                transform: "translateX(-50%)",
-                zIndex: "var(--z-index-sim)",
-                padding: "5px 20px",
-                backgroundColor: "rgba(255, 255, 255, 0.8)",
-                borderRadius: 5,
-                fontSize: 60,
-                // pointerEvents: "none",
-            }}
-        >
-            <span title={demand_status_text}>
-                {Math.round(current_demand_gw)}
-                <span style={{ fontSize: 20 }}>GW</span>
-            </span>
-            <span
-                style={{ color: status_color }}
-                title={supply_status_text}
-            >
-                {is_surplus ? "+" : ""}{diff}
-            </span>
+        <div id="power_status_container">
+            <table style={{ margin: "0 auto" }}>
+                <tbody>
+                    <tr className="supply_demand_labels">
+                        <td className="supply_demand_label">
+                            Demand
+                        </td>
+                        <td />
+                        <td className="supply_demand_label" style={{ textAlign: "left", color: status_color }}>
+                            {is_surplus ? "Surpluse" : "Shortage"}
+                        </td>
+                    </tr>
+                    <tr style={{ lineHeight: 0.9 }}>
+                        <td title={demand_status_text} style={{ textAlign: "right", fontSize: "var(--font-huge)", verticalAlign: "baseline" }}>
+                            {Math.round(current_demand_gw)}
+                        </td>
+                        <td style={{ fontSize: "var(--font-medium)", verticalAlign: "baseline" }}>
+                            GW
+                        </td>
+                        <td
+                            style={{ color: status_color, textAlign: "left", fontSize: "var(--font-huge)", verticalAlign: "baseline" }}
+                            title={supply_status_text}
+                        >
+                            {is_surplus ? "+" : ""}{diff}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
             <div className={"text_shortage" + (is_surplus ? " surplus" : " shortage")}>
                 SHORTAGE
             </div>

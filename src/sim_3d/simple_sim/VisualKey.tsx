@@ -170,7 +170,7 @@ function RenderTileView({ tile_data }: { tile_data: CellData | null })
 
 function TileInfoText({ hovered_tile }: { hovered_tile: CellData | null })
 {
-    if (!hovered_tile) return <div style={{ fontStyle: "italic" }}>Hover over a tile to see details</div>
+    if (!hovered_tile) return <div>Hover over a tile to see details</div>
 
     const { subtype, has_oil_rig } = hovered_tile
     const info = land_or_sea_types[subtype]

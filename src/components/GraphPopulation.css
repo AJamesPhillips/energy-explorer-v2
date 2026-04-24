@@ -4,3 +4,26 @@
     user-select: none;
     pointer-events: initial;
 }
+
+.source_info_link
+{
+    text-decoration: underline;
+    color: #0077cc;
+    opacity: 0;
+    cursor: pointer;
+}
+.source_info_label
+{
+    text-decoration: initial;
+    cursor: pointer;
+}
+
+#graph_population:hover .source_info_link
+{
+    opacity: 1;
+}
+#graph_population:hover .source_info_label
+{
+    color: #0077cc;
+    text-decoration: underline;
+}

@@ -29,7 +29,7 @@
 #info_box_text h1
 {
     text-align: center;
-    font-size: 30px;
+    font-size: var(--font-large);
 }
 
 #info_box_text_holder

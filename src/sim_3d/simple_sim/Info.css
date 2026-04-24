@@ -5,7 +5,7 @@
     align-items: center;
     height: 100%;
 
-    font-size: 18px;
+    font-size: var(--font-medium);
 
     /* we have to re-enable them after #app_html disables them */
     pointer-events: initial;

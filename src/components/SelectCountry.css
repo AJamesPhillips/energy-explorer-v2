@@ -6,7 +6,7 @@
     gap: 2px;
     align-items: center;
 
-    font-size: 18px;
+    font-size: 18px; /* This is for the emoji flag and heart */
 
     /* we have to re-enable them after #app_html disables them */
     pointer-events: initial;
@@ -41,9 +41,9 @@
 .countries_list_first_sub_heading,
 .countries_list_second_sub_heading
 {
-    font-weight: bold;
     padding-bottom: 10px;
-    font-size: 12px;
+    font-size: var(--font-small);
+    font-weight: bold;
 }
 .countries_list_second_sub_heading
 {

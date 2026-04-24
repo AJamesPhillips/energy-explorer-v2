@@ -1,10 +1,26 @@
 
+#power_status_container
+{
+    position: absolute;
+    /* Hack to cope with drei's <Html> forcing an absolute position on this element */
+    top: 20px;  /* view === "digital_twin" ? -375 : -100, */
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: var(--z-index-sim);
+    padding: 5px 20px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 5px;
+    min-width: 300px;
+
+    cursor: pointer;
+    user-select: none;
+}
 
 .text_shortage
 {
-    font-size: 15px;
+    font-size: var(--font-small);
+    font-weight: bold;
     text-align: center;
-    margin-top: -20;
     transition: font-size 0.2s ease, color 0.2s ease;
 }
 .text_shortage.surplus
@@ -13,6 +29,24 @@
 }
 .text_shortage.shortage
 {
-    font-size: 25px;
+    font-size: var(--font-medium);
     color: red;
+}
+
+.supply_demand_labels
+{
+    line-height: 0.9;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+#power_status_container:hover .supply_demand_labels
+{
+    opacity: 1;
+}
+.supply_demand_label
+{
+    font-size: var(--font-small);
+    font-weight: bold;
+    color: rgb(102, 102, 102);
+    text-align: right;
 }

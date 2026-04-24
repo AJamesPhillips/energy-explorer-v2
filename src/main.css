@@ -3,6 +3,7 @@
     font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
     line-height: 1.5;
     font-weight: 400;
+    font-size: var(--font-medium);
 
     color-scheme: light dark;
     color: rgba(255, 255, 255, 0.87);
@@ -15,6 +16,11 @@
 
     --z-index-sim: 1;
     --z-index-app-html: 2;
+
+    --font-small: 12px;
+    --font-medium: 18px;
+    --font-large: 30px;
+    --font-huge: 60px;
 }
 
 html, body, #app, #app_html {
@@ -86,11 +92,11 @@ html, body, #app, #app_html {
 }
 #app_options_panel .app_option.selected
 {
-    border-color: #646cff;
+    border-color: #0077cc;
 }
 #app_options_panel .app_option:hover
 {
-    border-color: #646cff;
+    border-color: #0077cc;
 }
 #app_options_panel .app_option img
 {
@@ -141,11 +147,11 @@ html, body, #app, #app_html {
 
 a {
     font-weight: 500;
-    color: #646cff;
+    color: #0077cc;
     text-decoration: inherit;
 }
 a:hover {
-    color: #535bf2;
+    color: #005fa3;
 }
 
 
@@ -166,7 +172,7 @@ button {
     transition: border-color 0.25s;
 }
 button:hover {
-    border-color: #646cff;
+    border-color: #0077cc;
 }
 button:focus,
 button:focus-visible {
@@ -188,7 +194,7 @@ button:focus-visible {
     background-color: #ffffff;
 }
 a:hover {
-    color: #646cff;
+    color: #0077cc;
 }
 button {
     background-color: #f9f9f9;
@@ -232,9 +238,29 @@ option {
 
 .ui_info_box .ui_info_box_header
 {
-    font-size: 12px;
+    font-size: var(--font-small);
+    font-weight: bold;
     color: #555;
     margin-bottom: 2;
     display: flex;
     justify-content: space-between;
+}
+
+/** Classes for consistent font sizes */
+.font_small
+{
+    font-size: var(--font-small);
+    font-weight: bold;
+}
+.font_medium
+{
+    font-size: var(--font-medium);
+}
+.font_large
+{
+    font-size: var(--font-large);
+}
+.font_huge
+{
+    font-size: var(--font-huge);
 }

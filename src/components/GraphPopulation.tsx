@@ -193,9 +193,12 @@ function InnerGraphPopulation(props: InnerGraphPopulationProps)
     const x_tick_years = known_years.filter((_, i) => i % Math.ceil(known_years.length / 4) === 0)
 
     return (
-        <div id="graph_population" className="ui_info_box">
+        <div
+            id="graph_population"
+            className="ui_info_box"
+        >
             <div className="ui_info_box_header">
-                <span>Population</span>
+                <span className="source_info_label">Population <span className="source_info_link">(source)</span></span>
                 <span style={{ fontWeight: "bold", color: is_projected ? "#e07020" : "#333" }}>
                     {fmt_pop(population, 1)} ({year}{is_projected ? " proj." : ""})
                 </span>
@@ -213,7 +216,7 @@ function InnerGraphPopulation(props: InnerGraphPopulationProps)
                     {y_ticks.map(({ pop, y }) => (
                         <g key={pop}>
                             <line x1={-4} y1={y} x2={PLOT_W} y2={y} stroke="#e0e0e0" strokeWidth={1} />
-                            <text x={-6} y={y} textAnchor="end" dominantBaseline="middle" fontSize={9} fill="#888">
+                            <text x={-6} y={y} textAnchor="end" dominantBaseline="middle" fontSize="var(--font-small)" fill="#888">
                                 {fmt_pop(pop)}
                             </text>
                         </g>
@@ -223,10 +226,10 @@ function InnerGraphPopulation(props: InnerGraphPopulationProps)
                     {x_tick_years.map(y => (
                         <g key={y}>
                             <line x1={x_of(y)} y1={PLOT_H} x2={x_of(y)} y2={PLOT_H + 4} stroke="#aaa" strokeWidth={1} />
-                            <text x={x_of(y)} y={PLOT_H + 14} textAnchor="middle" fontSize={9} fill="#888">{y}</text>
+                            <text x={x_of(y)} y={PLOT_H + 14} textAnchor="middle" fontSize="var(--font-small)" fill="#888">{y}</text>
                         </g>
                     ))}
-                    <text x={x_of(max_year)} y={PLOT_H + 14} textAnchor="end" fontSize={9} fill="#e07020">{max_year}</text>
+                    <text x={x_of(max_year)} y={PLOT_H + 14} textAnchor="end" fontSize="var(--font-small)" fill="#e07020">{max_year}</text>
 
                     {/* Projected line (dashed) */}
                     <polyline
