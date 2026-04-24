@@ -47,13 +47,12 @@ export function SelectCountry(props: SelectCountryProps)
                 message={
                     <>
                         <h1>Vote for a Country ⚡</h1>
-                        {/* <p>
-                            If you want a country added
-                            to the simulation press ⚡ to upvote it.
-                        </p> */}
                         <p>
-                            I hope you enjoyed and learnt something, if so <a href="https://www.patreon.com/WikiSim">we'd be grateful for your support to let us do more ❤️</a>
+                            Press ⚡ to vote for a country.
                         </p>
+                        {/* <p>
+                            I hope you enjoyed and learnt something, if so <a href="https://www.patreon.com/WikiSim">we'd be grateful for your support to let us do more ❤️</a>
+                        </p> */}
 
                         <Filter set_filter_text={set_filter_text} />
 
@@ -85,6 +84,10 @@ export function SelectCountry(props: SelectCountryProps)
                             user_votes_by_country_code2={user_votes_by_country_code2}
                             initial_user_votes_by_country_code2={initial_user_votes_by_country_code2}
                         />
+
+                        <p>
+                            I hope you enjoyed and learnt something, if so <a href="https://www.patreon.com/WikiSim">we'd be grateful for your support to let us do more ❤️</a>
+                        </p>
                     </>
                 }
                 confirmation_button={({ on_click }) =>
@@ -128,7 +131,10 @@ function CountryRow(props: CountryRowProps)
             {country.emoji} {country.name}
         </div>
         <button
-            style={{ padding: "2px 10px", backgroundColor: "initial" }}
+            style={{
+                padding: "2px 10px",
+                backgroundColor: user_vote ? "#ffcc00" : "initial",
+            }}
             onClick={() =>
             {
                 const new_votes = {

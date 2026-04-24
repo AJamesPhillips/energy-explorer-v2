@@ -2,8 +2,8 @@ import { JSX, useCallback, useEffect, useState } from "react"
 
 import "./InfoBox.css"
 
-const HIDE_ALL_IN_DEV = true
-// const HIDE_ALL_IN_DEV = false
+// const HIDE_ALL_IN_DEV = true
+const HIDE_ALL_IN_DEV = false
 
 
 interface InfoBoxProps
