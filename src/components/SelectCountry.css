@@ -12,6 +12,11 @@
     pointer-events: initial;
     cursor: pointer;
 }
+#select_country.on_wikisim
+{
+    /** Give extra space so that on WikiSim the close button doesn't overlap with this */
+    margin-right: 84px;
+}
 
 
 #select_country_button
@@ -21,11 +26,6 @@
     align-items: center;
     gap: 4px;
     cursor: pointer;
-}
-#select_country_button.on_wikisim
-{
-    /** Give extra space so that on WikiSim the close button doesn't overlap with this */
-    margin-right: 84px;
 }
 
 
