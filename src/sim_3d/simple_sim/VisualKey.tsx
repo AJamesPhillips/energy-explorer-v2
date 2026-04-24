@@ -109,13 +109,13 @@ export function VisualKey()
 
 
 
-function Mock3dTile(props: { colour: string })
-{
-    return <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-        {/* Diamond */}
-        <polygon points="10,6 20,13 10,20 0,13" fill={props.colour} />
-    </svg>
-}
+// function Mock3dTile(props: { colour: string })
+// {
+//     return <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+//         {/* Diamond */}
+//         <polygon points="10,6 20,13 10,20 0,13" fill={props.colour} />
+//     </svg>
+// }
 
 
 function RenderTileView({ tile_data }: { tile_data: CellData | null })

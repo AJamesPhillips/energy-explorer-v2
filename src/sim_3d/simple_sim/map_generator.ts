@@ -1,5 +1,6 @@
 import { uk_coverage } from "../data/coverage/uk/data"
-import { CellData, CellsData, LandOrSea } from "./interface"
+import { LandOrSea } from "../data/land_coverage/uk/data"
+import { CellData, CellsData } from "./interface"
 import { get_letter_for_land_or_sea } from "./map_data_compact"
 
 
@@ -48,6 +49,7 @@ export function generate_map_data(size: { x: number, y: number }): CellsData
             const { ratio: _, ...rest } = current_type
             const cell: CellData = {
                 ...rest,
+                id: y * size.x + x,
                 x: 0,
                 y: 0,
                 has_wind_turbine: false,
