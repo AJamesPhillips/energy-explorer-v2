@@ -39,26 +39,47 @@ export function PowerStatus ({ power, datetime }: { view: LimitedViewType, power
             <table style={{ margin: "0 auto" }}>
                 <tbody>
                     <tr className="supply_demand_labels">
-                        <td className="supply_demand_label">
+                        <td
+                            className="supply_demand_label"
+                            title={demand_status_text}
+                        >
                             Demand
                         </td>
                         <td />
-                        <td className="supply_demand_label" style={{ textAlign: "left", color: status_color }}>
+                        <td
+                            className="supply_demand_label"
+                            style={{ textAlign: "left", color: status_color }}
+                            title={supply_status_text}
+                        >
                             {is_surplus ? "Surpluse" : "Shortage"}
                         </td>
                     </tr>
-                    <tr style={{ lineHeight: 0.9 }}>
-                        <td title={demand_status_text} style={{ textAlign: "right", fontSize: "var(--font-huge)", verticalAlign: "baseline" }}>
+
+                    <tr style={{ lineHeight: 0.9, verticalAlign: "baseline" }}>
+                        <td
+                            style={{ textAlign: "right", fontSize: "var(--font-huge)" }}
+                            title={demand_status_text}
+                        >
                             {Math.round(current_demand_gw)}
                         </td>
-                        <td style={{ fontSize: "var(--font-medium)", verticalAlign: "baseline" }}>
+                        <td style={{ fontSize: "var(--font-medium)" }}>
                             GW
                         </td>
                         <td
-                            style={{ color: status_color, textAlign: "left", fontSize: "var(--font-huge)", verticalAlign: "baseline" }}
+                            style={{ color: status_color, textAlign: "left", fontSize: "var(--font-huge)" }}
                             title={supply_status_text}
                         >
                             {is_surplus ? "+" : ""}{diff}
+                        </td>
+                    </tr>
+
+                    <tr id="power_status_sources">
+                        <td style={{ textAlign: "right" }}>
+                            (source)
+                        </td>
+                        <td />
+                        <td style={{ textAlign: "left" }}>
+                            (source)
                         </td>
                     </tr>
                 </tbody>

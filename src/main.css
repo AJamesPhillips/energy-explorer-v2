@@ -21,6 +21,9 @@
     --font-medium: 18px;
     --font-large: 30px;
     --font-huge: 60px;
+
+    /* 4ea3ff */
+    --colour-link: #0077cc;
 }
 
 html, body, #app, #app_html {
@@ -92,11 +95,11 @@ html, body, #app, #app_html {
 }
 #app_options_panel .app_option.selected
 {
-    border-color: #0077cc;
+    border-color: var(--colour-link);
 }
 #app_options_panel .app_option:hover
 {
-    border-color: #0077cc;
+    border-color: var(--colour-link);
 }
 #app_options_panel .app_option img
 {
