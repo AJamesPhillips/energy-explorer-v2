@@ -1,15 +1,15 @@
 import { request_versioned_data_component_and_dependencies } from "core/data/fetch_from_db"
-import { IdAndMaybeVersion } from "core/data/id"
 import { data_components_by_idv } from "core/data/utils/data_components_by_id"
 import { evaluate_code_in_browser_sandbox } from "core/evaluator/implementation/browser_sandboxed_javascript"
 import { load_dependencies_into_runtime } from "core/evaluator/load_dependencies_into_runtime"
 import { get_supabase } from "core/supabase/browser"
 
+import { IdsToFetchAndMaybeCompute } from "./ids"
 import { DataComponentExtended } from "./interface"
 
 
 
-export async function get_wikisim_components(ids: { id: IdAndMaybeVersion, compute_value: boolean }[], set_components: (components: DataComponentExtended[]) => void): Promise<void>
+export async function get_wikisim_components(ids: IdsToFetchAndMaybeCompute[], set_components: (components: DataComponentExtended[]) => void): Promise<void>
 {
     const response = await request_versioned_data_component_and_dependencies({
         get_supabase,
@@ -29,19 +29,24 @@ export async function get_wikisim_components(ids: { id: IdAndMaybeVersion, compu
     })
 
 
-    const component_ids_to_compute = new Set(ids.filter(id => id.compute_value).map(id => id.id.to_str()))
+    // const component_ids_to_compute = new Set(ids.filter(id => id.compute_value).map(id => id.id.to_str()))
+    const component_ids_to_compute = Object.fromEntries(ids.filter(id => id.compute_value).map(id => [id.id.to_str(), id]))
 
-    const components_to_compute = components.filter(component =>
+    const components_to_compute: { component: DataComponentExtended, args: string }[] = []
+    components.forEach(component =>
     {
-        return component_ids_to_compute.has(component.id.to_str())
-            || component_ids_to_compute.has(component.id.to_str_without_version())
+        const should_compute = (component_ids_to_compute[component.id.to_str()]
+            || component_ids_to_compute[component.id.to_str_without_version()])
+        if (!should_compute) return
+
+        components_to_compute.push({ component, args: should_compute.args_for_compute })
     })
 
     // console.log(`Computing values for ${components_to_compute.length} components...`)
 
     const data_components_by_id_and_version = data_components_by_idv(components)
 
-    for (const component of components_to_compute)
+    for (const { component, args } of components_to_compute)
     {
         const response_loading_deps = await load_dependencies_into_runtime({
             component,
@@ -54,7 +59,7 @@ export async function get_wikisim_components(ids: { id: IdAndMaybeVersion, compu
         if (response_loading_deps.error) throw new Error(`Error loading dependencies for component with id ${component.id.to_str()}: ${response_loading_deps.error}`)
 
         const result = await evaluate_code_in_browser_sandbox({
-            js_input_value: `;(${component.result_value})()`,
+            js_input_value: `;(${component.result_value})(${args})`,
             requested_at: Date.now(),
             debugging: false,
             // timeout_ms: 500000,

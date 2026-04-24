@@ -61,59 +61,108 @@ export const map_factor_name_to_ido: Record<EnergyFactorName, IdOnly | undefined
 // This is not necessary but it slightly increases the initial loading speed of
 // the application.  It has been manually created by copying and pasting the
 // "Fetching N dependencies... 1191v7, " ... etc. log from the console.
-export const other_ids_performance_boost: IdAndMaybeVersion[] = [
-    "1011v7", // repeated
-    "1011v9",
-    "1154v1",
-    "1181v1",
-    "1183v1",
-    "1184v5",
-    "1186v2", // repeated
-    "1186v4",
-    "1187v1", // repeated
-    "1187v2",
-    "1188v3",
-    "1189v2",
-    "1190v1",
-    "1191v7",
-    "1192v3",
-    "1193v1",
-    "1194v1",
-    "1200v1",
-    "1201v2",
-    "1202v9",
-    "1203v2",
-    "1204v4",
-    "1205v5",
-    "1206v5",
-    "1208v1",
-    "1209v7",
-    "1210v6",
-    "1220v10",
-    "1221v4",
-    "1222v7", // repeated
-    "1222v9",
-    "1223v8",
-    "1224v4",
-    "1225v3",
-    "1226v3",
-    "1227v4",
-    "1228v4",
-    "1229v4",
-    "1230v5",
-    "1231v4",
-    "1232v3",
-    "1237v1",
-    "1238v6",
-    "1244v5",
-    "1245v4",
-    "1246v4",
-    "1248v4",
-    "1251v3",
-    "1253v1",
-    "1254v2",
-    "1255v2",
-    "1275v1",
-    "1276v1",
-    "1277v1",
-].map(id => parse_id(id))
+export const other_ids_performance_boost: IdsToFetchAndMaybeCompute[] = [
+    { id: "1011v7" }, // repeated
+    { id: "1011v9" }, // repeated
+    { id: "1011v10" }, // repeated
+    { id: "1011v12", compute_value: true, args_for_compute: `undefined,"United Kingdom"` },
+    { id: "1132v4" },
+    { id: "1154v1" },
+    { id: "1181v1" },
+    { id: "1183v1" }, // repeated
+    { id: "1183v2" },
+    { id: "1184v5" }, // repeated
+    { id: "1184v11" }, // repeated
+    { id: "1184v12" },
+    { id: "1186v2" }, // repeated
+    { id: "1186v4" },
+    { id: "1187v1" }, // repeated
+    { id: "1187v2" }, // repeated
+    { id: "1187v3" },
+    { id: "1188v3" },
+    { id: "1189v2" },
+    { id: "1190v1" },
+    { id: "1191v7" }, // repeated
+    { id: "1191v8" },
+    { id: "1192v3" }, // repeated
+    { id: "1192v4" },
+    { id: "1193v1" },
+    { id: "1194v1" },
+    { id: "1200v1" },
+    { id: "1201v2" },
+    { id: "1202v9" }, // repeated
+    { id: "1202v10" },
+    { id: "1203v2" },
+    { id: "1204v4" },
+    { id: "1205v5" },
+    { id: "1206v5" },
+    { id: "1208v1" },
+    { id: "1209v7" },
+    { id: "1210v6" },
+    { id: "1220v10" },
+    { id: "1221v4" },
+    { id: "1222v7" }, // repeated
+    { id: "1222v9" }, // repeated
+    { id: "1222v10" },
+    { id: "1223v8" }, // repeated
+    { id: "1223v9" },
+    { id: "1224v4" },
+    { id: "1225v3" },
+    { id: "1226v3" },
+    { id: "1227v4" },
+    { id: "1228v4" },
+    { id: "1229v4" },
+    { id: "1230v5" },
+    { id: "1231v4" },
+    { id: "1232v3" },
+    { id: "1237v1" },
+    { id: "1238v6" }, // repeated
+    { id: "1238v8" },
+    { id: "1244v5" },
+    { id: "1245v4" },
+    { id: "1246v4" },
+    { id: "1248v4" },
+    { id: "1251v3" },
+    { id: "1253v1" },
+    { id: "1254v2" },
+    { id: "1255v2" },
+    { id: "1257v1" },
+    { id: "1258v2" }, // repeated
+    { id: "1258v5" },
+    { id: "1275v1" },
+    { id: "1276v1" },
+    { id: "1277v1" },
+    { id: "1279v4" },
+    { id: "1280v4" },
+].map(({ id, compute_value, args_for_compute }) =>
+{
+    if (!compute_value)
+    {
+        return {
+            id: parse_id(id),
+            compute_value: false,
+        }
+    }
+    return {
+        id: parse_id(id),
+        compute_value,
+        args_for_compute,
+    }
+})
+
+
+export type IdsToFetchAndMaybeCompute = {
+    id: IdAndMaybeVersion
+    compute_value: false
+    args_for_compute?: never
+} | {
+    id: IdAndMaybeVersion
+    compute_value: true
+    args_for_compute: string
+}
+
+
+export const all_ids_to_fetch: IdsToFetchAndMaybeCompute[] = [
+    ...top_ids_to_fetch.map(id => ({ id, compute_value: true, args_for_compute: "" } as IdsToFetchAndMaybeCompute)),
+    ...other_ids_performance_boost,
+]

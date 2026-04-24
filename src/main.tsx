@@ -8,7 +8,6 @@ import * as z from "zod"
 import "./monkey_patch"
 
 import { flatten_new_or_data_component_to_json, hydrate_data_component_from_json } from "core/data/convert_between_json"
-import { IdAndMaybeVersion } from "core/data/id"
 import { data_components_by_ido, data_components_by_idv } from "core/data/utils/data_components_by_id"
 import { make_graph } from "core/data/utils/graph"
 import { make_field_validators } from "core/data/validate_fields"
@@ -21,24 +20,17 @@ import { GraphPopulation } from "./components/GraphPopulation"
 import { Options, ViewType } from "./components/Options"
 import { SelectCountry } from "./components/SelectCountry"
 import {
-    perspective_id_2009_mackay,
     perspective_id_general,
     PerspectiveType,
     SelectPerspective
 } from "./components/SelectPerspective"
 import { get_wikisim_components } from "./data/get_wikisim_components"
-import { other_ids_performance_boost, top_ids_to_fetch } from "./data/ids"
+import { all_ids_to_fetch } from "./data/ids"
 import { DataComponentExtended, PerspectiveKnowledgeGraph } from "./data/interface"
 import { GraphViewer } from "./graph/GraphViewer"
 import "./index.css"
 import { Sim3d } from "./sim_3d/Sim3d"
 import { Info } from "./sim_3d/simple_sim/Info"
-
-
-const all_ids_to_fetch: { id: IdAndMaybeVersion, compute_value: boolean }[] = [
-    ...top_ids_to_fetch.map(id => ({ id, compute_value: true })),
-    ...other_ids_performance_boost.map(id => ({ id, compute_value: false })),
-]
 
 
 function App ()
@@ -47,8 +39,8 @@ function App ()
     // const [view, set_view] = useState<ViewType>("digital_twin")
     const [view, set_view] = useState<ViewType>("simulation")
     const [selected_perspectives, set_selected_perspectives] = useState<PerspectiveType[]>([
-        perspective_id_2009_mackay,
-        perspective_id_general
+        perspective_id_general,
+        // perspective_id_2009_mackay,
     ])
 
 
