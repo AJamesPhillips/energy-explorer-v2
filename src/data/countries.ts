@@ -16,8 +16,8 @@ const implemented_countries: Set<CountryISO2Code> = new Set([
 ])
 const existing_manual_votes: Partial<Record<CountryISO2Code, number>> = {
     "GB": 7,
-    "IN": 1,
-    "FR": 1,
+    "IN": 2,
+    "FR": 2,
 }
 
 export const extended_countries_data: CountryData[] = countries_data.map(c => ({
