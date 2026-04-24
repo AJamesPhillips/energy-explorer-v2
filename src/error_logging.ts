@@ -1,6 +1,6 @@
 import * as Sentry from "@sentry/react"
 
-import { error_to_string } from "core/errors"
+import { error_to_string } from "core/error_to_string"
 
 
 export function setup_error_logging()
