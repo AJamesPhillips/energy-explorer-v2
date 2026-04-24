@@ -28,7 +28,7 @@ import { get_wikisim_components } from "./data/get_wikisim_components"
 import { all_ids_to_fetch } from "./data/ids"
 import { DataComponentExtended, PerspectiveKnowledgeGraph } from "./data/interface"
 import { GraphViewer } from "./graph/GraphViewer"
-import "./index.css"
+import "./main.css"
 import { Sim3d } from "./sim_3d/Sim3d"
 import { Info } from "./sim_3d/simple_sim/Info"
 
