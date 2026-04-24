@@ -1,42 +1,45 @@
-import { Html } from "@react-three/drei"
-import { useFrame } from "@react-three/fiber"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { lerp } from "three/src/math/MathUtils.js"
 
 import { LimitedViewType } from "../interface"
 import { PowerStats } from "../model/interface"
+import pub_sub from "../state/pub_sub"
 import "./PowerStatus.css"
 
 
-export function PowerStatus ({ view, power, datetime }: { view: LimitedViewType, power: PowerStats, datetime?: number })
+export function PowerStatus ({ power, datetime }: { view: LimitedViewType, power: PowerStats, datetime?: number })
 {
     const [current_supply_gw, set_current_supply_gw] = useState(power.supply_gw)
     const [current_demand_gw, set_current_demand_gw] = useState(power.demand_gw)
 
-    useFrame((_, delta) =>
+    useEffect(() =>
     {
-        // Smoothly animate changes in supply and demand
-        const supply_diff = power.supply_gw - current_supply_gw
-        const demand_diff = power.demand_gw - current_demand_gw
+        return pub_sub.sub("animation_tick", ({ delta_seconds }) =>
+        {
+            // Smoothly animate changes in supply and demand
+            const supply_diff = power.supply_gw - current_supply_gw
+            const demand_diff = power.demand_gw - current_demand_gw
 
-        const new_current_supply_gw = current_supply_gw + smooth_change(supply_diff, delta)
-        const new_current_demand_gw = current_demand_gw + smooth_change(demand_diff, delta)
+            const new_current_supply_gw = current_supply_gw + smooth_change(supply_diff, delta_seconds)
+            const new_current_demand_gw = current_demand_gw + smooth_change(demand_diff, delta_seconds)
 
-        set_current_supply_gw(new_current_supply_gw)
-        set_current_demand_gw(new_current_demand_gw)
+            set_current_supply_gw(new_current_supply_gw)
+            set_current_demand_gw(new_current_demand_gw)
+        })
     })
 
-    const diff = current_supply_gw - current_demand_gw
+    const diff = Math.round(current_supply_gw - current_demand_gw)
     const is_surplus = diff >= 0
-    const status_text = is_surplus ? `Surplus of ${diff} GW` : `Deficit of ${-diff} GW`
+    const demand_status_text = `Demand of ${Math.round(current_demand_gw)} GW`
+    const supply_status_text = is_surplus ? `${diff} GW surplus` : `${-diff} GW deficit`
     const status_color = is_surplus ? "green" : "red"
 
-    return <Html>
+    return <>
         <div
             style={{
                 position: "absolute",
                 // Hack to cope with drei's <Html> forcing an absolute position on this element
-                top: view === "digital_twin" ? -375 : -100,
+                top: 20, // view === "digital_twin" ? -375 : -100,
                 left: "50%",
                 transform: "translateX(-50%)",
                 zIndex: "var(--z-index-sim)",
@@ -46,11 +49,17 @@ export function PowerStatus ({ view, power, datetime }: { view: LimitedViewType,
                 fontSize: 60,
                 // pointerEvents: "none",
             }}
-            title={status_text}
         >
-            <span>{Math.round(current_demand_gw)}</span>
-            <span style={{ fontSize: 20 }}>GW</span>
-            <span style={{ color: status_color }}>{is_surplus ? "+" : ""}{Math.round(diff)}</span>
+            <span title={demand_status_text}>
+                {Math.round(current_demand_gw)}
+                <span style={{ fontSize: 20 }}>GW</span>
+            </span>
+            <span
+                style={{ color: status_color }}
+                title={supply_status_text}
+            >
+                {is_surplus ? "+" : ""}{diff}
+            </span>
             <div className={"text_shortage" + (is_surplus ? " surplus" : " shortage")}>
                 SHORTAGE
             </div>
@@ -58,7 +67,7 @@ export function PowerStatus ({ view, power, datetime }: { view: LimitedViewType,
                 <DatetimeDisplay datetime={datetime} />
             </div>
         </div>
-    </Html>
+    </>
 }
 
 

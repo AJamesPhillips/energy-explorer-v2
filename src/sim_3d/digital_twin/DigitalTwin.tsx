@@ -52,9 +52,9 @@ export const DigitalTwin = () =>
         <Canvas id="scene-3d">
             <UpdateDatetimeOnFrame set_datetime={set_datetime} />
             <DigitalTwinInner />
-            <PowerStatus view="digital_twin" power={power} datetime={datetime} />
         </Canvas>
 
+        <PowerStatus view="digital_twin" power={power} datetime={datetime} />
         <WelcomeMessage />
     </>
 }

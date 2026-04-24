@@ -9,6 +9,7 @@ import { uk_coverage } from "../data/coverage/uk/data"
 // import { uk_month_hourly_and_location_average_capacity_factor_wind_generation_2018 } from "../data/power_generation/wind_turbine"
 import { PerspectiveKnowledgeGraph } from "../../data/interface"
 import { PowerStats } from "../model/interface"
+import pub_sub from "../state/pub_sub"
 import { FooterLinks } from "./FooterLinks"
 import { CellData, CellsData } from "./interface"
 import { IsoMetricGrid } from "./IsoMetricGrid"
@@ -75,9 +76,9 @@ export function SimpleSim(props: { persective: PerspectiveKnowledgeGraph | undef
                 // power={power}
                 set_power={set_power}
             />
-            <PowerStatus view="simulation" power={power} />
         </Canvas>
 
+        <PowerStatus view="simulation" power={power} />
         <WelcomeMessage />
         <FooterLinks />
     </>
@@ -102,7 +103,7 @@ function SimpleSim3d(props: SimpleSim3dProps)
         scene.background = new THREE.Color(0xeeeeff)
     })
 
-    useFrame((_state, _delta) =>
+    useFrame((state, delta) =>
     {
         // const new_datetime = new Date(datetime.getTime() + (delta * speed))
         // set_datetime(new_datetime)
@@ -122,6 +123,11 @@ function SimpleSim3d(props: SimpleSim3dProps)
             sun_directional_ref.current.color = new THREE.Color(sun_args.colour)
             sun_directional_ref.current.intensity = sun_args.intensity
         }
+
+        pub_sub.pub("animation_tick", {
+            delta_seconds: delta,
+            elapsed_seconds: state.clock.getElapsedTime(),
+        })
     })
 
     const on_click_tile = useCallback(({ x, y }: { x: number; y: number }) =>
