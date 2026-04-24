@@ -78,16 +78,18 @@ function App ()
     const components_map_by_ido = useMemo(() => data_components_by_ido(components), [components])
 
 
-    const population_by_year = useMemo(() =>
+    const population_by_year = useMemo<undefined | Record<number, number>>(() =>
     {
-        return {
-            2010: 60e6,
-            2015: 62e6,
-            2020: 64e6,
-            2035: 68e6,
-        }
-    }, [components])
-    const [population, set_population] = useState({ population: population_by_year[2020], year: 2020 })
+        const population_id = "1011v12" // UK population
+        const population_component = components_map_by_idv[population_id]
+        if (!population_component) return undefined
+
+        const data = JSON.parse(population_component.computed_value!)
+        return Object.fromEntries(data)
+    }, [components_map_by_idv])
+
+    const [year, set_year] = useState(2026)
+    const [population, set_population] = useState<number | undefined>(undefined)
 
 
     // Make the knowledge graph
@@ -144,7 +146,7 @@ function App ()
     return <>
         <Evaluator />
 
-        {sim_or_dt && <Sim3d view={view} persective={persectives[0]!} population={population.population} />}
+        {sim_or_dt && <Sim3d view={view} persective={persectives[0]} population={population} />}
 
         <div id="app_html">
 
@@ -159,13 +161,15 @@ function App ()
                             <Info />
                             <SelectCountry selected_country_ISO2="GB" />
                         </div>
-                        <SelectPerspective
+                        {!sim_or_dt && <SelectPerspective
                             force_single={sim_or_dt}
                             selected_perspectives={selected_perspectives}
                             on_change={set_selected_perspectives}
-                        />
-                        {sim_or_dt && <GraphPopulation
+                        />}
+                        {sim_or_dt && population_by_year && <GraphPopulation
                             population_by_year={population_by_year}
+                            year={year}
+                            set_year={set_year}
                             population={population}
                             set_population={set_population}
                         />}

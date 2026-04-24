@@ -6,7 +6,7 @@ import { SimpleSim } from "./simple_sim/SimpleSim"
 
 
 
-export const Sim3d = (props: { view: LimitedViewType, persective: PerspectiveKnowledgeGraph, population: number }) =>
+export const Sim3d = (props: { view: LimitedViewType, persective: PerspectiveKnowledgeGraph | undefined, population: number | undefined }) =>
 {
     return <>
         {props.view === "digital_twin" && <DigitalTwin />}

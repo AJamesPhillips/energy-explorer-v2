@@ -38,7 +38,7 @@ const solar_built_area_w_per_m2 = 0.633 // W m-2 -- https://wikisim.org/wiki/127
 const CELL_SIZE = 12
 
 
-export function SimpleSim(props: { persective: PerspectiveKnowledgeGraph, population: number })
+export function SimpleSim(props: { persective: PerspectiveKnowledgeGraph | undefined, population: number | undefined })
 {
     // const power_demand_series = useMemo(() => uk_daily_power_demand_profiles["2010"].average_demand.data, [])
 
@@ -51,6 +51,8 @@ export function SimpleSim(props: { persective: PerspectiveKnowledgeGraph, popula
 
     useEffect(() =>
     {
+        if (!props.persective || !props.population) return
+
         const { id, version } = props.persective.graph.apex_id
         const id_str = `${id}v${version}`
         const node = props.persective.graph.nodes[id_str]
@@ -62,7 +64,7 @@ export function SimpleSim(props: { persective: PerspectiveKnowledgeGraph, popula
             ...existing,
             demand_gw,
         }))
-    }, [props.persective.graph, props.population])
+    }, [props.persective?.graph, props.population])
 
 
     return <>

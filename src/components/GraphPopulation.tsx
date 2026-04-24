@@ -1,9 +1,10 @@
-
-
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 
+import "./GraphPopulation.css"
+
+
 const WIDTH = 320
-const HEIGHT = 90
+const HEIGHT = 120
 const PADDING = { top: 10, right: 10, bottom: 22, left: 48 }
 const PLOT_W = WIDTH - PADDING.left - PADDING.right
 const PLOT_H = HEIGHT - PADDING.top - PADDING.bottom
@@ -16,13 +17,23 @@ function fmt_pop(n: number): string
     return `${n}`
 }
 
-export function GraphPopulation(props: { population_by_year: Record<number, number>, population: { population: number, year: number }, set_population: (population: { population: number, year: number }) => void })
+
+interface GraphPopulationProps
 {
-    const { population_by_year, population, set_population } = props
+    population_by_year: Record<number, number>
+    year: number
+    set_year: (year: number) => void
+    population: number | undefined
+    set_population: (population: number) => void
+}
+export function GraphPopulation(props: GraphPopulationProps)
+{
+    const { population_by_year, year, set_year, population, set_population } = props
 
     const known_years = useMemo(() => Object.keys(population_by_year).map(Number).sort((a, b) => a - b), [population_by_year])
 
-    // Project next 10 years from the last two known data points
+    // Project next N years from the last two known data points
+    const project_next_n_years = 10
     const projected_years = useMemo(() =>
     {
         if (known_years.length < 2) return {}
@@ -33,7 +44,7 @@ export function GraphPopulation(props: { population_by_year: Record<number, numb
         const rate = (last_pop - second_last_pop) / (last - second_last) // per year
 
         const proj: Record<number, number> = {}
-        for (let y = last + 1; y <= last + 10; y++)
+        for (let y = last + 1; y <= last + project_next_n_years; y++)
         {
             proj[y] = last_pop + rate * (y - last)
         }
@@ -50,34 +61,68 @@ export function GraphPopulation(props: { population_by_year: Record<number, numb
         [all_years, projected_years, population_by_year]
     )
 
-    const min_year = all_years[0] ?? 2010
-    const max_year = all_years[all_years.length - 1] ?? 2030
+    useEffect(() =>
+    {
+        if (population !== undefined) return
+        const initial_pop = get_pop_at_year(year, {
+            population_by_year,
+            projected_years,
+            all_years,
+            all_pops,
+        })
+        set_population(initial_pop)
+    }, [population])
+
+    if (population === undefined)
+    {
+        return null
+    }
+
+    return <InnerGraphPopulation
+        population_by_year={population_by_year}
+        year={year}
+        set_year={set_year}
+        known_years={known_years}
+        projected_years={projected_years}
+        all_years={all_years}
+        population={population}
+        set_population={set_population}
+        all_pops={all_pops}
+    />
+}
+
+interface InnerGraphPopulationProps
+{
+    population_by_year: Record<number, number>
+
+    year: number
+    set_year: (year: number) => void
+    known_years: number[]
+    projected_years: Record<number, number>
+    all_years: number[]
+
+    population: number
+    set_population: (population: number) => void
+    all_pops: number[]
+}
+function InnerGraphPopulation(props: InnerGraphPopulationProps)
+{
+    const {
+        population_by_year,
+        year, set_year,
+        known_years, projected_years, all_years,
+        population, set_population,
+        all_pops,
+    } = props
+
+    const min_year = all_years[0]!
+    const max_year = all_years[all_years.length - 1]!
     const min_pop = Math.min(...all_pops) * 0.97
     const max_pop = Math.max(...all_pops) * 1.03
 
     function x_of(year: number) { return ((year - min_year) / (max_year - min_year)) * PLOT_W }
     function y_of(pop: number) { return PLOT_H - ((pop - min_pop) / (max_pop - min_pop)) * PLOT_H }
 
-    function pop_at_year(year: number): number
-    {
-        if (population_by_year[year] !== undefined) return population_by_year[year]!
-        if (projected_years[year] !== undefined) return projected_years[year]!
-        // interpolate
-        const sorted = all_years
-        for (let i = 0; i < sorted.length - 1; i++)
-        {
-            const y0 = sorted[i]!
-            const y1 = sorted[i + 1]!
-            if (year >= y0 && year <= y1)
-            {
-                const t = (year - y0) / (y1 - y0)
-                const p0 = projected_years[y0] ?? population_by_year[y0]!
-                const p1 = projected_years[y1] ?? population_by_year[y1]!
-                return p0 + t * (p1 - p0)
-            }
-        }
-        return all_pops[all_pops.length - 1]!
-    }
 
     // Known points polyline
     const known_points = known_years.map(y => `${x_of(y)},${y_of(population_by_year[y]!)}`)
@@ -91,18 +136,25 @@ export function GraphPopulation(props: { population_by_year: Record<number, numb
 
     const year_from_client_x = useCallback((client_x: number) =>
     {
-        if (!svg_ref.current) return population.year
+        if (!svg_ref.current) return year
         const rect = svg_ref.current.getBoundingClientRect()
         const px = client_x - rect.left - PADDING.left
         const ratio = Math.max(0, Math.min(1, px / PLOT_W))
         return Math.round(min_year + ratio * (max_year - min_year))
-    }, [min_year, max_year, population.year])
+    }, [min_year, max_year, year])
 
     const handle_move = useCallback((client_x: number) =>
     {
         const year = year_from_client_x(client_x)
-        set_population({ year, population: pop_at_year(year) })
-    }, [year_from_client_x, pop_at_year, set_population])
+        set_year(year)
+        const new_pop = get_pop_at_year(year, {
+            population_by_year,
+            projected_years,
+            all_years,
+            all_pops,
+        })
+        set_population(new_pop)
+    }, [year_from_client_x, get_pop_at_year, set_population])
 
     useEffect(() =>
     {
@@ -126,8 +178,8 @@ export function GraphPopulation(props: { population_by_year: Record<number, numb
         }
     }, [dragging, handle_move])
 
-    const cursor_x = x_of(population.year)
-    const is_projected = population.year > proj_start_year
+    const cursor_x = x_of(year)
+    const is_projected = year > proj_start_year
 
     const y_tick_count = 3
     const y_ticks = Array.from({ length: y_tick_count }, (_, i) =>
@@ -139,11 +191,11 @@ export function GraphPopulation(props: { population_by_year: Record<number, numb
     const x_tick_years = known_years.filter((_, i) => i % Math.ceil(known_years.length / 4) === 0)
 
     return (
-        <div id="graph_population" style={{ userSelect: "none", pointerEvents: "initial" }}>
+        <div id="graph_population">
             <div style={{ fontSize: 12, color: "#555", marginBottom: 2, display: "flex", justifyContent: "space-between" }}>
                 <span>Population</span>
                 <span style={{ fontWeight: "bold", color: is_projected ? "#e07020" : "#333" }}>
-                    {fmt_pop(population.population)} ({population.year}{is_projected ? " proj." : ""})
+                    {fmt_pop(population)} ({year}{is_projected ? " proj." : ""})
                 </span>
             </div>
             <svg
@@ -220,7 +272,12 @@ export function GraphPopulation(props: { population_by_year: Record<number, numb
                     />
                     <circle
                         cx={cursor_x}
-                        cy={y_of(pop_at_year(population.year))}
+                        cy={y_of(get_pop_at_year(year, {
+                            population_by_year,
+                            projected_years,
+                            all_years,
+                            all_pops,
+                        }))}
                         r={5}
                         fill={is_projected ? "#e07020" : "#2a7ae4"}
                         stroke="white"
@@ -230,4 +287,37 @@ export function GraphPopulation(props: { population_by_year: Record<number, numb
             </svg>
         </div>
     )
+}
+
+
+
+function get_pop_at_year(
+    year: number,
+    args: {
+        population_by_year: Record<number, number>,
+        projected_years: Record<number, number>,
+        all_years: number[],
+        all_pops: number[],
+    }
+): number
+{
+    const { population_by_year, projected_years, all_years, all_pops } = args
+
+    if (population_by_year[year] !== undefined) return population_by_year[year]!
+    if (projected_years[year] !== undefined) return projected_years[year]!
+    // interpolate
+    const sorted = all_years
+    for (let i = 0; i < sorted.length - 1; i++)
+    {
+        const y0 = sorted[i]!
+        const y1 = sorted[i + 1]!
+        if (year >= y0 && year <= y1)
+        {
+            const t = (year - y0) / (y1 - y0)
+            const p0 = projected_years[y0] ?? population_by_year[y0]!
+            const p1 = projected_years[y1] ?? population_by_year[y1]!
+            return p0 + t * (p1 - p0)
+        }
+    }
+    return all_pops[all_pops.length - 1]!
 }
