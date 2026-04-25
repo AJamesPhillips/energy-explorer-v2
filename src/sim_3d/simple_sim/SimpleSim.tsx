@@ -39,6 +39,15 @@ const offshore_wind_turbines_w_per_m2 = 3 // https://wikisim.org/wiki/1276
 const solar_farm_w_per_m2 = 5  // https://www.withouthotair.com/c6/page_41.shtml#:~:text=5%20W/m2
 const solar_built_area_w_per_m2 = 0.633 // W m-2 -- https://wikisim.org/wiki/1274
 
+const hours_per_day = 24
+// TODO: move this into WikiSim
+function convert_kwh_pd_pp_to_gw(args: { kwh_per_day_per_person: number, population: number })
+{
+    const kwh_per_day = args.kwh_per_day_per_person * args.population
+    const kw = kwh_per_day / hours_per_day
+    return kw / 1e6
+}
+
 
 export function SimpleSim(props: { persective: PerspectiveKnowledgeGraph | undefined, population: number | undefined })
 {
@@ -264,14 +273,4 @@ function calculate_power_supply_from_data(data: CellsData): number
     })
 
     return supply_gw
-}
-
-
-const hours_per_day = 24
-// TODO: move this into WikiSim
-function convert_kwh_pd_pp_to_gw(args: { kwh_per_day_per_person: number, population: number })
-{
-    const kwh_per_day = args.kwh_per_day_per_person * args.population
-    const kw = kwh_per_day / hours_per_day
-    return kw / 1e6
 }

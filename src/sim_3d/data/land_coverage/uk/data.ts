@@ -1,5 +1,6 @@
 
 // Copy and pasted from https://wikisim.org/wiki/1261
+// TODO have this data pulled from latest WikiSim version
 
 export const uk_land_coverage = [
     [

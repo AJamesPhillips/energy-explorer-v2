@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 
+import pub_sub from "../sim_3d/state/pub_sub"
 import "./GraphPopulation.css"
 
 
@@ -198,7 +199,13 @@ function InnerGraphPopulation(props: InnerGraphPopulationProps)
             className="ui_info_box"
         >
             <div className="ui_info_box_header">
-                <span className="source_info_label">Population <span className="source_info_link">(source)</span></span>
+                <span
+                    className="source_info_label"
+                    onClick={() => pub_sub.pub("show_info_and_data_sources", "population")}
+                >
+                    Population <span className="source_info_link">(source)</span>
+                </span>
+
                 <span style={{ fontWeight: "bold", color: is_projected ? "#e07020" : "#333" }}>
                     {fmt_pop(population, 1)} ({year}{is_projected ? " proj." : ""})
                 </span>

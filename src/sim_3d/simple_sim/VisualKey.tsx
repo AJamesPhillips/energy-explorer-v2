@@ -89,7 +89,7 @@ export function VisualKey()
                 <Mock3dTile colour={tile_colour(area_type)} />{area_type_to_human_readable(area_type)}
             </div>
         })} */}
-        <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: 8, marginTop: 12 }}>
+        <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: 8, marginTop: 12, minWidth: 235 }}>
             <RenderTileView tile_data={hovered_tile} />
             <TileInfoText hovered_tile={hovered_tile} />
         </div>
@@ -170,7 +170,10 @@ function RenderTileView({ tile_data }: { tile_data: CellData | null })
 
 function TileInfoText({ hovered_tile }: { hovered_tile: CellData | null })
 {
-    if (!hovered_tile) return <div>Hover over a tile to see details</div>
+    if (!hovered_tile) return <div>
+        Hover over a tile<br/>
+        to see details
+    </div>
 
     const { subtype, has_oil_rig } = hovered_tile
     const info = land_or_sea_types[subtype]

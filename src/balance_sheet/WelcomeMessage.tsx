@@ -1,4 +1,6 @@
 import { OnceOffInfoBox } from "../components/InfoBox"
+import { asset_url } from "../utils/asset_url"
+const SEWTHA_url = asset_url("/imgs/SEWTHA_book_cover.png")
 
 
 export function WelcomeMessage()
@@ -21,7 +23,7 @@ export function WelcomeMessage()
 
                 <p style={{ textAlign: "center" }}>
                     <a href="https://www.withouthotair.com/">
-                        <img src="/imgs/SEWTHA_book_cover.png" style={{ margin: "auto" }} />
+                        <img src={SEWTHA_url} style={{ margin: "auto" }} />
                     </a>
                 </p>
 

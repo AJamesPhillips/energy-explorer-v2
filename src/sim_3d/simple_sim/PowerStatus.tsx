@@ -7,6 +7,10 @@ import pub_sub from "../state/pub_sub"
 import "./PowerStatus.css"
 
 
+const open_power_demand_source = () => pub_sub.pub("show_info_and_data_sources", "power_demand")
+const open_power_supply_source = () => pub_sub.pub("show_info_and_data_sources", "power_supply")
+
+
 export function PowerStatus ({ power, datetime }: { view: LimitedViewType, power: PowerStats, datetime?: number })
 {
     const [current_supply_gw, set_current_supply_gw] = useState(power.supply_gw)
@@ -31,7 +35,7 @@ export function PowerStatus ({ power, datetime }: { view: LimitedViewType, power
     const diff = Math.round(current_supply_gw - current_demand_gw)
     const is_surplus = diff >= 0
     const demand_status_text = `Demand of ${Math.round(current_demand_gw)} GW`
-    const supply_status_text = is_surplus ? `${diff} GW surplus` : `${-diff} GW deficit`
+    const supply_status_text = is_surplus ? `${diff} GW surplus` : `${-diff} GW deficit. More power needed!`
     const status_color = is_surplus ? "green" : "red"
 
     return <>
@@ -42,6 +46,7 @@ export function PowerStatus ({ power, datetime }: { view: LimitedViewType, power
                         <td
                             className="supply_demand_label"
                             title={demand_status_text}
+                            onClick={open_power_demand_source}
                         >
                             Demand
                         </td>
@@ -50,6 +55,7 @@ export function PowerStatus ({ power, datetime }: { view: LimitedViewType, power
                             className="supply_demand_label"
                             style={{ textAlign: "left", color: status_color }}
                             title={supply_status_text}
+                            onClick={open_power_supply_source}
                         >
                             {is_surplus ? "Surpluse" : "Shortage"}
                         </td>
@@ -59,6 +65,7 @@ export function PowerStatus ({ power, datetime }: { view: LimitedViewType, power
                         <td
                             style={{ textAlign: "right", fontSize: "var(--font-huge)" }}
                             title={demand_status_text}
+                            onClick={open_power_demand_source}
                         >
                             {Math.round(current_demand_gw)}
                         </td>
@@ -68,24 +75,34 @@ export function PowerStatus ({ power, datetime }: { view: LimitedViewType, power
                         <td
                             style={{ color: status_color, textAlign: "left", fontSize: "var(--font-huge)" }}
                             title={supply_status_text}
+                            onClick={open_power_supply_source}
                         >
                             {is_surplus ? "+" : ""}{diff}
                         </td>
                     </tr>
 
                     <tr id="power_status_sources">
-                        <td style={{ textAlign: "right" }}>
+                        <td
+                            style={{ textAlign: "right" }}
+                            onClick={open_power_demand_source}
+                        >
                             (source)
                         </td>
                         <td />
-                        <td style={{ textAlign: "left" }}>
+                        <td
+                            style={{ textAlign: "left" }}
+                            onClick={open_power_supply_source}
+                        >
                             (source)
                         </td>
                     </tr>
                 </tbody>
             </table>
 
-            <div className={"text_shortage" + (is_surplus ? " surplus" : " shortage")}>
+            <div
+                className={"text_shortage" + (is_surplus ? " surplus" : " shortage")}
+                title={supply_status_text}
+            >
                 SHORTAGE
             </div>
             <div>

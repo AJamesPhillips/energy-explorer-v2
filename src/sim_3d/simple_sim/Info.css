@@ -10,4 +10,5 @@
     /* we have to re-enable them after #app_html disables them */
     pointer-events: initial;
     cursor: pointer;
+    user-select: none;
 }

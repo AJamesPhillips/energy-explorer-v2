@@ -11,6 +11,7 @@ interface InfoBoxProps
     message: string | JSX.Element
     on_close: () => void
     confirmation_button?: ((p: { on_click: (() => void) }) => JSX.Element)
+    wider_info_box?: boolean
 }
 export function InfoBox(props: InfoBoxProps)
 {
@@ -49,6 +50,7 @@ export function InfoBox(props: InfoBoxProps)
         <div id="info_box_text_holder" onPointerDown={on_click}>
             <div
                 id="info_box_text"
+                className={props.wider_info_box ? "wider_info_box" : ""}
                 onPointerDown={e => e.stopPropagation()}
             >
                 {props.message}

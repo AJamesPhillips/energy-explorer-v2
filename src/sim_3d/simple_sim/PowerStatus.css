@@ -12,8 +12,13 @@
     border-radius: 5px;
     min-width: 300px;
 
-    cursor: pointer;
     user-select: none;
+}
+
+#power_status_container table td:nth-child(1),
+#power_status_container table td:nth-child(3)
+{
+    cursor: pointer;
 }
 
 .text_shortage

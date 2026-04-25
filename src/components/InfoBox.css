@@ -54,6 +54,11 @@
     z-index: 1000;
 }
 
+#info_box_text.wider_info_box
+{
+    max-width: 600px;
+}
+
 #info_box_text > button
 {
     display: block;
