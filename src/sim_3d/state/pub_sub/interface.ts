@@ -20,5 +20,5 @@ export interface PublishableEvents
     }
     on_hover_tile: CellData | null
     will_update_tile: CellData | null
-    show_info_and_data_sources: InfoSectionId
+    show_info_and_data_sources: InfoSectionId | true
 }
