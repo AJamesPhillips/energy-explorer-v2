@@ -1,7 +1,7 @@
 name: "🐛 Report a bug"
 description: Highlight a potential problem with the simulation.
 title: "[BUG]: "
-labels: [enhancement, feedback]
+labels: [bug]
 body:
   # - type: markdown
   #   attributes:
@@ -30,7 +30,7 @@ body:
     attributes:
       label: Details
       description: Please provide more details, including what you were doing when it happened.
-      placeholder: When I did XYZ  in the simulation I noticed that ABC displayed the wrong number.  Here's a screen shot / screen recording...
+      placeholder: When I did XYZ in the simulation I noticed that ABC displayed the wrong number.  Here's a screen shot / screen recording...
     # validations:
     #   required: false
 
