@@ -1,6 +1,6 @@
 name: "🐛 Report a bug"
 description: Highlight a potential problem with the simulation.
-title: "[BUG]: "
+title: "[BUG] "
 labels: [bug]
 body:
   # - type: markdown
