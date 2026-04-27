@@ -1,3 +1,4 @@
+import { Text } from "@react-three/drei"
 import { Canvas, useFrame, useThree } from "@react-three/fiber"
 import { useCallback, useEffect, useRef, useState } from "react"
 import * as THREE from "three"
@@ -192,6 +193,9 @@ function SimpleSim3d(props: SimpleSim3dProps)
             on_hover_tile={on_hover_tile}
         />
         <Data />
+        {/* Render an empty bit of Text otherwise when Drei Text is first rendered
+            it causes the whole scene to unmount and remount for some reason. */}
+        <Text>{""}</Text>
     </>
 }
 
