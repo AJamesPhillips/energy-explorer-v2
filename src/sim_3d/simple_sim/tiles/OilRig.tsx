@@ -48,7 +48,7 @@ function SingleOilRig({ x, y, cell_size, state }: SingleOilRigProps)
     const flame_r     = s * 0.07
 
     // ── Subsea depths ──────────────────────────────────────────────────────
-    const riser_depth  = s * 2.0
+    const riser_depth  = s * 2.5
 
     // ── Geometries ─────────────────────────────────────────────────────────
     const leg_geo      = useMemo(() => new THREE.CylinderGeometry(leg_r, leg_r, leg_h, 8), [leg_r, leg_h])

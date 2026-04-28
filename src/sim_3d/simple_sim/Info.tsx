@@ -136,6 +136,11 @@ export function Info()
                     </p>
 
 
+                    <Section id="oil_and_gas_reserves" title="Oil and Gas Reserves" />
+                    <p>
+                        The data for the oil and gas reserves is based on... (TODO)
+                    </p>
+
                     <Section id="motivation" title="Motivation for this sim" />
                     <p>
                         To get a better intuitive understanding of the scale of

@@ -1,7 +1,14 @@
 import { CellData } from "../../simple_sim/interface"
 
 
-export type InfoSectionId = "map" | "population" | "power_demand" | "power_supply" | "motivation"
+export type InfoSectionId =
+    "map"
+    | "population"
+    | "power_demand"
+    | "power_supply"
+    | "motivation"
+    | "oil_and_gas_reserves"
+
 
 export interface PublishableEvents
 {
@@ -19,6 +26,7 @@ export interface PublishableEvents
         id: string
     }
     on_hover_tile: CellData | null
+    on_highlight_oil_reserves: { x: number, y: number } | null
     will_update_tile: CellData | null
     tile_power_changed: { tile: CellData; change_gw: number }
     show_info_and_data_sources: InfoSectionId | true

@@ -54,6 +54,7 @@ export function IsoMetricGridContentTiles(props: IsoMetricGridContentTilesProps)
             .map(cell => ({
                 x: cell.x,
                 y: cell.y,
+                depth: 2.0,
                 ratio_remaining: !cell.has_oil_rig ? 1 : cell.has_oil_rig.state === "extracting" ? 0.5 : 0,
             })),
         [tiles],
