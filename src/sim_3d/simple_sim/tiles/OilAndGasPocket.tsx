@@ -118,7 +118,11 @@ function OilAndGasPocket({ x, y, depth, ratio_remaining, cell_size }: OilAndGasP
 
             {this_is_highlighted && <mesh
                 geometry={new THREE.PlaneGeometry(2 * s, 2 * s)}
-                material={new THREE.MeshBasicMaterial({ transparent: true, opacity: 1.0, side: THREE.DoubleSide })}
+                material={new THREE.MeshBasicMaterial({
+                    transparent: true,
+                    opacity: 0.0,
+                    side: THREE.DoubleSide,
+                })}
                 rotation={[0, Math.PI / 4, 0]}
                 position={[-1 * s, (-2 -depth) * s, -1 * s]}
                 onClick={() =>
