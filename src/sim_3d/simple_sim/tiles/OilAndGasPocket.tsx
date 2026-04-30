@@ -121,7 +121,7 @@ function OilAndGasPocket({ x, y, depth, ratio_remaining, cell_size }: OilAndGasP
                 material={new THREE.MeshBasicMaterial({ transparent: true, opacity: 1.0, side: THREE.DoubleSide })}
                 rotation={[0, Math.PI / 4, 0]}
                 position={[-1 * s, (-2 -depth) * s, -1 * s]}
-                onClick={e =>
+                onClick={() =>
                 {
                     pub_sub.pub("show_info_and_data_sources", "oil_and_gas_reserves")
                 }}
