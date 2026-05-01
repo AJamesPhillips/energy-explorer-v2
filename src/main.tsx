@@ -11,7 +11,7 @@ import { flatten_new_or_data_component_to_json, hydrate_data_component_from_json
 import { data_components_by_ido, data_components_by_idv } from "core/data/utils/data_components_by_id"
 import { make_graph } from "core/data/utils/graph"
 import { make_field_validators } from "core/data/validate_fields"
-import { Evaluator } from "core/evaluator/implementation/browser_sandboxed_javascript"
+import { Evaluator } from "core/evaluator/implementation/browser_react_Evaluator"
 import { DataComponentAsJSON } from "core/supabase"
 
 import { BalanceSheet } from "./balance_sheet/BalanceSheet"
