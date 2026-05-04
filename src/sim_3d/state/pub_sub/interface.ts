@@ -25,9 +25,11 @@ export interface PublishableEvents
     clear_message: {
         id: string
     }
+    show_info_and_data_sources: InfoSectionId | true
+    show_select_country: undefined
+
     on_hover_tile: CellData | null
     on_highlight_oil_reserves: { x: number, y: number } | null
     will_update_tile: CellData | null
     tile_power_changed: { tile: CellData; change_gw: number }
-    show_info_and_data_sources: InfoSectionId | true
 }

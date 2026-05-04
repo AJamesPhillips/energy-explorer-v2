@@ -1,9 +1,10 @@
-import { useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 
 import { InfoBox } from "../components/InfoBox"
 import { BlueSkyLogo, GitHubLogo, MailLogo } from "../components/svgs"
 import { CountryData, extended_countries_data, get_country_by_code } from "../data/countries"
 import { CountryISO2Code } from "../data/countries_data"
+import pub_sub from "../sim_3d/state/pub_sub"
 import "./SelectCountry.css"
 
 
@@ -31,6 +32,12 @@ export function SelectCountry(props: SelectCountryProps)
     const implemented_countries = filtered_countries.filter(c => c.implemented)
     const unimplemented_countries = filtered_countries.filter(c => !c.implemented)
         .sort((a, b) => b.votes - a.votes) // show the most voted for unimplemented countries at the top
+
+
+    useEffect(() => pub_sub.sub("show_select_country", () =>
+    {
+        set_show_info_box(true)
+    }), [])
 
     return (
         <div id="select_country" className={on_wikisim ? "on_wikisim" : ""}>

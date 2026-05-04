@@ -1,13 +1,14 @@
 import { OnceOffInfoBox } from "../../components/InfoBox"
+import pub_sub from "../state/pub_sub"
 
 
 export function WelcomeMessage()
 {
     return <OnceOffInfoBox
         id="simple_sim_welcome_message"
-        message={
+        message={({ close_info_box }) =>
             <>
-                <h1>⚡️Power the UK⚡️<br/>On Renewables Alone</h1>
+                <h1>⚡️Power the UK⚡️</h1>
 
                 {/* <p>
                     This is a simplification of the UK's national energy system.
@@ -18,10 +19,18 @@ export function WelcomeMessage()
                 {/* And click on ℹ️ symbols to get more information */}
                 </p>
 
-                {/* <p>
-                    Why?  To get a better intuitive understanding of the scale of
-                    energy demand and of the area, and resources required for different sources of energy.
-                </p> */}
+                <p>
+                    Or <a
+                        onClick={e =>
+                        {
+                            e.preventDefault()
+                            close_info_box()
+                            pub_sub.pub("show_select_country", undefined)
+                        }}
+                    >
+                        vote for your own country
+                    </a>.
+                </p>
 
 
                 {/* <p>
