@@ -15,7 +15,8 @@
     -moz-osx-font-smoothing: grayscale;
 
     --z-index-sim: 1;
-    --z-index-app-html: 2;
+    --z-index-app-html-data_portal: 2;
+    --z-index-app-html: 3;
 
     --font-small: 12px;
     --font-medium: 18px;

@@ -28,9 +28,9 @@ import { all_ids_to_fetch } from "./data/ids"
 import { DataComponentExtended, PerspectiveKnowledgeGraph } from "./data/interface"
 import { GraphViewer } from "./graph/GraphViewer"
 import "./main.css"
+import { PopulationByYear, process_data_component } from "./sim_3d/data/population/process_data_component"
 import { Sim3d } from "./sim_3d/Sim3d"
 import { DataPortal } from "./sim_3d/simple_sim/ui/DataPortal"
-import { GraphPopulation } from "./sim_3d/simple_sim/ui/GraphPopulation"
 import { Info } from "./sim_3d/simple_sim/ui/Info"
 
 
@@ -71,18 +71,28 @@ function App ()
     const components_map_by_ido = useMemo(() => data_components_by_ido(components), [components])
 
 
-    const population_by_year = useMemo<undefined | Record<number, number>>(() =>
+    const population_by_year = useMemo<undefined | PopulationByYear>(() =>
     {
         const population_id = "1011v12" // UK population
         const population_component = components_map_by_idv[population_id]
         if (!population_component) return undefined
 
-        const data = JSON.parse(population_component.computed_value!)
-        return Object.fromEntries(data)
+        return process_data_component(population_component)
     }, [components_map_by_idv])
 
     const [year, set_year] = useState(2026)
     const [population, set_population] = useState<number | undefined>(undefined)
+
+    // Ensure population is set when population_by_year is loaded or year changes
+    useEffect(() =>
+    {
+        if (!population_by_year) return
+
+        const new_population = population_by_year[year]?.value
+        if (new_population === undefined) return
+
+        set_population(new_population)
+    }, [population_by_year, year])
 
 
     // Make the knowledge graph
@@ -157,19 +167,17 @@ function App ()
                             <Info />
                         </div>
                         <div className="app_controls_row">
-                            <DataPortal />
+                            <DataPortal
+                                population_by_year={population_by_year}
+                                year={year}
+                                population={population}
+                                set_population={set_population}
+                            />
                         </div>
                         {!sim_or_dt && <SelectPerspective
                             force_single={sim_or_dt}
                             selected_perspectives={selected_perspectives}
                             on_change={set_selected_perspectives}
-                        />}
-                        {sim_or_dt && population_by_year && <GraphPopulation
-                            population_by_year={population_by_year}
-                            year={year}
-                            set_year={set_year}
-                            population={population}
-                            set_population={set_population}
                         />}
                     </div>
                 </div>

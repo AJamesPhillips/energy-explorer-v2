@@ -33,13 +33,13 @@ export function Info()
             className="ui_button"
             onClick={() => set_show_info_box(true)}
         >
-            Info <InfoLogo style={{ marginLeft: 5 }} />
+            Sources <InfoLogo style={{ marginLeft: 5 }} />
         </span>
 
         {show_info_box && <InfoBox
             wider_info_box={true}
             message={<>
-                <h1>Info and Data Sources <InfoLogo style={{ height: 30 }} /></h1>
+                <h1>Data Sources <InfoLogo style={{ height: 30 }} /></h1>
 
                 <div style={{ overflowY: "scroll", maxHeight: "50vh", paddingRight: 10 }}>
                     <p>
