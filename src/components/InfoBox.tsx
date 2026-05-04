@@ -47,7 +47,13 @@ export function InfoBox(props: InfoBoxProps)
 
 
     return <div id="info_box" className={(hiding ? "hidden" : "")}>
-        <div id="info_box_text_holder" onPointerDown={close_info_box}>
+        <div id="info_box_text_holder" onClick={e =>
+        {
+            // Make sure we close the info box and do not propagate any click
+            // events to elements in the darkened background behind the info box.
+            e.stopPropagation()
+            close_info_box()
+        }}>
             <div
                 id="info_box_text"
                 className={props.wider_info_box ? "wider_info_box" : ""}
