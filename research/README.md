@@ -41,6 +41,12 @@ having a higher standing charge than urban and southern areas.
 differences - check how long they have been in place for.
 https://www.thisismoney.co.uk/money/bills/article-14542353/Households-Liverpool-pay-50-standing-charges-London-thanks-energy-postcode-lottery.html
 
-## France
+## France's Net Zero Roadmap
 
 https://www.ecologie.gouv.fr/sites/default/files/documents/202604_France%27s_roadmap_to_transitionning_away_from_Fossil_Fuel_EN.pdf
+
+## Nameplate Solar PV Confusion
+
+This report shows that existing UK housing stock could have 47.5 GW of rooftop
+solar PV potential.  It's important to note that this is the nameplate capacity
+not the average annual output: https://anot8.org/r/?url=https%3A%2F%2Fwww.cpre.org.uk%2Fwp-content%2Fuploads%2F2023%2F05%2FRooftop-Revolution-Report.pdf&h=0-ajp&ta=%5B%5B0%2C10%2C%22%22%2C%22%22%2C%5B%5D%2C%2221.5%22%2C%22424.5%22%2C%22790.5%22%2C%22416%22%2C%22AJP%22%5D%5D
