@@ -2,6 +2,7 @@ import { useState } from "react"
 
 import { InfoBox } from "../../../components/InfoBox"
 import { GraphLogo } from "../../../components/svgs"
+import { is_narrow_screen } from "../../../utils/screen_type"
 import { PopulationByYear } from "../../data/population/process_data_component"
 import { GraphPopulation } from "./GraphPopulation"
 import "./ui.css"
@@ -25,7 +26,7 @@ export function DataPortal(props: DataPortalProps)
             className="ui_button"
             onClick={() => set_show_data_portal(true)}
         >
-            Graphs <GraphLogo style={{ marginLeft: 5 }} />
+            {is_narrow_screen ? "" : "Graphs "}<GraphLogo style={{ marginLeft: 5 }} />
         </span>
 
         {show_data_portal && <InfoBox

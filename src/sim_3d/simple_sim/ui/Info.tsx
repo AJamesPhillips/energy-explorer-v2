@@ -4,6 +4,7 @@ import { InfoBox } from "../../../components/InfoBox"
 import { Link } from "../../../components/Link"
 import { InfoLogo } from "../../../components/svgs"
 import { asset_url } from "../../../utils/asset_url"
+import { is_narrow_screen } from "../../../utils/screen_type"
 import pub_sub from "../../state/pub_sub"
 import { InfoSectionId } from "../../state/pub_sub/interface"
 import "./ui.css"
@@ -33,7 +34,7 @@ export function Info()
             className="ui_button"
             onClick={() => set_show_info_box(true)}
         >
-            Sources <InfoLogo style={{ marginLeft: 5 }} />
+            {is_narrow_screen ? "" : "Sources "}<InfoLogo style={{ marginLeft: 5 }} />
         </span>
 
         {show_info_box && <InfoBox

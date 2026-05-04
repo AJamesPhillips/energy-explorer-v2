@@ -149,9 +149,23 @@ export function GraphPopulation(props: GraphPopulationProps)
                 ref={svg_ref}
                 width={WIDTH}
                 height={HEIGHT}
-                style={{ display: "block", cursor: "ew-resize", overflow: "visible" }}
-                onMouseDown={e => { set_dragging(true); handle_move(e.clientX) }}
-                onTouchStart={e => { set_dragging(true); handle_move(e.touches[0]!.clientX) }}
+                style={{
+                    display: "block",
+                    cursor: "ew-resize",
+                    overflow: "visible",
+                    // This prevents the screen from being dragged down and
+                    // potentially causing the browser to show its refresh prompt
+                    // or to actually refresh the page.
+                    touchAction: "none",
+                }}
+                onMouseDown={e => {
+                    set_dragging(true)
+                    handle_move(e.clientX)
+                }}
+                onTouchStart={e => {
+                    set_dragging(true)
+                    handle_move(e.touches[0]!.clientX)
+                }}
             >
                 <g transform={`translate(${PADDING.left},${PADDING.top})`}>
                     {/* Y axis ticks */}
