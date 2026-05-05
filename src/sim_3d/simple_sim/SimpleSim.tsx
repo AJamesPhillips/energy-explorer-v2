@@ -13,13 +13,12 @@ import { is_narrow_screen } from "../../utils/screen_type"
 import { PowerStats } from "../model/interface"
 import pub_sub from "../state/pub_sub"
 import { CONSTANTS, DEFAULTS } from "./constants"
-import { FooterLinks } from "./FooterLinks"
+import { Footer } from "./footer/Footer"
 import { CellData, CellsData } from "./interface"
 import { IsoCamera } from "./IsoCamera"
 import { IsoMetricGrid } from "./IsoMetricGrid"
 import { map_data_cells } from "./map_data"
 import { PowerStatus } from "./PowerStatus"
-import { TileInfo } from "./TileInfo"
 import { DebugMapEdges } from "./utils/DebugMapEdges"
 import { WelcomeMessage } from "./WelcomeMessage"
 
@@ -104,8 +103,7 @@ export function SimpleSim(props: { persective: PerspectiveKnowledgeGraph | undef
 
         <PowerStatus view="simulation" power={power} />
         <WelcomeMessage />
-        <TileInfo />
-        <FooterLinks />
+        <Footer />
     </>
 }
 

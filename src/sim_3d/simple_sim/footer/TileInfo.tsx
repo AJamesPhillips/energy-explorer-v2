@@ -3,21 +3,22 @@ import { Box } from "@react-three/drei"
 import { Canvas } from "@react-three/fiber"
 import { useEffect, useRef, useState } from "react"
 
-import { is_touch_screen } from "../../utils/screen_type"
-import { LandOrSea, LandOrSeaType } from "../data/land_coverage/uk/data"
-import pub_sub from "../state/pub_sub"
-import { CONSTANTS, DEFAULTS } from "./constants"
-import { CellData, CellsData } from "./interface"
-import { IsoCamera } from "./IsoCamera"
-import { bevel_colours, box_geometry_for_cell_size } from "./IsoMetricTileConstants"
-import { tile_colour } from "./tile"
+import { CloseIcon } from "../../../components/svgs"
+import { is_touch_screen } from "../../../utils/screen_type"
+import { LandOrSea, LandOrSeaType } from "../../data/land_coverage/uk/data"
+import pub_sub from "../../state/pub_sub"
+import { CONSTANTS, DEFAULTS } from "../constants"
+import { CellData, CellsData } from "../interface"
+import { IsoCamera } from "../IsoCamera"
+import { bevel_colours, box_geometry_for_cell_size } from "../IsoMetricTileConstants"
+import { tile_colour } from "../tile"
+import { OilRigTiles } from "../tiles/OilRig"
+import { SolarFarm } from "../tiles/SolarFarm"
+import { SuburbanTiles } from "../tiles/Suburban"
+import { UrbanTiles } from "../tiles/Urban"
+import { WindTurbine } from "../tiles/WindTurbine"
+import { Woodland } from "../tiles/Woodland"
 import "./TileInfo.css"
-import { OilRigTiles } from "./tiles/OilRig"
-import { SolarFarm } from "./tiles/SolarFarm"
-import { SuburbanTiles } from "./tiles/Suburban"
-import { UrbanTiles } from "./tiles/Urban"
-import { WindTurbine } from "./tiles/WindTurbine"
-import { Woodland } from "./tiles/Woodland"
 
 
 const { CELL_SIZE } = CONSTANTS
@@ -75,11 +76,12 @@ export function TileInfo()
         })
     , [])
 
-
-
     return <div id="tile_info_panel" className="ui_info_box">
-        <div className="ui_info_box_header">
-            Tile Info
+        <div className="ui_info_box_header" style={{ display: "flex", justifyContent: "space-between" }}>
+            <div>Tile Info</div>
+            {false && <CloseIcon
+                style={{ height: 24, margin: "-5px -5px 0 0" }}
+            />}
         </div>
 
         {/* {Object.keys(land_or_sea_types).map(at =>

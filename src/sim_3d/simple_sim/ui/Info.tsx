@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 
 import { InfoBox } from "../../../components/InfoBox"
 import { Link } from "../../../components/Link"
-import { InfoLogo } from "../../../components/svgs"
+import { InfoIcon } from "../../../components/svgs"
 import { asset_url } from "../../../utils/asset_url"
 import { is_narrow_screen } from "../../../utils/screen_type"
 import pub_sub from "../../state/pub_sub"
@@ -34,13 +34,13 @@ export function Info()
         onClick={() => set_show_info_box(true)}
     >
         <span>
-            {is_narrow_screen() ? "" : "Sources "}<InfoLogo style={{ marginLeft: is_narrow_screen() ? 0 : 5 }} />
+            {is_narrow_screen() ? "" : "Sources "}<InfoIcon style={{ marginLeft: is_narrow_screen() ? 0 : 5 }} />
         </span>
 
         {show_info_box && <InfoBox
             wider_info_box={true}
             message={<>
-                <h1>Data Sources <InfoLogo style={{ height: 30 }} /></h1>
+                <h1>Data Sources <InfoIcon style={{ height: 30 }} /></h1>
 
                 <div style={{ overflowY: "scroll", maxHeight: "50vh", paddingRight: 10 }}>
                     <p>

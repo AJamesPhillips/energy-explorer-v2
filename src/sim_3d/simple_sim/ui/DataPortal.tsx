@@ -1,7 +1,7 @@
 import { useState } from "react"
 
 import { InfoBox } from "../../../components/InfoBox"
-import { GraphLogo } from "../../../components/svgs"
+import { GraphIcon } from "../../../components/svgs"
 import { is_narrow_screen } from "../../../utils/screen_type"
 import { PopulationByYear } from "../../data/population/process_data_component"
 import { GraphPopulation } from "./GraphPopulation"
@@ -27,13 +27,13 @@ export function DataPortal(props: DataPortalProps)
         onClick={() => set_show_data_portal(true)}
     >
         <span>
-            {is_narrow_screen() ? "" : "Graphs "}<GraphLogo style={{ marginLeft: is_narrow_screen() ? 0 : 5 }} />
+            {is_narrow_screen() ? "" : "Graphs "}<GraphIcon style={{ marginLeft: is_narrow_screen() ? 0 : 5 }} />
         </span>
 
         {show_data_portal && <InfoBox
             wider_info_box={true}
             message={<>
-                <h1>Data Graphs <GraphLogo style={{ height: 30 }} /></h1>
+                <h1>Data Graphs <GraphIcon style={{ height: 30 }} /></h1>
 
                 <div style={{ overflowY: "scroll", maxHeight: "50vh", paddingRight: 10 }}>
                     <Section id="" title="Population" />
