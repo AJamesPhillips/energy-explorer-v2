@@ -1,5 +1,5 @@
 import { OrthographicCamera } from "@react-three/drei"
-import { useEffect, useRef } from "react"
+import { useLayoutEffect, useRef } from "react"
 import * as THREE from "three"
 
 
@@ -26,7 +26,7 @@ export function IsoCamera({ grid_size, cell_size, position_xy }: IsoCameraProps)
 
     const cam_ref = useRef<THREE.OrthographicCamera>(null)
 
-    useEffect(() =>
+    useLayoutEffect(() =>
     {
         cam_ref.current?.lookAt(cx, 0, cz)
     }, [cx, cz])

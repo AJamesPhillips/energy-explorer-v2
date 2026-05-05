@@ -1,4 +1,4 @@
-import { Text } from "@react-three/drei"
+import { MapControls, Text } from "@react-three/drei"
 import { Canvas, useFrame, useThree } from "@react-three/fiber"
 import { useCallback, useEffect, useRef, useState } from "react"
 import * as THREE from "three"
@@ -7,7 +7,9 @@ import { uk_coverage } from "../data/coverage/uk/data"
 // import uk_daily_power_demand_profiles from "../data/power_demand/uk/daily_profiles.json"
 // import { uk_month_hourly_and_location_average_capacity_factor_solar_generation_2018 } from "../data/power_generation/solar_pv"
 // import { uk_month_hourly_and_location_average_capacity_factor_wind_generation_2018 } from "../data/power_generation/wind_turbine"
+import { lerp } from "three/src/math/MathUtils.js"
 import { PerspectiveKnowledgeGraph } from "../../data/interface"
+import { is_narrow_screen } from "../../utils/screen_type"
 import { PowerStats } from "../model/interface"
 import pub_sub from "../state/pub_sub"
 import { CONSTANTS, DEFAULTS } from "./constants"
@@ -17,6 +19,7 @@ import { IsoCamera } from "./IsoCamera"
 import { IsoMetricGrid } from "./IsoMetricGrid"
 import { map_data_cells } from "./map_data"
 import { PowerStatus } from "./PowerStatus"
+import { DebugMapEdges } from "./utils/DebugMapEdges"
 import { VisualKey } from "./VisualKey"
 import { WelcomeMessage } from "./WelcomeMessage"
 
@@ -26,6 +29,16 @@ import { WelcomeMessage } from "./WelcomeMessage"
 
 const { CELL_SIZE, GRID_SIZE } = CONSTANTS
 const { sun_args } = DEFAULTS
+
+// Pan boundary: allow the camera target to roam 25% beyond each edge of the grid,
+// so the user can always see most of the map but can nudge to the edges.
+const GRID_W = GRID_SIZE.x * CELL_SIZE
+const GRID_D = GRID_SIZE.y * CELL_SIZE
+const PAN_MARGIN = (zoom: number) => GRID_W * lerp(-0.2, -0.05, zoom / 9)
+const PAN_MIN_X = (zoom: number) => -PAN_MARGIN(zoom)
+const PAN_MAX_X = (zoom: number) => GRID_W + PAN_MARGIN(zoom)
+const PAN_MIN_Z = (zoom: number) => -PAN_MARGIN(zoom)
+const PAN_MAX_Z = (zoom: number) => GRID_D + PAN_MARGIN(zoom)
 // The visual grid was made from dropping half of the cells (all deep sea cells)
 const DROPPED_AREA = 2
 const KM2_PER_CELL = uk_coverage.total_uk.total_area_km2 / (GRID_SIZE.x * GRID_SIZE.y * DROPPED_AREA)
@@ -109,6 +122,7 @@ function SimpleSim3d(props: SimpleSim3dProps)
     // const [datetime, set_datetime] = useState(start_datetime)
     const sun_ambient_ref = useRef<THREE.AmbientLight>(null)
     const sun_directional_ref = useRef<THREE.DirectionalLight>(null)
+    const controls_ref = useRef<{ target: THREE.Vector3; object: THREE.Camera }>(null)
 
     useThree(({ scene }) =>
     {
@@ -136,6 +150,26 @@ function SimpleSim3d(props: SimpleSim3dProps)
             delta_seconds: delta,
             elapsed_seconds: state.clock.getElapsedTime(),
         })
+
+
+        // Clamp camera target to pan bounds every frame (runs after controls update at priority 1).
+        const ctrl = controls_ref.current
+        if (!ctrl) return
+
+        const { target, object: camera } = ctrl
+        const zoom = (camera as any).zoom as number
+        const clamp_x = Math.max(PAN_MIN_X(zoom), Math.min(PAN_MAX_X(zoom), target.x))
+        const clamp_z = Math.max(PAN_MIN_Z(zoom), Math.min(PAN_MAX_Z(zoom), target.z))
+        if (clamp_x !== target.x || clamp_z !== target.z)
+        {
+            const dx = clamp_x - target.x
+            const dz = clamp_z - target.z
+            target.x = clamp_x
+            target.z = clamp_z
+            camera.position.x += dx
+            camera.position.z += dz
+        }
+        console.log(Math.round(camera.position.x), Math.round(camera.position.y), Math.round(camera.position.z))
     })
 
 
@@ -181,7 +215,24 @@ function SimpleSim3d(props: SimpleSim3dProps)
     }, [props.data])
 
     return <>
-        <IsoCamera grid_size={GRID_SIZE} cell_size={CELL_SIZE} position_xy={{ x: 5, y: 5 }} />
+        <IsoCamera grid_size={GRID_SIZE} cell_size={CELL_SIZE} />
+        <MapControls
+            ref={controls_ref as React.Ref<any>}
+            target={new THREE.Vector3(-30, -30, -30)}
+            makeDefault
+            enableRotate={false}
+            minZoom={is_narrow_screen() ? 1 : 3}
+            maxZoom={9}
+            dampingFactor={0.2}
+        />
+        <DebugMapEdges
+            visible={false}
+            controls_ref={controls_ref}
+            PAN_MIN_X={PAN_MIN_X}
+            PAN_MAX_X={PAN_MAX_X}
+            PAN_MIN_Z={PAN_MIN_Z}
+            PAN_MAX_Z={PAN_MAX_Z}
+        />
         <ambientLight ref={sun_ambient_ref} />
         <directionalLight ref={sun_directional_ref} position={sun_args.direct_position} />
 
