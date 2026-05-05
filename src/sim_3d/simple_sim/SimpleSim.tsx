@@ -19,8 +19,8 @@ import { IsoCamera } from "./IsoCamera"
 import { IsoMetricGrid } from "./IsoMetricGrid"
 import { map_data_cells } from "./map_data"
 import { PowerStatus } from "./PowerStatus"
+import { TileInfo } from "./TileInfo"
 import { DebugMapEdges } from "./utils/DebugMapEdges"
-import { VisualKey } from "./VisualKey"
 import { WelcomeMessage } from "./WelcomeMessage"
 
 
@@ -104,7 +104,7 @@ export function SimpleSim(props: { persective: PerspectiveKnowledgeGraph | undef
 
         <PowerStatus view="simulation" power={power} />
         <WelcomeMessage />
-        <VisualKey />
+        <TileInfo />
         <FooterLinks />
     </>
 }
@@ -243,7 +243,7 @@ function SimpleSim3d(props: SimpleSim3dProps)
             on_click_tile={on_click_tile}
             on_hover_tile={on_hover_tile}
         />
-        <Data />
+
         {/* Render an empty bit of Text otherwise when Drei Text is first rendered
             it causes the whole scene to unmount and remount for some reason. */}
         <Text>{""}</Text>
@@ -252,16 +252,8 @@ function SimpleSim3d(props: SimpleSim3dProps)
 
 
 
-function Data ()
-{
-
-    // const wind = useMemo(() => uk_month_hourly_and_location_average_capacity_factor_wind_generation_2018(), [])
-    // const solar = useMemo(() => uk_month_hourly_and_location_average_capacity_factor_solar_generation_2018(), [])
-
-    // console.log("coverage", coverage)
-
-    return <></>
-}
+// const wind = useMemo(() => uk_month_hourly_and_location_average_capacity_factor_wind_generation_2018(), [])
+// const solar = useMemo(() => uk_month_hourly_and_location_average_capacity_factor_solar_generation_2018(), [])
 
 
 function cycle_cell_contents(cell: CellData): CellData

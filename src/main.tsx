@@ -160,20 +160,22 @@ function App ()
             <div style={{ display: "flex", gap: "20px", flexDirection: "column", flexGrow: 1 }}>
                 <div id="app_top_bar">
                     <div id="app_top_bar_side">
-                        <div className="app_controls_row">
-                            <SelectCountry selected_country_ISO2="GB" />
-                        </div>
-                        <div className="app_controls_row">
-                            <Info />
-                        </div>
-                        <div className="app_controls_row">
-                            <DataPortal
-                                population_by_year={population_by_year}
-                                year={year}
-                                population={population}
-                                set_population={set_population}
-                            />
-                        </div>
+                        {sim_or_dt && <>
+                            <div className="app_controls_row">
+                                <SelectCountry selected_country_ISO2="GB" />
+                            </div>
+                            <div className="app_controls_row">
+                                <Info />
+                            </div>
+                            <div className="app_controls_row">
+                                <DataPortal
+                                    population_by_year={population_by_year}
+                                    year={year}
+                                    population={population}
+                                    set_population={set_population}
+                                />
+                            </div>
+                        </>}
                         {!sim_or_dt && <SelectPerspective
                             force_single={sim_or_dt}
                             selected_perspectives={selected_perspectives}

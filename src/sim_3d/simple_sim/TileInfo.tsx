@@ -11,13 +11,13 @@ import { CellData, CellsData } from "./interface"
 import { IsoCamera } from "./IsoCamera"
 import { bevel_colours, box_geometry_for_cell_size } from "./IsoMetricTileConstants"
 import { tile_colour } from "./tile"
+import "./TileInfo.css"
 import { OilRigTiles } from "./tiles/OilRig"
 import { SolarFarm } from "./tiles/SolarFarm"
 import { SuburbanTiles } from "./tiles/Suburban"
 import { UrbanTiles } from "./tiles/Urban"
 import { WindTurbine } from "./tiles/WindTurbine"
 import { Woodland } from "./tiles/Woodland"
-import "./VisualKey.css"
 
 
 const { CELL_SIZE } = CONSTANTS
@@ -57,7 +57,7 @@ Object.values(land_or_sea_types).forEach((entry, i) =>
 })
 
 
-export function VisualKey()
+export function TileInfo()
 {
     const [hovered_tile, set_hovered_tile] = useState<CellData | null>(null)
     const hovered_tile_ref = useRef<CellData | null>(null)
@@ -77,7 +77,7 @@ export function VisualKey()
 
 
 
-    return <div id="visual_key" className="ui_info_box">
+    return <div id="tile_info_panel" className="ui_info_box">
         <div className="ui_info_box_header">
             Tile Info
         </div>
