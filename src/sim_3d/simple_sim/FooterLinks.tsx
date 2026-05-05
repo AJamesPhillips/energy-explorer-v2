@@ -22,7 +22,7 @@ export function FooterLinks()
         {show_contact_info && <InfoBox
             message={
                 <div style={{ whiteSpace: ""}}>
-                    If you enjoy this please share it.
+                    If you enjoyed this please share it.
                     You can <Link
                         url="https://docs.google.com/forms/d/e/1FAIpQLSdKpO2KkvlXnhEoo9VejTID8tfGbHA_BEbZuFrsAku_TahH8w/viewform"
                         noWrap={true}
@@ -46,12 +46,12 @@ export function FooterLinks()
                     >
                         code <GitHubLogo height={14} />
                     </Link>{" "}
-                    or <Link
+                    {/* or <Link
                         url="https://www.patreon.com/WikiSim"
                         noWrap={true}
                     >
                         donate ❤️
-                    </Link>
+                    </Link> */}
 
                     <p>
                         I hope you enjoyed and learnt something from this simulation.

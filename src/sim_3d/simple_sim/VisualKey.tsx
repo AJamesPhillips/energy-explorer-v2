@@ -3,6 +3,7 @@ import { Box } from "@react-three/drei"
 import { Canvas } from "@react-three/fiber"
 import { useEffect, useRef, useState } from "react"
 
+import { is_touch_screen } from "../../utils/screen_type"
 import { LandOrSea, LandOrSeaType } from "../data/land_coverage/uk/data"
 import pub_sub from "../state/pub_sub"
 import { CONSTANTS, DEFAULTS } from "./constants"
@@ -172,7 +173,7 @@ function RenderTileView({ tile_data }: { tile_data: CellData | null })
 function TileInfoText({ hovered_tile }: { hovered_tile: CellData | null })
 {
     if (!hovered_tile) return <div>
-        Hover over a tile<br/>
+        {is_touch_screen() ? "Select" : "Hover over"} a tile<br/>
         to see details
     </div>
 
