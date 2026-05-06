@@ -5,13 +5,18 @@ import { Link } from "../../../components/Link"
 import { InfoIcon } from "../../../components/svgs"
 import { asset_url } from "../../../utils/asset_url"
 import { is_narrow_screen } from "../../../utils/screen_type"
+import { land_or_sea_types } from "../../data/land_coverage/uk/data"
 import pub_sub from "../../state/pub_sub"
 import { InfoSectionId } from "../../state/pub_sub/interface"
+import { RenderSingleTile } from "../footer/RenderSingleTile"
+import { CellData } from "../interface"
 import "./ui.css"
 const SEWTHA_url = asset_url("/imgs/SEWTHA_book_cover.png")
 const bgs_url = asset_url("/imgs/logos_BGS.png")
 const ons_url = asset_url("/svgs/logos_ONS.svg")
 const ukceh_url = asset_url("/imgs/logos_UKCEH.png")
+const tiles_1_url = asset_url("/imgs/tiles_1.png")
+const tiles_2_url = asset_url("/imgs/tiles_2.png")
 
 
 export function Info()
@@ -49,6 +54,10 @@ export function Info()
                     </p>
 
                     <Section id="map" title="The map" />
+                    <p>
+                        The map shows the different types of land and sea in the UK:
+                    </p>
+                    <ExampleTileTypes />
                     <p>
                         The map is divided into 400 squares, each representing about
                         35 km × 35 km (≈ 1250 km²) of land or sea. Only ⅓ of the sea
@@ -89,8 +98,12 @@ export function Info()
 
                     <Section id="power_demand" title="Power demand" />
                     <p>
-                        The <Link url="https://wikisim.org/wiki/1239">power demand data</Link> is a
-                        complicated topic and is based largely on the
+                        The total power demand of the UK is about 500 to 600 GW.
+                    </p>
+                    <p>
+                        Calculating the total power demand of the UK is a
+                        complicated topic and the value used in this smulation is
+                        largely based on the
                         2009 book by Professor David MacKay "Sustainable Energy - without the hot air", with
                         some minor adjustments and updates e.g. to include data centre
                         power usage.
@@ -102,8 +115,11 @@ export function Info()
                         height={100}
                     />
                     <p>
-                        The "total_demand" value is used from the <Link url="https://wikisim.org/wiki/1239">power demand data</Link>.
-                        It's units are in kW hours per person per day.  To convert into
+                        The specific value used in this simulation comes from
+                        the <code>"total_demand"</code> value you can see in the <Link url="https://wikisim.org/wiki/1239">power demand data</Link>.
+                    </p>
+                    <p>
+                        Its units are in kW hours per person per day.  To convert into
                         the GW value shown in the simulation, it is multiplied by the population as well as
                         converting from kW hours per day to GW.
                     </p>
@@ -154,7 +170,8 @@ export function Info()
                         with thanks to all our teachers, mentors and supporters.
                     </p>
                 </div>
-            </>}
+                </>
+            }
             on_close={() => set_show_info_box(false)}
         />}
     </div>
@@ -180,4 +197,46 @@ function LogoImg(props: { src: string, alt: string, url: string, height?: number
             <img src={props.src} style={{ margin: "auto", height }} />
         </Link>
     </p>
+}
+
+
+function ExampleTileTypes()
+{
+    const use_images = true
+    if (use_images) return <div style={{ display: "flex" }}>
+        <img src={tiles_1_url} style={{ width: 100 }} />
+        <div style={{ display: "flex", flexDirection: "column", gap: 40, padding: "22px 0" }}>
+            <div>{land_or_sea_types.woodland.human_readable}</div>
+            <div>{land_or_sea_types.arable.human_readable}</div>
+            <div>{land_or_sea_types.grassland.human_readable}</div>
+            <div>{land_or_sea_types.suburban.human_readable}</div>
+            <div>{land_or_sea_types.urban.human_readable}</div>
+        </div>
+        <div style={{ width: 40 }}></div>
+        <img src={tiles_2_url} style={{ width: 100 }} />
+        <div style={{ display: "flex", flexDirection: "column", gap: 40, padding: "22px 0" }}>
+            <div>{land_or_sea_types.rock.human_readable}</div>
+            <div>{land_or_sea_types.wetland.human_readable}</div>
+            <div>{land_or_sea_types.inland_water.human_readable}</div>
+            <div>{land_or_sea_types.shallow.human_readable}</div>
+            <div>{land_or_sea_types.deep.human_readable}</div>
+        </div>
+    </div>
+
+    const urban: CellData = {
+        id: 4, x: 1, y: 1,
+        type: "land", subtype: "urban",
+        has_wind_turbine: false,
+        has_solar_farm: false,
+        has_oil_rig: undefined,
+        has_oil_pocket: undefined,
+    }
+
+    const tile_data = Object.values(land_or_sea_types).map(data => ({ ...urban, ...data }))
+
+    return <div style={{ display: "flex", gap: 0, flexWrap: "wrap", flexDirection: "column" }}>
+        {tile_data.map((tile_data, index) =>
+            <RenderSingleTile key={index} tile_data={tile_data} size={50} border="" />
+        )}
+    </div>
 }

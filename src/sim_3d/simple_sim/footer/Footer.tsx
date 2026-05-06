@@ -14,9 +14,9 @@ export function Footer()
     const [show_contact_info, set_show_contact_info] = useState(false)
 
     return <div id="app_footer">
-        <div className="footer_row">
+        {false && <div className="footer_row">
             <TileInfo />
-        </div>
+        </div>}
 
         <div className="footer_row">
             <div className="ui_button" onClick={() => set_show_contact_info(true)}>
