@@ -1,4 +1,6 @@
 import { IdAndMaybeVersion, IdOnly, parse_id } from "core/data/id"
+
+import { PROJECTION_UNTIL_YEAR } from "../sim_3d/data/fossil_fuels/process_data_component"
 import { EnergyFactorName } from "./interface"
 
 
@@ -62,6 +64,7 @@ export const map_factor_name_to_ido: Record<EnergyFactorName, IdOnly | undefined
 // the application.  It has been manually created by copying and pasting the
 // "Fetching N dependencies... 1191v7, " ... etc. log from the console.
 export const other_ids_performance_boost: IdsToFetchAndMaybeCompute[] = [
+    // UK population
     { id: "1011v7" }, // repeated
     { id: "1011v9" }, // repeated
     { id: "1011v10" }, // repeated
@@ -134,6 +137,8 @@ export const other_ids_performance_boost: IdsToFetchAndMaybeCompute[] = [
     { id: "1277v1" },
     { id: "1279v4" },
     { id: "1280v4" },
+    // UK Oil and gas reserves and production
+    { id: "1284v7", compute_value: true, args_for_compute: `false,${PROJECTION_UNTIL_YEAR}` },
 ].map(({ id, compute_value, args_for_compute }) =>
 {
     if (!compute_value)

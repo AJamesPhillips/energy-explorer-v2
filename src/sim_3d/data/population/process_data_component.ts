@@ -4,7 +4,7 @@ import { DataComponentExtended } from "../../../data/interface"
 export type PopulationByYear = Record<number, { value: number, is_projected?: boolean }>
 
 
-export function process_data_component(component: DataComponentExtended): PopulationByYear
+export function process_uk_population_data_component(component: DataComponentExtended): PopulationByYear
 {
     const data = JSON.parse(component.computed_value!)
     const population_by_year_raw: Record<number, number> = Object.fromEntries(data)

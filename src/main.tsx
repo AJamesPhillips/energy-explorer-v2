@@ -28,7 +28,8 @@ import { all_ids_to_fetch } from "./data/ids"
 import { DataComponentExtended, PerspectiveKnowledgeGraph } from "./data/interface"
 import { GraphViewer } from "./graph/GraphViewer"
 import "./main.css"
-import { PopulationByYear, process_data_component } from "./sim_3d/data/population/process_data_component"
+import { OilGasByYear, process_uk_oil_gas_data_component } from "./sim_3d/data/fossil_fuels/process_data_component"
+import { PopulationByYear, process_uk_population_data_component } from "./sim_3d/data/population/process_data_component"
 import { Sim3d } from "./sim_3d/Sim3d"
 import { DataPortal } from "./sim_3d/simple_sim/ui/DataPortal"
 import { Info } from "./sim_3d/simple_sim/ui/Info"
@@ -71,14 +72,28 @@ function App ()
     const components_map_by_ido = useMemo(() => data_components_by_ido(components), [components])
 
 
-    const population_by_year = useMemo<undefined | PopulationByYear>(() =>
+    const { population_by_year, oil_gas_by_year } = useMemo(() =>
     {
         const population_id = "1011v12" // UK population
-        const population_component = components_map_by_idv[population_id]
-        if (!population_component) return undefined
+        const oil_gas_id = "1284v7" // UK oil and gas production and reserves
 
-        return process_data_component(population_component)
+        let population_by_year: PopulationByYear | undefined = undefined
+        const population_component = components_map_by_idv[population_id]
+        if (population_component)
+        {
+            population_by_year = process_uk_population_data_component(population_component)
+        }
+
+        let oil_gas_by_year: OilGasByYear | undefined = undefined
+        const oil_gas_component = components_map_by_idv[oil_gas_id]
+        if (oil_gas_component)
+        {
+            oil_gas_by_year = process_uk_oil_gas_data_component(oil_gas_component)
+        }
+
+        return { population_by_year, oil_gas_by_year }
     }, [components_map_by_idv])
+
 
     const [year, set_year] = useState(2026)
     const [population, set_population] = useState<number | undefined>(undefined)
