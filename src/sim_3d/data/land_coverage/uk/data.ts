@@ -201,6 +201,21 @@ export type LandOrSea = {
 export type LandOrSeaType = SimplifiedLandAreaType | OffshoreAreaType
 
 
+export const land_or_sea_types: Record<LandOrSeaType, LandOrSea & { human_readable: string }> = {
+    woodland:     { type: "land", subtype: "woodland",     human_readable: "Woodland" },
+    arable:       { type: "land", subtype: "arable",       human_readable: "Arable" },
+    grassland:    { type: "land", subtype: "grassland",    human_readable: "Grassland" },
+    suburban:     { type: "land", subtype: "suburban",     human_readable: "Suburban" },
+    urban:        { type: "land", subtype: "urban",        human_readable: "Urban" },
+    rock:         { type: "land", subtype: "rock",         human_readable: "Rock" },
+    wetland:      { type: "land", subtype: "wetland",      human_readable: "Wetland" },
+    inland_water: { type: "land", subtype: "inland_water", human_readable: "Inland Water" },
+
+    shallow: { type: "sea", subtype: "shallow", human_readable: "Shallow Sea" },
+    deep:    { type: "sea", subtype: "deep",    human_readable: "Deep Sea" },
+}
+
+
 interface LandAreaInfo
 {
     total_area_km2: number
