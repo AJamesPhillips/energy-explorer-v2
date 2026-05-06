@@ -95,7 +95,7 @@ function App ()
     }, [components_map_by_idv])
 
 
-    const [year, set_year] = useState(2026)
+    const [year, _set_year] = useState(2026)
     const [population, set_population] = useState<number | undefined>(undefined)
 
     // Ensure population is set when population_by_year is loaded or year changes
@@ -182,10 +182,13 @@ function App ()
                             </div>
                             <div className="app_controls_row">
                                 <DataPortal
-                                    population_by_year={population_by_year}
                                     year={year}
+
+                                    population_by_year={population_by_year}
                                     population={population}
                                     set_population={set_population}
+
+                                    oil_gas_by_year={oil_gas_by_year}
                                 />
                             </div>
                         </>}

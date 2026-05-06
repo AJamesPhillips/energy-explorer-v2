@@ -3,23 +3,28 @@ import { useState } from "react"
 import { InfoBox } from "../../../components/InfoBox"
 import { GraphIcon } from "../../../components/svgs"
 import { is_narrow_screen } from "../../../utils/screen_type"
+import { OilGasByYear } from "../../data/fossil_fuels/process_data_component"
 import { PopulationByYear } from "../../data/population/process_data_component"
+import { GraphOilGas } from "./GraphOilGas"
 import { GraphPopulation } from "./GraphPopulation"
 import "./ui.css"
 
 
 interface DataPortalProps
 {
-    population_by_year: PopulationByYear | undefined
     year: number
+
+    population_by_year: PopulationByYear | undefined
     population: number | undefined
     set_population: (population: number) => void
+
+    oil_gas_by_year: OilGasByYear | undefined
 }
 export function DataPortal(props: DataPortalProps)
 {
     const [show_data_portal, set_show_data_portal] = useState<boolean>(false)
 
-    const { population_by_year, population } = props
+    const { population_by_year, population, oil_gas_by_year } = props
 
     return <div
         className="ui_button"
@@ -41,12 +46,17 @@ export function DataPortal(props: DataPortalProps)
             >
                 <h1>Data Graphs <GraphIcon style={{ height: 30 }} /></h1>
 
-                <div style={{ overflowY: "scroll", maxHeight: "50vh", paddingRight: 10 }}>
-                    <Section id="" title="Population" />
+                <div style={{ overflowY: "scroll", maxHeight: "50vh", paddingRight: 10, paddingBottom: 30 }}>
+                    <Section id="" title="Oil & Gas" />
+                    {oil_gas_by_year && <GraphOilGas
+                        oil_gas_by_year={oil_gas_by_year}
+                    />}
 
+                    <Section id="" title="Population" />
                     {population && population_by_year && <GraphPopulation
-                        {...props}
+                        year={props.year}
                         population={population}
+                        set_population={props.set_population}
                         population_by_year={population_by_year}
                     />}
                 </div>
