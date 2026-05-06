@@ -149,8 +149,6 @@ function App ()
     return <>
         <Evaluator />
 
-        {sim_or_dt && <Sim3d view={view} persective={persectives[0]} population={population} />}
-
         <div id="app_html">
 
             {!!(new URLSearchParams(document.location.search).has("other_mediums")) &&
@@ -195,6 +193,12 @@ function App ()
             </div>
 
         </div>
+
+        {/* If this is position below the id="app_html" element then the InfoBox(es)
+        triggered by the footer buttons will hide the header buttons, however the header
+        InfoBox(es) will not hide the footer buttons like Subscribe, Donate etc.
+        Not sure how to fix this yet */}
+        {sim_or_dt && <Sim3d view={view} persective={persectives[0]} population={population} />}
     </>
 }
 
