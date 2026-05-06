@@ -223,6 +223,7 @@ function SimpleSim3d(props: SimpleSim3dProps)
             minZoom={is_narrow_screen() ? 1 : 3}
             maxZoom={9}
             dampingFactor={0.2}
+            zoomSpeed={0.7}
         />
         <DebugMapEdges
             visible={false}
