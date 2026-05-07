@@ -1,7 +1,29 @@
-import { OrthographicCamera } from "@react-three/drei"
-import { useLayoutEffect, useRef } from "react"
+import { MapControls, OrthographicCamera } from "@react-three/drei"
+import { useFrame } from "@react-three/fiber"
+import { useMemo, useRef } from "react"
 import * as THREE from "three"
+import { lerp } from "three/src/math/MathUtils.js"
 
+import { is_narrow_screen, is_touch_screen } from "../../utils/screen_type"
+import { CONSTANTS } from "./constants"
+import { DebugMapEdges } from "./utils/DebugMapEdges"
+
+
+const { CELL_SIZE, GRID_SIZE } = CONSTANTS
+
+// Pan boundary: allow the camera target to roam 25% beyond each edge of the grid,
+// so the user can always see most of the map but can nudge to the edges.
+const GRID_W = GRID_SIZE.x * CELL_SIZE
+const GRID_D = GRID_SIZE.y * CELL_SIZE
+const FUDGE_MIN = (is_touch_screen() ? 6 : 3) * CELL_SIZE
+const FUDGE_MAX = (is_touch_screen() ? 3 : 3) * CELL_SIZE
+const MARGIN_ZOOM_1 = -0.16
+const MARGIN_ZOOM_9 = 0.04
+const PAN_MARGIN = (zoom: number) => GRID_W * lerp(MARGIN_ZOOM_1, MARGIN_ZOOM_9, zoom / 9)
+const PAN_MIN_X = (zoom: number) => -PAN_MARGIN(zoom) - FUDGE_MIN
+const PAN_MAX_X = (zoom: number) => GRID_W + PAN_MARGIN(zoom) - FUDGE_MAX
+const PAN_MIN_Z = (zoom: number) => -PAN_MARGIN(zoom) - FUDGE_MIN
+const PAN_MAX_Z = (zoom: number) => GRID_D + PAN_MARGIN(zoom) - FUDGE_MAX
 
 /**
  * Orthographic camera positioned at the classic isometric angle (45° yaw, ~35° pitch)
@@ -13,32 +35,83 @@ interface IsoCameraProps
 {
     grid_size: { x: number, y: number }
     cell_size: number
-    position_xy?: { x: number, y: number }
 }
-export function IsoCamera({ grid_size, cell_size, position_xy }: IsoCameraProps)
+export function IsoCamera({ grid_size, cell_size }: IsoCameraProps)
 {
-    // Centre of the tile grid in world space (tiles start at origin).
-    const cx = (grid_size.x - (position_xy?.x ?? 0)) * cell_size / 2
-    const cz = (grid_size.y - (position_xy?.y ?? 0)) * cell_size / 2
+    const controls_ref = useRef<{ target: THREE.Vector3; object: THREE.Camera }>(null)
 
-    // Distance sized so the whole grid fits in view; (1,1,1) direction = iso angle.
-    const dist = Math.max(grid_size.x, grid_size.y) * cell_size * 1.5
+    const { initial_target, initial_position, initial_zoom, dist } = useMemo(() =>
+    {
+        // The tiles start at origin 0,0,0 so center the camera on the middle
+        // lower part of the grid, i.e. divide by 3 not 2.
+        const x = grid_size.x * cell_size / 3
+        const z = grid_size.y * cell_size / 3
+        const initial_target = new THREE.Vector3(x, 0, z)
+
+        // Distance sized so the whole grid fits in view; (1,1,1) direction = iso angle.
+        const dist = Math.max(grid_size.x, grid_size.y) * cell_size * 1.5
+
+        const initial_position = initial_target.clone().addScalar(dist)
+
+        const initial_zoom = is_narrow_screen() ? 2 : 3
+
+        return { initial_target, initial_position, initial_zoom, dist }
+    }, [])
 
     const cam_ref = useRef<THREE.OrthographicCamera>(null)
 
-    useLayoutEffect(() =>
-    {
-        cam_ref.current?.lookAt(cx, 0, cz)
-    }, [cx, cz])
 
-    return (
+    useFrame(() =>
+    {
+        // Clamp camera target to pan bounds every frame (runs after controls update at priority 1).
+        const ctrl = controls_ref.current
+        if (!ctrl) return
+
+        const { target, object: camera } = ctrl
+        const zoom = (camera as any).zoom as number
+        const clamp_x = Math.max(PAN_MIN_X(zoom), Math.min(PAN_MAX_X(zoom), target.x))
+        const clamp_z = Math.max(PAN_MIN_Z(zoom), Math.min(PAN_MAX_Z(zoom), target.z))
+        if (clamp_x !== target.x || clamp_z !== target.z)
+        {
+            const dx = clamp_x - target.x
+            const dz = clamp_z - target.z
+            target.x = clamp_x
+            target.z = clamp_z
+            camera.position.x += dx
+            camera.position.z += dz
+        }
+    })
+
+
+    return <>
         <OrthographicCamera
             ref={cam_ref}
             makeDefault
-            position={[cx + dist, dist, cz + dist]}
-            zoom={3}
+            position={initial_position}
+            zoom={initial_zoom}
             near={-dist * 4}
             far={dist * 4}
+            // lookAt - use MapControls target
         />
-    )
+        <MapControls
+            ref={controls_ref as React.Ref<any>}
+            // This is the lookAt point for the camera
+            target={initial_target}
+            makeDefault
+            enableRotate={false}
+            minZoom={is_narrow_screen() ? 1 : 3}
+            maxZoom={9}
+            dampingFactor={0.2}
+            zoomSpeed={is_touch_screen() ? 1 : 0.7}
+            panSpeed={is_touch_screen() ? 1.3 : 1}
+        />
+        <DebugMapEdges
+            visible={false}
+            controls_ref={controls_ref}
+            PAN_MIN_X={PAN_MIN_X}
+            PAN_MAX_X={PAN_MAX_X}
+            PAN_MIN_Z={PAN_MIN_Z}
+            PAN_MAX_Z={PAN_MAX_Z}
+        />
+    </>
 }

@@ -8,7 +8,6 @@ import uk_daily_power_demand_profiles from "../data/power_demand/uk/daily_profil
 import { PowerStats } from "../model/interface"
 import { CONSTANTS } from "../scene/CONSTANTS"
 import { Earth } from "../scene/earth/Earth"
-import "../scene/lil-gui.css"
 import { SpatialData } from "../scene/spatial_data/SpatialData"
 import { PowerStatus } from "../simple_sim/PowerStatus"
 import { clamp } from "../utils/clamp"
