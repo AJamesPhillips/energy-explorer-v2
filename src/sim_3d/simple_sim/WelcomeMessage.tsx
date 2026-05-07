@@ -1,12 +1,11 @@
 import { OnceOffInfoBox } from "../../components/InfoBox"
-import pub_sub from "../state/pub_sub"
 
 
 export function WelcomeMessage()
 {
     return <OnceOffInfoBox
         id="simple_sim_welcome_message"
-        message={({ close_info_box }) =>
+        message={() =>
             <>
                 <h1>⚡️Power the UK⚡️</h1>
 
@@ -19,7 +18,7 @@ export function WelcomeMessage()
                 {/* And click on ℹ️ symbols to get more information */}
                 </p>
 
-                <p>
+                {/* <p>
                     Or <a
                         onClick={e =>
                         {
@@ -27,10 +26,11 @@ export function WelcomeMessage()
                             close_info_box()
                             pub_sub.pub("show_select_country", undefined)
                         }}
+                        style={{ cursor: "pointer" }}
                     >
                         vote for your own country
                     </a>.
-                </p>
+                </p> */}
 
 
                 {/* <p>
