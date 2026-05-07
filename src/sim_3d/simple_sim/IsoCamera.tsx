@@ -51,7 +51,7 @@ export function IsoCamera({ grid_size, cell_size }: IsoCameraProps)
         // Distance sized so the whole grid fits in view; (1,1,1) direction = iso angle.
         const dist = Math.max(grid_size.x, grid_size.y) * cell_size * 1.5
 
-        const initial_position = initial_target.clone().addScalar(dist)
+        const initial_position = new THREE.Vector3(x + dist, dist * 0.85, z + dist)
 
         const initial_zoom = is_narrow_screen() ? 2 : 3
 
