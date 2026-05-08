@@ -41,7 +41,7 @@ export function RenderSingleTile({ tile_data, size, border }: RenderSingleTilePr
 
     return <div style={{ width: size, height: size, border }}>
         <Canvas>
-            <IsoCamera grid_size={{ x: 1, y: 1 }} cell_size={CELL_SIZE} position_xy={{ x: 1.5, y: 1.5 }} />
+            <IsoCamera grid_size={{ x: 1, y: 1 }} cell_size={CELL_SIZE} />
             <ambientLight
                 color={sun_args.colour}
                 intensity={sun_args.ambient_intensity}
