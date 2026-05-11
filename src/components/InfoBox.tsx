@@ -59,7 +59,7 @@ export function InfoBox(props: InfoBoxProps)
             <div
                 id="info_box_text"
                 className={props.wider_info_box ? "wider_info_box" : ""}
-                onPointerDown={e => e.stopPropagation()}
+                onClick={e => e.stopPropagation()}
             >
                 {message_as_jsx(props.message, close_info_box)}
 
