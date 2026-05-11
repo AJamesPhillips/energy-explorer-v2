@@ -1,4 +1,4 @@
-import { DataPoint } from "../../data/fossil_fuels/process_data_component"
+import { DataPoint } from "../../data/interface"
 import { GRAPH_CONSTANTS } from "../constants"
 
 const { PLOT_W, PLOT_H } = GRAPH_CONSTANTS
@@ -99,19 +99,30 @@ function test()
         {
             name: "oil_reserves",
             colour: "black",
+            colour_projected: "black",
             points: [
                 { year: 2020, value: 100, is_projected: false },
-                { year: 2021, value: 90, is_projected: false },
-            ]
+                { year: 2021, value: 90 },
+            ],
+            known_points: [
+                { year: 2020, value: 100, x: 0, y: 114.30497051390059 },
+                { year: 2021, value: 90, x: 442, y: 125.08845829823083}
+            ],
+            known_points_polyline: "0,114.30497051390059 442,125.08845829823083",
+            proj_points_polyline: "442,125.08845829823083",
         },
         {
             name: "gas_reserves",
             colour: "blue",
+            colour_projected: "blue",
             points: [
                 { year: 2020, value: 200, is_projected: true },
-                { year: 2021, value: undefined, is_projected: false },
-            ]
+                { year: 2021 },
+            ],
+            known_points: [],
+            known_points_polyline: "",
+            proj_points_polyline: "0,6.470092670598149",
         }
     ]))
 }
-test()
+// test()

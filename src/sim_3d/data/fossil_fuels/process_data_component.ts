@@ -1,11 +1,7 @@
 import { DataComponentExtended } from "../../../data/interface"
+import { DataPoint } from "../interface"
 
 
-export interface DataPoint
-{
-    value: number | undefined
-    is_projected?: boolean
-}
 interface DataRow
 {
     oil_reserves: DataPoint

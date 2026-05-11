@@ -34,22 +34,4 @@ export function GraphOilGas(props: GraphOilGasProps)
     }
 
     return <Graph {...graph_props as any} />
-    // return <Graph
-    //     graph_title="Oil & Gas"
-    //     data_source_name="oil_and_gas_reserves"
-
-    //     year={props.year}
-    //     data_by_year={oil_gas_by_year}
-    //     colour_by_series={{
-    //         oil_reserves: "#e07020",
-    //         gas_reserves: "#2a7ae4",
-    //         cumulative_oil_production: false,
-    //         cumulative_gas_production: false,
-    //     }}
-    //     get_values_description={values =>
-    //     {
-    //         const description = `Oil: ${values.oil_reserves.value ?? "n/a"} Gas: ${values.gas_reserves.value ?? "n/a"}`
-    //         return { description, is_projected: false }
-    //     }}
-    // />
 }

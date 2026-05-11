@@ -103,7 +103,7 @@ function App ()
     {
         if (!population_by_year) return
 
-        const new_population = population_by_year[year]?.value
+        const new_population = population_by_year[year]?.population.value
         if (new_population === undefined) return
 
         set_population(new_population)

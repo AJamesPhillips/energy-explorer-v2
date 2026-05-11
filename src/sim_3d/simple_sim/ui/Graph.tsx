@@ -1,24 +1,15 @@
 import { useCallback, useEffect, useRef, useState } from "react"
 
-import { DataPoint } from "../../data/fossil_fuels/process_data_component"
+import { DataPoint } from "../../data/interface"
 import pub_sub from "../../state/pub_sub"
 import { InfoSectionId } from "../../state/pub_sub/interface"
 import { GRAPH_CONSTANTS } from "../constants"
+import { format_value_to_string } from "./format_value_to_string"
 import "./Graph.css"
 import { graph_compute_data_series, GraphDataSeries } from "./graph_compute_data_series"
 
 
 const { HEIGHT, PADDING, PLOT_W, PLOT_H } = GRAPH_CONSTANTS
-
-function y_value_to_string(n: number, detailed = 0): string
-{
-    if (n >= 1e9) return `${(n / 1e9).toFixed(1 + detailed)}B`
-    if (n >= 1e7) return `${(n / 1e6).toFixed(0 + detailed)}M`
-    if (n >= 1e6) return `${(n / 1e6).toFixed(1 + detailed)}M`
-    if (n >= 1e4) return `${(n / 1e3).toFixed(0 + detailed)}K`
-    if (n >= 1e3) return `${(n / 1e3).toFixed(1 + detailed)}K`
-    return `${n}`
-}
 
 
 export interface GraphProps<Fields extends string[] = []>
@@ -30,10 +21,12 @@ export interface GraphProps<Fields extends string[] = []>
     data_by_year: Record<number, {[f in Fields[number]]: DataPoint}>
     colour_by_series: {[f in Fields[number]]: string | false}
     get_values_description: (year: number, values: {[f in Fields[number]]: DataPoint}) => { description: string, is_projected: boolean }
+
+    on_change?: (year: number, values: {[f in Fields[number]]: DataPoint}) => void
 }
 export function Graph<Fields extends string[]>(props: GraphProps<Fields>)
 {
-    const { data_by_year, colour_by_series, get_values_description } = props
+    const { data_by_year, colour_by_series, get_values_description, on_change } = props
 
     const [year, set_year] = useState(props.year)
 
@@ -69,9 +62,11 @@ export function Graph<Fields extends string[]>(props: GraphProps<Fields>)
     {
         const year = year_from_client_x(client_x)
         set_year(year)
-        // const new_pop = get_values_at_year(year, data_by_year)
-        // set_population(new_pop.value)
-    }, [year_from_client_x, get_values_at_year])//, set_population])
+
+        if (!on_change) return
+        const values = get_values_at_year(year, data_by_year)
+        on_change(year, values)
+    }, [year_from_client_x, get_values_at_year, on_change])
 
     useEffect(() =>
     {
@@ -110,7 +105,12 @@ export function Graph<Fields extends string[]>(props: GraphProps<Fields>)
     const x_tick_years = all_years.filter((_, i) => i % Math.ceil(all_years.length / 4) === 0)
 
     return (
-        <div className="data_graph ui_info_box" onMouseLeave={() => set_dragging(false)}>
+        <div
+            className="data_graph ui_info_box"
+            onMouseLeave={() => set_dragging(false)}
+            // Not sure if this is needed, but think it should be needed:
+            // onTouchEnd={() => set_dragging(false)}
+        >
             <div className="ui_info_box_header">
                 <span
                     className="source_info_label"
@@ -137,7 +137,7 @@ export function Graph<Fields extends string[]>(props: GraphProps<Fields>)
                     touchAction: "none",
                 }}
                 onMouseDown={e => {
-                    set_dragging(true)
+                    set_dragging(dragging => !dragging)
                     handle_move(e.clientX)
                 }}
                 onTouchStart={e => {
@@ -151,7 +151,7 @@ export function Graph<Fields extends string[]>(props: GraphProps<Fields>)
                         <g key={y_value}>
                             <line x1={-4} y1={y} x2={PLOT_W()} y2={y} stroke="#e0e0e0" strokeWidth={1} />
                             <text x={-6} y={y} textAnchor="end" dominantBaseline="middle" fontSize="var(--font-small)" fill="#888">
-                                {y_value_to_string(y_value)}
+                                {format_value_to_string(y_value)}
                             </text>
                         </g>
                     ))}
@@ -204,14 +204,6 @@ export function Graph<Fields extends string[]>(props: GraphProps<Fields>)
                         strokeWidth={1.5}
                         strokeDasharray="3 2"
                     />
-                    {/* <circle
-                        cx={cursor_x}
-                        cy={y_of(population)}
-                        r={5}
-                        fill={is_projected ? "#e07020" : "#2a7ae4"}
-                        stroke="white"
-                        strokeWidth={1.5}
-                    /> */}
                 </g>
             </svg>
         </div>
