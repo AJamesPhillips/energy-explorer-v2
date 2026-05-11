@@ -10,7 +10,7 @@ import { graph_compute_data_series, GraphDataSeries } from "./graph_compute_data
 
 const { HEIGHT, PADDING, PLOT_W, PLOT_H } = GRAPH_CONSTANTS
 
-function fmt_pop(n: number, detailed = 0): string
+function y_value_to_string(n: number, detailed = 0): string
 {
     if (n >= 1e9) return `${(n / 1e9).toFixed(1 + detailed)}B`
     if (n >= 1e7) return `${(n / 1e6).toFixed(0 + detailed)}M`
@@ -50,7 +50,7 @@ export function Graph<Fields extends string[]>(props: GraphProps<Fields>)
     const max_value = Math.max(...all_values) * 1.03
 
     function x_of(year: number) { return ((year - min_year) / (max_year - min_year)) * PLOT_W() }
-    function y_of(pop: number) { return PLOT_H - ((pop - min_value) / (max_value - min_value)) * PLOT_H }
+    function y_of(value: number) { return PLOT_H - ((value - min_value) / (max_value - min_value)) * PLOT_H }
 
     // Dragging
     const svg_ref = useRef<SVGSVGElement>(null)
@@ -103,14 +103,14 @@ export function Graph<Fields extends string[]>(props: GraphProps<Fields>)
     const y_tick_count = 3
     const y_ticks = Array.from({ length: y_tick_count }, (_, i) =>
     {
-        const pop = min_value + (i / (y_tick_count - 1)) * (max_value - min_value)
-        return { pop, y: y_of(pop) }
+        const y_value = min_value + (i / (y_tick_count - 1)) * (max_value - min_value)
+        return { y_value, y: y_of(y_value) }
     })
 
     const x_tick_years = all_years.filter((_, i) => i % Math.ceil(all_years.length / 4) === 0)
 
     return (
-        <div className="data_graph ui_info_box">
+        <div className="data_graph ui_info_box" onMouseLeave={() => set_dragging(false)}>
             <div className="ui_info_box_header">
                 <span
                     className="source_info_label"
@@ -147,11 +147,11 @@ export function Graph<Fields extends string[]>(props: GraphProps<Fields>)
             >
                 <g transform={`translate(${PADDING.left},${PADDING.top})`}>
                     {/* Y axis ticks */}
-                    {y_ticks.map(({ pop, y }) => (
-                        <g key={pop}>
+                    {y_ticks.map(({ y_value, y }) => (
+                        <g key={y_value}>
                             <line x1={-4} y1={y} x2={PLOT_W()} y2={y} stroke="#e0e0e0" strokeWidth={1} />
                             <text x={-6} y={y} textAnchor="end" dominantBaseline="middle" fontSize="var(--font-small)" fill="#888">
-                                {fmt_pop(pop)}
+                                {y_value_to_string(y_value)}
                             </text>
                         </g>
                     ))}
