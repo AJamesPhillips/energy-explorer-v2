@@ -1,6 +1,6 @@
 
 
-#app_footer .footer_generation_stack
+#app_footer .actions_stack
 {
     display: flex;
     flex-direction: column;
@@ -8,25 +8,25 @@
     align-items: flex-end;
 }
 
-#app_footer .footer_generation_options
+#app_footer .actions_options
 {
     display: flex;
     flex-direction: column;
     gap: 8px;
 }
 
-#app_footer .footer_generation_toggle_button
+#app_footer .actions_toggle_button
 {
     min-width: 48px;
     justify-content: center;
 }
 
-#app_footer .footer_generation_bulldozer_button
+#app_footer .actions_bulldozer_button
 {
     justify-content: center;
 }
 
-#app_footer .footer_generation_option_selected
+#app_footer .actions_option_selected
 {
     border-color: #1f7bff;
 }

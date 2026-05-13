@@ -1,13 +1,12 @@
 import { CarbonFuelsIcon } from "../../../components/svgs"
-import "./ElectricityGenerationOptions.css"
 import { FooterBuildOptions } from "./FooterBuildOptions"
 
 const carbon_fuels_options = [
-    "Oil&Gas Rig",
-    "Pipeline",
-    "Refineries",
-    "Storage",
-    "Terminals",
+    { text: "Oil&Gas Rig", enabled: true },
+    // { text: "Pipeline", enabled: false },
+    // { text: "Refineries", enabled: false },
+    // { text: "Storage", enabled: false },
+    // { text: "Terminals", enabled: false },
 ]
 
 export function CarbonFuelsOptions()

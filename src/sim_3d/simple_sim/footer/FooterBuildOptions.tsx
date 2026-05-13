@@ -1,10 +1,17 @@
 import { ReactNode, useState } from "react"
 
 import { BulldozerIcon, CloseIcon } from "../../../components/svgs"
+import "./FooterBuildOptions.css"
 
+
+interface Option
+{
+    text: string
+    enabled: boolean
+}
 
 export function FooterBuildOptions(props: {
-    options: string[]
+    options: Option[]
     build_aria_label: (option: string) => string
     toggle_aria_label: string
     toggle_collapsed_content: ReactNode
@@ -15,21 +22,26 @@ export function FooterBuildOptions(props: {
     const [selected_option, set_selected_option] = useState("")
 
     return <div className="footer_row">
-        <div className="footer_generation_stack">
-            {show_options && <div className="footer_generation_options">
+        <div className="actions_stack">
+            {show_options && <div className="actions_options">
                 {props.options.map(option => <button
-                    key={option}
+                    key={option.text}
                     type="button"
-                    className={"ui_button " + (selected_option === option ? "footer_generation_option_selected" : "")}
-                    onClick={() => set_selected_option(option)}
-                    aria-label={props.build_aria_label(option)}
+                    className={
+                        "ui_button "
+                        + (selected_option === option.text ? "actions_option_selected" : "")
+                        + (option.enabled ? "" : "actions_option_disabled")
+                    }
+                    onClick={() => set_selected_option(selected => selected === option.text ? "" : option.text)}
+                    aria-label={props.build_aria_label(option.text)}
+                    disabled={!option.enabled}
                 >
-                    {option}
+                    {option.text}
                 </button>)}
                 <button
                     type="button"
-                    className={"ui_button footer_generation_bulldozer_button " + (selected_option === "Bulldozer" ? "footer_generation_option_selected" : "")}
-                    onClick={() => set_selected_option("Bulldozer")}
+                    className={"ui_button actions_bulldozer_button " + (selected_option === "Bulldozer" ? "actions_option_selected" : "")}
+                    onClick={() => set_selected_option(selected => selected === "Bulldozer" ? "" : "Bulldozer")}
                     aria-label={props.remove_aria_label}
                 >
                     <BulldozerIcon style={{ height: 30 }} />
@@ -38,7 +50,7 @@ export function FooterBuildOptions(props: {
 
             <button
                 type="button"
-                className="ui_button footer_generation_toggle_button"
+                className="ui_button actions_toggle_button"
                 onClick={() => set_show_options(prev => !prev)}
                 aria-expanded={show_options}
                 aria-label={props.toggle_aria_label}

@@ -1,15 +1,15 @@
 import { FooterBuildOptions } from "./FooterBuildOptions"
-import "./ElectricityGenerationOptions.css"
+
 
 const electricity_generation_options = [
-    "Gas",
-    "Nuclear",
-    "Hydro",
-    "Biomass",
-    "Wave",
-    "Tidal",
-    "Solar",
-    "Wind",
+    { text: "Gas", enabled: true },
+    // { text: "Biomass", enabled: false },
+    { text: "Nuclear", enabled: true },
+    // { text: "Hydro", enabled: false },
+    // { text: "Wave", enabled: false },
+    // { text: "Tidal", enabled: false },
+    { text: "Solar", enabled: true },
+    { text: "Wind", enabled: true },
 ]
 
 export function ElectricityGenerationOptions()

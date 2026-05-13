@@ -25,6 +25,7 @@
 
     /* 4ea3ff */
     --colour-link: #0077cc;
+    --colour-border-gray: rgb(204, 204, 204);
 }
 
 html, body, #app, #app_html {
@@ -175,6 +176,11 @@ button {
 button:hover {
     border-color: #0077cc;
 }
+button:disabled {
+    border-color: var(--colour-border-gray);
+    color: var(--colour-border-gray);
+    cursor: initial;
+}
 button:focus,
 button:focus-visible {
     outline: 4px auto -webkit-focus-ring-color;
@@ -233,7 +239,7 @@ option {
 {
     background-color: white;
     padding: 6px 12px;
-    border: 1px solid rgb(204, 204, 204);
+    border: 1px solid var(--colour-border-gray);
     border-radius: 4px;
 }
 
