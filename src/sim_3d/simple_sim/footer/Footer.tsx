@@ -2,7 +2,7 @@ import { useState } from "react"
 
 import { InfoBox } from "../../../components/InfoBox"
 import { Link } from "../../../components/Link"
-import { GitHubLogo, MagnifyingGlassIcon, MailIcon } from "../../../components/svgs"
+import { BulldozerIcon, ElectricityBoltIcon, GitHubLogo, MagnifyingGlassIcon, MailIcon } from "../../../components/svgs"
 import { is_narrow_screen } from "../../../utils/screen_type"
 import pub_sub from "../../state/pub_sub"
 import "./Footer.css"
@@ -12,11 +12,36 @@ import { TileInfo } from "./TileInfo"
 export function Footer()
 {
     const [show_contact_info, set_show_contact_info] = useState(false)
+    const [show_power_generation_options, set_show_power_generation_options] = useState(false)
 
     return <div id="app_footer">
         {false && <div className="footer_row">
             <TileInfo />
         </div>}
+
+        <div className="footer_row">
+            <div className="footer_generation_stack">
+                {show_power_generation_options && <div className="footer_generation_options">
+                    <div className="ui_button">Nuclear</div>
+                    <div className="ui_button">Gas</div>
+                    <div className="ui_button">Biomass</div>
+                    <div className="ui_button">Wave</div>
+                    <div className="ui_button">Tidal</div>
+                    <div className="ui_button footer_generation_bulldozer_button">
+                        <BulldozerIcon style={{ height: 20 }} />
+                    </div>
+                </div>}
+
+                <div
+                    className="ui_button footer_generation_toggle_button"
+                    onClick={() => set_show_power_generation_options(prev => !prev)}
+                >
+                    {show_power_generation_options
+                        ? <span className="footer_generation_close_x">✕</span>
+                        : <ElectricityBoltIcon style={{ height: 24 }} />}
+                </div>
+            </div>
+        </div>
 
         <div className="footer_row">
             <div className="ui_button" onClick={() => set_show_contact_info(true)}>

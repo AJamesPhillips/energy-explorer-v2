@@ -3,3 +3,4 @@ packages:
   - "lib/core"
 allowBuilds:
   esbuild: true
+  supabase: set this to true or false
