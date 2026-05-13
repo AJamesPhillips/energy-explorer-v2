@@ -1,12 +1,12 @@
 import { DataPoint, OilGasByYear } from "../../data/fossil_fuels/process_data_component"
 
 
-export type ProductionFieldsTuple = ["oil_production", "gas_production"]
+export type ProductionFields = ["oil_production", "gas_production"]
 export type OilGasDataByYear<Fields extends string[]> = Record<number, {[f in Fields[number]]: DataPoint}>
 
-export function get_oil_gas_production_by_year(oil_gas_by_year: OilGasByYear): OilGasDataByYear<ProductionFieldsTuple>
+export function get_oil_gas_production_by_year(oil_gas_by_year: OilGasByYear): OilGasDataByYear<ProductionFields>
 {
-    const production_by_year: OilGasDataByYear<ProductionFieldsTuple> = {}
+    const production_by_year: OilGasDataByYear<ProductionFields> = {}
     const all_years = Object.keys(oil_gas_by_year).map(Number).sort((a, b) => a - b)
 
     let previous_oil_cumulative: number | undefined
