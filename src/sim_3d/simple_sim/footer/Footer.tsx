@@ -8,6 +8,7 @@ import pub_sub from "../../state/pub_sub"
 import { CarbonFuelsOptions } from "./CarbonFuelsOptions"
 import { ElectricityGenerationOptions } from "./ElectricityGenerationOptions"
 import "./Footer.css"
+import { GovernmentPolicyOptions } from "./GovernmentPolicyOptions"
 import { TileInfo } from "./TileInfo"
 
 
@@ -22,6 +23,7 @@ export function Footer()
 
         <CarbonFuelsOptions />
         <ElectricityGenerationOptions />
+        <GovernmentPolicyOptions />
 
         <div className="footer_row">
             <div className="ui_button" onClick={() => set_show_contact_info(true)}>
