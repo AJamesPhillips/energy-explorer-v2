@@ -54,3 +54,8 @@
 {
     justify-content: center;
 }
+
+#app_footer .footer_generation_option_selected
+{
+    border-color: #1f7bff;
+}
