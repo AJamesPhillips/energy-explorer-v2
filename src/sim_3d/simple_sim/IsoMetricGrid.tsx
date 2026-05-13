@@ -5,6 +5,7 @@ import * as THREE from "three"
 import { Instance, Instances } from "@react-three/drei"
 import { CellData, CellsData } from "./interface"
 import { IsoMetricGridContentTiles } from "./IsoMetricGridContentTiles"
+import { InvalidPlacementAnimations } from "./InvalidPlacementAnimation"
 import { bevel_colours, box_geometry_for_cell_size } from "./IsoMetricTileConstants"
 import { tile_colour } from "./tile"
 import { TilePowerChangeAnimations } from "./TilePowerChangeAnimation"
@@ -125,6 +126,7 @@ export function IsoMetricGrid(props: IsoMetricGridProps)
 
         {rendered_once && <IsoMetricGridContentTiles cell_size={cell_size} tiles={tiles} />}
         {rendered_once && <TilePowerChangeAnimations cell_size={cell_size} />}
+        {rendered_once && <InvalidPlacementAnimations cell_size={cell_size} />}
 
         <group ref={hover_ref} visible={hover_visible}>
             <lineSegments args={[hover_outline_geo, hover_outline_mat]} />

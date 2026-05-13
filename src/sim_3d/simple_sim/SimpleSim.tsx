@@ -145,6 +145,13 @@ function SimpleSim3d(props: SimpleSim3dProps)
             const cell = prev[x]?.[y]
             if (!cell) return prev
 
+            const invalid_item = get_invalid_placement_item(cell)
+            if (invalid_item !== null)
+            {
+                pub_sub.pub("invalid_placement", { tile: cell, item_type: invalid_item })
+                return prev
+            }
+
             const new_cell = cycle_cell_contents(cell)
             const new_cells: CellsData = {
                 ...prev,
@@ -203,6 +210,14 @@ function SimpleSim3d(props: SimpleSim3dProps)
 
 // const wind = useMemo(() => uk_month_hourly_and_location_average_capacity_factor_wind_generation_2018(), [])
 // const solar = useMemo(() => uk_month_hourly_and_location_average_capacity_factor_solar_generation_2018(), [])
+
+
+function get_invalid_placement_item(cell: CellData): "wind_turbine" | "solar_farm" | null
+{
+    if (cell.type === "sea" && cell.subtype === "deep") return "wind_turbine"
+    if (cell.type === "land" && (cell.subtype === "wetland" || cell.subtype === "inland_water")) return "solar_farm"
+    return null
+}
 
 
 function cycle_cell_contents(cell: CellData): CellData
