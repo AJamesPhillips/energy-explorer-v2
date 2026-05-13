@@ -6,6 +6,7 @@ import { GitHubLogo, MagnifyingGlassIcon, MailIcon } from "../../../components/s
 import { is_narrow_screen } from "../../../utils/screen_type"
 import pub_sub from "../../state/pub_sub"
 import "./Footer.css"
+import { PowerGenerationOptions } from "./PowerGenerationOptions"
 import { TileInfo } from "./TileInfo"
 
 
@@ -17,6 +18,8 @@ export function Footer()
         {false && <div className="footer_row">
             <TileInfo />
         </div>}
+
+        <PowerGenerationOptions />
 
         <div className="footer_row">
             <div className="ui_button" onClick={() => set_show_contact_info(true)}>
