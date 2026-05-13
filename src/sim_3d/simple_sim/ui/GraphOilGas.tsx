@@ -14,8 +14,8 @@ interface GraphOilGasProps
 const OIL_COLOUR = "#e07020"
 const GAS_COLOUR = "#2a7ae4"
 
-type ReservesFields = ["oil_reserves", "gas_reserves", "cumulative_oil_production", "cumulative_gas_production"]
-type ProductionFields = ["oil_production", "gas_production"]
+type ReservesFieldsTuple = ["oil_reserves", "gas_reserves", "cumulative_oil_production", "cumulative_gas_production"]
+type ProductionFieldsTuple = ["oil_production", "gas_production"]
 type OilGasDataByYear<Fields extends string[]> = Record<number, {[f in Fields[number]]: DataPoint}>
 
 function get_oil_gas_description(oil: number | undefined, gas: number | undefined)
@@ -55,16 +55,17 @@ function create_oil_gas_graph_props<Fields extends string[]>(args: {
     }
 }
 
-function get_oil_gas_production_by_year(oil_gas_by_year: OilGasByYear): OilGasDataByYear<ProductionFields>
+function get_oil_gas_production_by_year(oil_gas_by_year: OilGasByYear): OilGasDataByYear<ProductionFieldsTuple>
 {
-    const production_by_year: OilGasDataByYear<ProductionFields> = {}
+    const production_by_year: OilGasDataByYear<ProductionFieldsTuple> = {}
     const all_years = Object.keys(oil_gas_by_year).map(Number).sort((a, b) => a - b)
 
     let previous_oil_cumulative: number | undefined
     let previous_gas_cumulative: number | undefined
     all_years.forEach(year =>
     {
-        const row = oil_gas_by_year[year]!
+        const row = oil_gas_by_year[year]
+        if (!row) return
         const current_oil_cumulative = row.cumulative_oil_production.value
         const current_gas_cumulative = row.cumulative_gas_production.value
 
@@ -116,7 +117,7 @@ export function GraphOilGasReserves(props: GraphOilGasProps)
 {
     const { oil_gas_by_year } = props
 
-    const graph_props = create_oil_gas_graph_props<ReservesFields>({
+    const graph_props = create_oil_gas_graph_props<ReservesFieldsTuple>({
         graph_title: "Oil & Gas Reserves",
         year: props.year,
         data_by_year: oil_gas_by_year,
@@ -131,7 +132,7 @@ export function GraphOilGasReserves(props: GraphOilGasProps)
         is_projected: year => year > DATA_UNTIL_YEAR,
     })
 
-    return <Graph<ReservesFields> {...graph_props} />
+    return <Graph<ReservesFieldsTuple> {...graph_props} />
 }
 
 export function GraphOilGasResources()
@@ -145,7 +146,7 @@ export function GraphOilGasResources()
 export function GraphOilGasProduction(props: GraphOilGasProps)
 {
     const production_by_year = get_oil_gas_production_by_year(props.oil_gas_by_year)
-    const graph_props = create_oil_gas_graph_props<ProductionFields>({
+    const graph_props = create_oil_gas_graph_props<ProductionFieldsTuple>({
         graph_title: "Oil & Gas Annual Production",
         year: props.year,
         data_by_year: production_by_year,
@@ -159,5 +160,5 @@ export function GraphOilGasProduction(props: GraphOilGasProps)
             values.oil_production.is_projected ?? values.gas_production.is_projected ?? year > DATA_UNTIL_YEAR,
     })
 
-    return <Graph<ProductionFields> {...graph_props} />
+    return <Graph<ProductionFieldsTuple> {...graph_props} />
 }
