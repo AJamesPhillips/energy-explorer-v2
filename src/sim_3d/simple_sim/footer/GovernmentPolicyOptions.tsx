@@ -121,8 +121,8 @@ function PolicySection(props: {
         <p aria-live="polite" className="government_policy_status_text">
             {props.active ? "Policy activated." : "Policy deactivated."}
         </p>
-        <div id={"government_policy_controls_" + props.id}>
+        {props.active && <div id={"government_policy_controls_" + props.id}>
             {props.children}
-        </div>
+        </div>}
     </div>
 }
