@@ -2,12 +2,14 @@ import { useState } from "react"
 
 import { InfoBox } from "../../../components/InfoBox"
 import { Link } from "../../../components/Link"
-import { BulldozerIcon, ElectricityBoltIcon, GitHubLogo, MagnifyingGlassIcon, MailIcon } from "../../../components/svgs"
+import { BulldozerIcon, CloseIcon, ElectricityBoltIcon, GitHubLogo, MagnifyingGlassIcon, MailIcon } from "../../../components/svgs"
 import { is_narrow_screen } from "../../../utils/screen_type"
 import pub_sub from "../../state/pub_sub"
 import "./Footer.css"
 import { TileInfo } from "./TileInfo"
 
+
+const power_generation_options = ["Nuclear", "Gas", "Biomass", "Wave", "Tidal"]
 
 export function Footer()
 {
@@ -23,7 +25,7 @@ export function Footer()
         <div className="footer_row">
             <div className="footer_generation_stack">
                 {show_power_generation_options && <div className="footer_generation_options">
-                    {["Nuclear", "Gas", "Biomass", "Wave", "Tidal"].map(option => <button
+                    {power_generation_options.map(option => <button
                         key={option}
                         type="button"
                         className={"ui_button " + (selected_power_generation_option === option ? "footer_generation_option_selected" : "")}
@@ -50,7 +52,7 @@ export function Footer()
                     aria-label="Toggle power generation options"
                 >
                     {show_power_generation_options
-                        ? <span className="footer_generation_close_x">✕</span>
+                        ? <CloseIcon style={{ height: 16 }} />
                         : <ElectricityBoltIcon style={{ height: 24 }} />}
                 </button>
             </div>

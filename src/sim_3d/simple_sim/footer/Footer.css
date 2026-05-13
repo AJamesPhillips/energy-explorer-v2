@@ -42,14 +42,6 @@
     justify-content: center;
 }
 
-#app_footer .footer_generation_close_x
-{
-    color: #111;
-    font-size: 20px;
-    line-height: 1;
-    font-weight: 700;
-}
-
 #app_footer .footer_generation_bulldozer_button
 {
     justify-content: center;
