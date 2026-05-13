@@ -14,8 +14,8 @@ interface GraphOilGasProps
 const OIL_COLOUR = "#e07020"
 const GAS_COLOUR = "#2a7ae4"
 
-type ReservesFields = ("oil_reserves" | "gas_reserves" | "cumulative_oil_production" | "cumulative_gas_production")[]
-type ProductionFields = ("oil_production" | "gas_production")[]
+type ReservesFields = ["oil_reserves", "gas_reserves", "cumulative_oil_production", "cumulative_gas_production"]
+type ProductionFields = ["oil_production", "gas_production"]
 type OilGasDataByYear<Fields extends string[]> = Record<number, {[f in Fields[number]]: DataPoint}>
 
 function get_oil_gas_description(oil: number | undefined, gas: number | undefined)
@@ -119,7 +119,7 @@ export function GraphOilGasReserves(props: GraphOilGasProps)
     const graph_props = create_oil_gas_graph_props<ReservesFields>({
         graph_title: "Oil & Gas Reserves",
         year: props.year,
-        data_by_year: oil_gas_by_year as OilGasDataByYear<ReservesFields>,
+        data_by_year: oil_gas_by_year,
         colour_by_series: {
             oil_reserves: OIL_COLOUR,
             gas_reserves: GAS_COLOUR,
@@ -131,7 +131,7 @@ export function GraphOilGasReserves(props: GraphOilGasProps)
         is_projected: year => year > DATA_UNTIL_YEAR,
     })
 
-    return <Graph {...graph_props as any} />
+    return <Graph<ReservesFields> {...graph_props} />
 }
 
 export function GraphOilGasResources()
@@ -159,5 +159,5 @@ export function GraphOilGasProduction(props: GraphOilGasProps)
             values.oil_production.is_projected ?? values.gas_production.is_projected ?? year > DATA_UNTIL_YEAR,
     })
 
-    return <Graph {...graph_props as any} />
+    return <Graph<ProductionFields> {...graph_props} />
 }
