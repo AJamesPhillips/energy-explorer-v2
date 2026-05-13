@@ -75,7 +75,7 @@ function App ()
     const { population_by_year, oil_gas_by_year } = useMemo(() =>
     {
         const population_id = "1011v12" // UK population
-        const oil_gas_id = "1284v7" // UK oil and gas production and reserves
+        const oil_gas_id = "1284v19" // UK oil and gas production, reserves and resources
 
         let population_by_year: PopulationByYear | undefined = undefined
         const population_component = components_map_by_idv[population_id]
