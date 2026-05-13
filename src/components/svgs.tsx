@@ -7,6 +7,7 @@ const github_logo_url = asset_url("svgs/github.svg")
 const graph_icon_url = asset_url("svgs/graph.svg")
 const info_icon_url = asset_url("svgs/info.svg")
 const bulldozer_icon_url = asset_url("svgs/bulldozer.svg")
+const carbon_fuels_icon_url = asset_url("svgs/carbon_fuels.svg")
 const electricity_bolt_icon_url = asset_url("svgs/electricity_bolt.svg")
 const magnifying_icon_url = asset_url("svgs/magnifying_glass.svg")
 const mail_icon_url = asset_url("svgs/mail.svg")
@@ -50,6 +51,11 @@ export function InfoIcon(props: { style?: CSSProperties })
 export function BulldozerIcon(props: { style?: CSSProperties })
 {
     return <img src={bulldozer_icon_url} style={{ ...default_icon_style, ...props.style }} />
+}
+
+export function CarbonFuelsIcon(props: { style?: CSSProperties })
+{
+    return <img src={carbon_fuels_icon_url} style={{ ...default_icon_style, ...props.style }} />
 }
 
 export function ElectricityBoltIcon(props: { style?: CSSProperties })
