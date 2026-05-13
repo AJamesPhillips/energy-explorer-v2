@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react"
+import { ReactNode, useCallback, useEffect, useRef, useState } from "react"
 
 import { DataPoint } from "../../data/fossil_fuels/process_data_component"
 import pub_sub from "../../state/pub_sub"
@@ -29,7 +29,7 @@ export interface GraphProps<Fields extends string[] = []>
     year: number
     data_by_year: Record<number, {[f in Fields[number]]: DataPoint}>
     colour_by_series: {[f in Fields[number]]: string | false}
-    get_values_description: (year: number, values: {[f in Fields[number]]: DataPoint}) => { description: string, is_projected: boolean }
+    get_values_description: (year: number, values: {[f in Fields[number]]: DataPoint}) => { description: ReactNode, is_projected: boolean }
 }
 export function Graph<Fields extends string[]>(props: GraphProps<Fields>)
 {
