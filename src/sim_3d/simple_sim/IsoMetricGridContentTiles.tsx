@@ -2,10 +2,10 @@ import { useMemo } from "react"
 import { CellData } from "./interface"
 import { OilAndGasPocketTiles } from "./tiles/OilAndGasPocket"
 import { OilRigTiles } from "./tiles/OilRig"
-import { SolarFarm } from "./tiles/SolarFarm"
+import { SolarFarms } from "./tiles/SolarFarm"
 import { SuburbanTiles } from "./tiles/Suburban"
 import { UrbanTiles } from "./tiles/Urban"
-import { WindTurbine } from "./tiles/WindTurbine"
+import { WindTurbineFarms } from "./tiles/WindTurbine"
 import { Woodland } from "./tiles/Woodland"
 
 
@@ -65,8 +65,8 @@ export function IsoMetricGridContentTiles(props: IsoMetricGridContentTilesProps)
         <SuburbanTiles tiles={suburban_tiles} cell_size={cell_size} />
         <UrbanTiles tiles={urban_tiles} cell_size={cell_size} />
 
-        <WindTurbine tiles={wind_turbine_tiles} cell_size={cell_size} />
-        <SolarFarm tiles={solar_farm_tiles} cell_size={cell_size} />
+        <WindTurbineFarms tiles={wind_turbine_tiles} cell_size={cell_size} />
+        <SolarFarms tiles={solar_farm_tiles} cell_size={cell_size} />
 
         <OilRigTiles tiles={oil_rig_tiles} cell_size={cell_size} />
         <OilAndGasPocketTiles tiles={oil_and_gas_pocket_tiles} cell_size={cell_size} />

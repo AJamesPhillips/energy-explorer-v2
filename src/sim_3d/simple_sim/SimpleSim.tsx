@@ -1,4 +1,3 @@
-import { Text } from "@react-three/drei"
 import { Canvas, useFrame, useThree } from "@react-three/fiber"
 import { useCallback, useEffect, useRef, useState } from "react"
 import * as THREE from "three"
@@ -12,6 +11,7 @@ import { PowerStats } from "../model/interface"
 import pub_sub from "../state/pub_sub"
 import { CONSTANTS, DEFAULTS } from "./constants"
 import { Footer } from "./footer/Footer"
+import { InitialiseGeometriesEtc } from "./InitialiseGeometriesEtc"
 import { CellData, CellsData } from "./interface"
 import { IsoCamera } from "./IsoCamera"
 import { IsoMetricGrid } from "./IsoMetricGrid"
@@ -145,6 +145,13 @@ function SimpleSim3d(props: SimpleSim3dProps)
             const cell = prev[x]?.[y]
             if (!cell) return prev
 
+            const invalid_item = get_invalid_placement_item(cell)
+            if (invalid_item !== null)
+            {
+                pub_sub.pub("invalid_placement", { tile: cell, item_type: invalid_item })
+                return prev
+            }
+
             const new_cell = cycle_cell_contents(cell)
             const new_cells: CellsData = {
                 ...prev,
@@ -193,9 +200,7 @@ function SimpleSim3d(props: SimpleSim3dProps)
             on_hover_tile={on_hover_tile}
         />
 
-        {/* Render an empty bit of Text otherwise when Drei Text is first rendered
-            it causes the whole scene to unmount and remount for some reason. */}
-        <Text>{""}</Text>
+        <InitialiseGeometriesEtc cell_size={CELL_SIZE} />
     </>
 }
 
@@ -203,6 +208,14 @@ function SimpleSim3d(props: SimpleSim3dProps)
 
 // const wind = useMemo(() => uk_month_hourly_and_location_average_capacity_factor_wind_generation_2018(), [])
 // const solar = useMemo(() => uk_month_hourly_and_location_average_capacity_factor_solar_generation_2018(), [])
+
+
+function get_invalid_placement_item(cell: CellData): "wind_turbine" | "solar_farm" | null
+{
+    if (cell.type === "sea" && cell.subtype === "deep") return "wind_turbine"
+    if (cell.type === "land" && (cell.subtype === "wetland" || cell.subtype === "inland_water")) return "solar_farm"
+    return null
+}
 
 
 function cycle_cell_contents(cell: CellData): CellData

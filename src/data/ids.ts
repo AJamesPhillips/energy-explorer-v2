@@ -70,12 +70,15 @@ export const other_ids_performance_boost: IdsToFetchAndMaybeCompute[] = [
     { id: "1011v10" }, // repeated
     { id: "1011v12", compute_value: true, args_for_compute: `undefined,"United Kingdom"` },
     { id: "1132v4" },
+    { id: "1145v1" },
     { id: "1154v1" },
     { id: "1157v3" },
     { id: "1181v1" },
     { id: "1183v1" }, // repeated
     { id: "1183v2" }, // repeated
-    { id: "1183v3" },
+    { id: "1183v3" }, // repeated
+    { id: "1183v4" }, // repeated
+    { id: "1183v5" },
     { id: "1184v5" }, // repeated
     { id: "1184v11" }, // repeated
     { id: "1184v12" },
@@ -140,11 +143,13 @@ export const other_ids_performance_boost: IdsToFetchAndMaybeCompute[] = [
     { id: "1277v1" },
     { id: "1279v4" },
     { id: "1280v4" }, // repeated
-    { id: "1280v8" },
+    { id: "1280v8" }, // repeated
+    { id: "1280v13" },
     // UK Oil and gas reserves and production
     { id: "1284v19", compute_value: true, args_for_compute: `true,${INCLUDE_PROJECTION_UNTIL ? PROJECTION_UNTIL_YEAR : undefined}` },
     { id: "1285v4" },
-    { id: "1286v3" },
+    { id: "1286v3" }, // repeated
+    { id: "1286v7" },
 ].map(({ id, compute_value, args_for_compute }) =>
 {
     if (!compute_value)

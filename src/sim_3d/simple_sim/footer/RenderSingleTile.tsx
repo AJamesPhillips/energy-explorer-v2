@@ -7,10 +7,10 @@ import { IsoCamera } from "../IsoCamera"
 import { bevel_colours, box_geometry_for_cell_size } from "../IsoMetricTileConstants"
 import { tile_colour } from "../tile"
 import { OilRigTiles } from "../tiles/OilRig"
-import { SolarFarm } from "../tiles/SolarFarm"
+import { SolarFarms } from "../tiles/SolarFarm"
 import { SuburbanTiles } from "../tiles/Suburban"
 import { UrbanTiles } from "../tiles/Urban"
-import { WindTurbine } from "../tiles/WindTurbine"
+import { WindTurbineFarms } from "../tiles/WindTurbine"
 import { Woodland } from "../tiles/Woodland"
 import "./TileInfo.css"
 
@@ -70,10 +70,10 @@ export function RenderSingleTile({ tile_data, size, border }: RenderSingleTilePr
                 <SuburbanTiles tiles={[{ x: 0, y: 0, id: tile_data.id }]} cell_size={CELL_SIZE} />
             </>}
             {tile_data?.has_wind_turbine && <>
-                <WindTurbine tiles={[{ x: 0, y: 0 }]} cell_size={CELL_SIZE} />
+                <WindTurbineFarms tiles={[{ x: 0, y: 0 }]} cell_size={CELL_SIZE} />
             </>}
             {tile_data?.has_solar_farm && <>
-                <SolarFarm tiles={[{ x: 0, y: 0 }]} cell_size={CELL_SIZE} />
+                <SolarFarms tiles={[{ x: 0, y: 0 }]} cell_size={CELL_SIZE} />
             </>}
             {tile_data?.has_oil_rig && <>
                 <OilRigTiles
