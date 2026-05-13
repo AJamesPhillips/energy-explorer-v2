@@ -192,11 +192,41 @@ function SinkingSolarFarm({ cell_size }: { cell_size: number })
 }
 
 
-function play_bubbling_sound(): void
+/** Shared AudioContext — created once and reused to avoid resource exhaustion. */
+let shared_audio_ctx: AudioContext | null = null
+function get_audio_context(): AudioContext | null
 {
     try
     {
-        const ctx = new AudioContext()
+        if (!shared_audio_ctx || shared_audio_ctx.state === "closed")
+        {
+            shared_audio_ctx = new AudioContext()
+        }
+        return shared_audio_ctx
+    }
+    catch (_e)
+    {
+        return null
+    }
+}
+
+/**
+ * Plays a placeholder bubbling sound using the Web Audio API.
+ * This is a temporary stand-in; the volume (BUBBLE_GAIN) can be adjusted
+ * or made user-configurable when a proper sound asset is added.
+ * TODO: replace with a licensed audio file and add a user-facing mute toggle.
+ */
+const BUBBLE_GAIN = 0.25
+
+function play_bubbling_sound(): void
+{
+    const ctx = get_audio_context()
+    if (!ctx) return
+
+    try
+    {
+        // Resume the context if it was suspended (browser autoplay policy)
+        if (ctx.state === "suspended") ctx.resume()
 
         for (let i = 0; i < 8; i++)
         {
@@ -211,14 +241,12 @@ function play_bubbling_sound(): void
             osc.type = "sine"
             osc.frequency.value = freq
             gain.gain.setValueAtTime(0, ctx.currentTime + start_time)
-            gain.gain.linearRampToValueAtTime(0.25, ctx.currentTime + start_time + 0.04)
+            gain.gain.linearRampToValueAtTime(BUBBLE_GAIN, ctx.currentTime + start_time + 0.04)
             gain.gain.linearRampToValueAtTime(0, ctx.currentTime + start_time + 0.18)
 
             osc.start(ctx.currentTime + start_time)
             osc.stop(ctx.currentTime + start_time + 0.2)
         }
-
-        setTimeout(() => ctx.close(), 3000)
     }
     catch (_e)
     {
