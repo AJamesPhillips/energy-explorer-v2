@@ -2,6 +2,7 @@
 import { DATA_UNTIL_YEAR, DataPoint, OilGasByYear } from "../../data/fossil_fuels/process_data_component"
 import pub_sub from "../../state/pub_sub"
 import { Graph, GraphProps } from "./Graph"
+import { get_oil_gas_production_by_year, OilGasDataByYear, ProductionFieldsTuple } from "./GraphOilGas.helpers"
 import "./Graph.css"
 
 
@@ -15,8 +16,6 @@ const OIL_COLOUR = "#e07020"
 const GAS_COLOUR = "#2a7ae4"
 
 type ReservesFieldsTuple = ["oil_reserves", "gas_reserves", "cumulative_oil_production", "cumulative_gas_production"]
-type ProductionFieldsTuple = ["oil_production", "gas_production"]
-type OilGasDataByYear<Fields extends string[]> = Record<number, {[f in Fields[number]]: DataPoint}>
 
 function get_oil_gas_description(oil: number | undefined, gas: number | undefined)
 {
@@ -53,45 +52,6 @@ function create_oil_gas_graph_props<Fields extends string[]>(args: {
             return { description, is_projected }
         },
     }
-}
-
-function get_oil_gas_production_by_year(oil_gas_by_year: OilGasByYear): OilGasDataByYear<ProductionFieldsTuple>
-{
-    const production_by_year: OilGasDataByYear<ProductionFieldsTuple> = {}
-    const all_years = Object.keys(oil_gas_by_year).map(Number).sort((a, b) => a - b)
-
-    let previous_oil_cumulative: number | undefined
-    let previous_gas_cumulative: number | undefined
-    all_years.forEach(year =>
-    {
-        const row = oil_gas_by_year[year]
-        if (!row) return
-        const current_oil_cumulative = row.cumulative_oil_production.value
-        const current_gas_cumulative = row.cumulative_gas_production.value
-
-        const oil_production = (
-            current_oil_cumulative !== undefined &&
-            previous_oil_cumulative !== undefined
-        )
-            ? current_oil_cumulative - previous_oil_cumulative
-            : undefined
-        const gas_production = (
-            current_gas_cumulative !== undefined &&
-            previous_gas_cumulative !== undefined
-        )
-            ? current_gas_cumulative - previous_gas_cumulative
-            : undefined
-
-        production_by_year[year] = {
-            oil_production: { value: oil_production, is_projected: row.cumulative_oil_production.is_projected },
-            gas_production: { value: gas_production, is_projected: row.cumulative_gas_production.is_projected },
-        }
-
-        previous_oil_cumulative = current_oil_cumulative ?? previous_oil_cumulative
-        previous_gas_cumulative = current_gas_cumulative ?? previous_gas_cumulative
-    })
-
-    return production_by_year
 }
 
 function GraphOilGasBlank(props: { graph_title: string, message: string })
