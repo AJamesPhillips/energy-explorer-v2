@@ -6,7 +6,7 @@ import { InfoSectionId } from "../../state/pub_sub/interface"
 import { GRAPH_CONSTANTS } from "../constants"
 import { format_value_to_string } from "./format_value_to_string"
 import "./Graph.css"
-import { graph_compute_data_series, GraphDataSeries } from "./graph_compute_data_series"
+import { filter_graph_data_series, graph_compute_data_series, GraphDataSeries } from "./graph_compute_data_series"
 
 
 const { HEIGHT, PADDING, PLOT_W, PLOT_H } = GRAPH_CONSTANTS
@@ -30,12 +30,9 @@ export function Graph<Fields extends string[]>(props: GraphProps<Fields>)
 
     const [year, set_year] = useState(props.year)
 
-
     const all_years = Object.keys(data_by_year).map(Number).sort((a, b) => a - b)
-    const all_rows = all_years.map(y => data_by_year[y]!)
-    const all_values = all_rows.flatMap(row => Object.values(row).map(dp => (dp as DataPoint).value).filter(v => v !== undefined))
-
-    const data_series: GraphDataSeries[] = graph_compute_data_series(data_by_year, colour_by_series)
+    const filtered_data_by_year = filter_graph_data_series(data_by_year, colour_by_series)
+    const all_values = Object.values(filtered_data_by_year).flatMap(row => Object.values(row).map(dp => (dp as DataPoint).value!))
 
     const min_year = all_years[0]!
     const max_year = all_years[all_years.length - 1]!
@@ -44,6 +41,11 @@ export function Graph<Fields extends string[]>(props: GraphProps<Fields>)
 
     function x_of(year: number) { return ((year - min_year) / (max_year - min_year)) * PLOT_W() }
     function y_of(value: number) { return PLOT_H - ((value - min_value) / (max_value - min_value)) * PLOT_H }
+
+    const data_series: GraphDataSeries[] = graph_compute_data_series({
+        data_by_year: filtered_data_by_year, colour_by_series, x_of, y_of
+    })
+
 
     // Dragging
     const svg_ref = useRef<SVGSVGElement>(null)
@@ -98,7 +100,7 @@ export function Graph<Fields extends string[]>(props: GraphProps<Fields>)
     const y_tick_count = 3
     const y_ticks = Array.from({ length: y_tick_count }, (_, i) =>
     {
-        const y_value = min_value + (i / (y_tick_count - 1)) * (max_value - min_value)
+        const y_value = Math.round(min_value + (i / (y_tick_count - 1)) * (max_value - min_value))
         return { y_value, y: y_of(y_value) }
     })
 

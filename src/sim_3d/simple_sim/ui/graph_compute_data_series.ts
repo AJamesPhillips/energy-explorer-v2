@@ -1,7 +1,37 @@
 import { DataPoint } from "../../data/interface"
-import { GRAPH_CONSTANTS } from "../constants"
 
-const { PLOT_W, PLOT_H } = GRAPH_CONSTANTS
+
+export function filter_graph_data_series<
+    Fields extends string[],
+    DataRow = {[f in Fields[number]]: DataPoint}
+>(
+    data_by_year: Record<number, DataRow>,
+    colour_by_series: {[f in Fields[number]]: string | false},
+): Record<number, DataRow>
+{
+    const all_years = Object.keys(data_by_year).map(Number).sort((a, b) => a - b)
+    const all_rows = all_years.map(y => data_by_year[y]!)
+    const series_names = Object.keys(all_rows[0] || {}) as Fields
+
+    const filtered_data_by_year: Record<number, DataRow> = {}
+
+    Object.keys(data_by_year).map(Number).forEach(year =>
+    {
+        const data_row: DataRow = data_by_year[year]!
+        const filtered_data_row: Partial<DataRow> = {}
+
+        series_names.forEach((field: Fields[number]) =>
+        {
+            const colour = colour_by_series[field]
+            if (colour === false) return
+            filtered_data_row[field as keyof DataRow] = data_row[field as keyof DataRow]
+        })
+
+        filtered_data_by_year[year] = filtered_data_row as DataRow
+    })
+
+    return filtered_data_by_year
+}
 
 
 export interface GraphDataSeries
@@ -17,24 +47,18 @@ export interface GraphDataSeries
 export function graph_compute_data_series<
     Fields extends string[],
     DataRow = {[f in Fields[number]]: DataPoint}
->(
+>(args: {
     data_by_year: Record<number, DataRow>,
-    colour_by_series: {[f in Fields[number]]: string | false}
-): GraphDataSeries[]
+    colour_by_series: {[f in Fields[number]]: string | false},
+    x_of: (year: number) => number,
+    y_of: (value: number) => number,
+}): GraphDataSeries[]
 {
+    const { data_by_year, colour_by_series, x_of, y_of } = args
+
     const all_years = Object.keys(data_by_year).map(Number).sort((a, b) => a - b)
     const all_rows = all_years.map(y => data_by_year[y]!)
     const series_names = Object.keys(all_rows[0] || {}) as Fields
-
-    const all_values = all_rows.flatMap(row => Object.values(row).map(dp => (dp as DataPoint).value).filter(v => v !== undefined))
-    const min_year = all_years[0]!
-    const max_year = all_years[all_years.length - 1]!
-    const min_value = Math.min(...all_values) * 0.97
-    const max_value = Math.max(...all_values) * 1.03
-
-    function x_of(year: number) { return ((year - min_year) / (max_year - min_year)) * PLOT_W() }
-    function y_of(pop: number) { return PLOT_H - ((pop - min_value) / (max_value - min_value)) * PLOT_H }
-
 
     const data_series: GraphDataSeries[] = []
     series_names.forEach((field: Fields[number]) =>
@@ -86,43 +110,43 @@ export function graph_compute_data_series<
 }
 
 
-function test()
-{
-    const result = graph_compute_data_series({
-        2020: { oil_reserves: { value: 100, is_projected: false }, gas_reserves: { value: 200, is_projected: true } },
-        2021: { oil_reserves: { value: 90 }, gas_reserves: { value: undefined } },
-    }, {
-        oil_reserves: "black",
-        gas_reserves: "blue",
-    })
-    console.assert(JSON.stringify(result) === JSON.stringify([
-        {
-            name: "oil_reserves",
-            colour: "black",
-            colour_projected: "black",
-            points: [
-                { year: 2020, value: 100, is_projected: false },
-                { year: 2021, value: 90 },
-            ],
-            known_points: [
-                { year: 2020, value: 100, x: 0, y: 114.30497051390059 },
-                { year: 2021, value: 90, x: 442, y: 125.08845829823083}
-            ],
-            known_points_polyline: "0,114.30497051390059 442,125.08845829823083",
-            proj_points_polyline: "442,125.08845829823083",
-        },
-        {
-            name: "gas_reserves",
-            colour: "blue",
-            colour_projected: "blue",
-            points: [
-                { year: 2020, value: 200, is_projected: true },
-                { year: 2021 },
-            ],
-            known_points: [],
-            known_points_polyline: "",
-            proj_points_polyline: "0,6.470092670598149",
-        }
-    ]))
-}
-// test()
+// function test()
+// {
+//     const result = graph_compute_data_series({
+//         2020: { oil_reserves: { value: 100, is_projected: false }, gas_reserves: { value: 200, is_projected: true } },
+//         2021: { oil_reserves: { value: 90 }, gas_reserves: { value: undefined } },
+//     }, {
+//         oil_reserves: "black",
+//         gas_reserves: "blue",
+//     })
+//     console.assert(JSON.stringify(result) === JSON.stringify([
+//         {
+//             name: "oil_reserves",
+//             colour: "black",
+//             colour_projected: "black",
+//             points: [
+//                 { year: 2020, value: 100, is_projected: false },
+//                 { year: 2021, value: 90 },
+//             ],
+//             known_points: [
+//                 { year: 2020, value: 100, x: 0, y: 114.30497051390059 },
+//                 { year: 2021, value: 90, x: 442, y: 125.08845829823083}
+//             ],
+//             known_points_polyline: "0,114.30497051390059 442,125.08845829823083",
+//             proj_points_polyline: "442,125.08845829823083",
+//         },
+//         {
+//             name: "gas_reserves",
+//             colour: "blue",
+//             colour_projected: "blue",
+//             points: [
+//                 { year: 2020, value: 200, is_projected: true },
+//                 { year: 2021 },
+//             ],
+//             known_points: [],
+//             known_points_polyline: "",
+//             proj_points_polyline: "0,6.470092670598149",
+//         }
+//     ]))
+// }
+// // test()
