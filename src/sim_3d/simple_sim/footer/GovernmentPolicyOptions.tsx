@@ -2,7 +2,7 @@ import { ReactNode, useState } from "react"
 
 import { InfoBox } from "../../../components/InfoBox"
 import { GovernmentPolicyIcon } from "../../../components/svgs"
-import "./ElectricityGenerationOptions.css"
+import "./GovernmentPolicyOptions.css"
 
 
 export function GovernmentPolicyOptions()
@@ -39,6 +39,7 @@ export function GovernmentPolicyOptions()
                 </p>
 
                 <PolicySection
+                    id="oil_gas_extraction_tax"
                     title="Tax on oil and gas extraction"
                     description="Currently: no additional extraction tax is applied in this model."
                     options_description="Option: activate this policy and set a tax level to increase extraction costs."
@@ -60,6 +61,7 @@ export function GovernmentPolicyOptions()
                 </PolicySection>
 
                 <PolicySection
+                    id="retail_green_tax"
                     title="Green tax on retail market electricity"
                     description="Currently: no additional retail electricity green tax is applied in this model."
                     options_description="Option: activate this policy and set a tax level to apply a retail green levy."
@@ -81,6 +83,7 @@ export function GovernmentPolicyOptions()
                 </PolicySection>
 
                 <PolicySection
+                    id="regional_pricing"
                     title="Toggle regional or national electricity pricing"
                     description="Currently: national pricing is assumed in this model."
                     options_description="Option: switch between national and regional pricing to compare impacts."
@@ -94,6 +97,7 @@ export function GovernmentPolicyOptions()
 
 
 function PolicySection(props: {
+    id: string
     title: string
     description: string
     options_description: string
@@ -102,13 +106,23 @@ function PolicySection(props: {
     children?: ReactNode
 })
 {
-    return <div style={{ marginTop: 16 }}>
-        <h2 style={{ marginBottom: 8 }}>{props.title}</h2>
-        <p style={{ marginBottom: 8 }}>{props.description}</p>
-        <p style={{ marginBottom: 8 }}>{props.options_description}</p>
-        <button type="button" onClick={props.on_toggle}>
+    return <div className="government_policy_section">
+        <h2 className="government_policy_section_title">{props.title}</h2>
+        <p className="government_policy_section_text">{props.description}</p>
+        <p className="government_policy_section_text">{props.options_description}</p>
+        <button
+            type="button"
+            onClick={props.on_toggle}
+            aria-expanded={props.active}
+            aria-controls={"government_policy_controls_" + props.id}
+        >
             {props.active ? "Deactivate policy" : "Activate policy"}
         </button>
-        {props.children}
+        <p aria-live="polite" className="government_policy_status_text">
+            {props.active ? "Policy activated." : "Policy deactivated."}
+        </p>
+        <div id={"government_policy_controls_" + props.id}>
+            {props.children}
+        </div>
     </div>
 }
