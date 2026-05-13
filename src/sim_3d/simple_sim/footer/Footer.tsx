@@ -22,24 +22,27 @@ export function Footer()
         <div className="footer_row">
             <div className="footer_generation_stack">
                 {show_power_generation_options && <div className="footer_generation_options">
-                    <div className="ui_button">Nuclear</div>
-                    <div className="ui_button">Gas</div>
-                    <div className="ui_button">Biomass</div>
-                    <div className="ui_button">Wave</div>
-                    <div className="ui_button">Tidal</div>
-                    <div className="ui_button footer_generation_bulldozer_button">
+                    <button type="button" className="ui_button">Nuclear</button>
+                    <button type="button" className="ui_button">Gas</button>
+                    <button type="button" className="ui_button">Biomass</button>
+                    <button type="button" className="ui_button">Wave</button>
+                    <button type="button" className="ui_button">Tidal</button>
+                    <button type="button" className="ui_button footer_generation_bulldozer_button" aria-label="Bulldoze">
                         <BulldozerIcon style={{ height: 20 }} />
-                    </div>
+                    </button>
                 </div>}
 
-                <div
+                <button
+                    type="button"
                     className="ui_button footer_generation_toggle_button"
                     onClick={() => set_show_power_generation_options(prev => !prev)}
+                    aria-expanded={show_power_generation_options}
+                    aria-label="Toggle power generation options"
                 >
                     {show_power_generation_options
                         ? <span className="footer_generation_close_x">✕</span>
                         : <ElectricityBoltIcon style={{ height: 24 }} />}
-                </div>
+                </button>
             </div>
         </div>
 
