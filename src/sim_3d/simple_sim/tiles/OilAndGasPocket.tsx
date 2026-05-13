@@ -128,7 +128,7 @@ function OilAndGasPocket({ x, y, depth, ratio_remaining, cell_size }: OilAndGasP
                 position={[-1 * s, (-2 -depth) * s, -1 * s]}
                 onClick={() =>
                 {
-                    pub_sub.pub("show_info_and_data_sources", "oil_and_gas_reserves")
+                    pub_sub.pub("show_info_and_data_sources", "oil_and_gas_data")
                 }}
             />}
 
@@ -143,7 +143,7 @@ function OilAndGasPocket({ x, y, depth, ratio_remaining, cell_size }: OilAndGasP
                 // cursor="pointer"
                 onClick={() =>
                 {
-                    pub_sub.pub("show_info_and_data_sources", "oil_and_gas_reserves")
+                    pub_sub.pub("show_info_and_data_sources", "oil_and_gas_data")
                 }}
             >
                 {`Oil & Gas ${Math.round(ratio_remaining * 100)}%`}

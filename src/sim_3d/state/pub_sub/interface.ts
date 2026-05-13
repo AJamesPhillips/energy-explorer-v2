@@ -7,7 +7,7 @@ export type InfoSectionId =
     | "power_demand"
     | "power_supply"
     | "motivation"
-    | "oil_and_gas_reserves"
+    | "oil_and_gas_data"
 
 
 export interface PublishableEvents

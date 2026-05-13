@@ -5,6 +5,7 @@ import { Link } from "../../../components/Link"
 import { InfoIcon } from "../../../components/svgs"
 import { asset_url } from "../../../utils/asset_url"
 import { is_narrow_screen } from "../../../utils/screen_type"
+import { OIL_GAS_RESERVES_CONFIDENCE, OIL_GAS_RESOURCES_CONFIDENCE } from "../../data/fossil_fuels/process_data_component"
 import { land_or_sea_types } from "../../data/land_coverage/uk/data"
 import pub_sub from "../../state/pub_sub"
 import { InfoSectionId } from "../../state/pub_sub/interface"
@@ -152,9 +153,18 @@ export function Info()
                     </p>
 
 
-                    <Section id="oil_and_gas_reserves" title="Oil and Gas Reserves" />
+                    <Section id="oil_and_gas_data" title="Oil and Gas Data" />
                     <p>
-                        The data for the oil and gas reserves is based on... (TODO)
+                        Includes data on reserves, resources and production from
+                        the <a href="https://wikisim.org/wiki/1283">
+                            North Sea Transition Authority
+                        </a>'s data processed and contextualised here: <a href="https://wikisim.org/wiki/1284v19">
+                            UK oil and gas production, reserves and resources
+                        </a>.  Specifically this sim uses the {OIL_GAS_RESERVES_CONFIDENCE} reserves
+                        and the {OIL_GAS_RESOURCES_CONFIDENCE} resources (to set an maximal
+                        realistic upper bound).  See <a href="https://wikisim.org/wiki/1291v5">
+                            Forecast of potential UKCS production rates
+                        </a> by Carys Thomas for more details including justification for 3C resources.
                     </p>
 
                     <Section id="motivation" title="Motivation for this sim" />

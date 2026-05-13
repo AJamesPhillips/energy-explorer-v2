@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react"
+import { ReactNode, useCallback, useEffect, useRef, useState } from "react"
 
 import { DataPoint } from "../../data/interface"
 import pub_sub from "../../state/pub_sub"
@@ -20,7 +20,7 @@ export interface GraphProps<Fields extends string[] = []>
     year: number
     data_by_year: Record<number, {[f in Fields[number]]: DataPoint}>
     colour_by_series: {[f in Fields[number]]: string | false}
-    get_values_description: (year: number, values: {[f in Fields[number]]: DataPoint}) => { description: string, is_projected: boolean }
+    get_values_description: (year: number, values: {[f in Fields[number]]: DataPoint}) => { description: string | ReactNode, is_projected: boolean }
 
     on_change?: (year: number, values: {[f in Fields[number]]: DataPoint}) => void
 }
@@ -148,7 +148,7 @@ export function Graph<Fields extends string[]>(props: GraphProps<Fields>)
                 <g transform={`translate(${PADDING.left},${PADDING.top})`}>
                     {/* Y axis ticks */}
                     {y_ticks.map(({ y_value, y }) => (
-                        <g key={y_value}>
+                        <g key={y}>
                             <line x1={-4} y1={y} x2={PLOT_W()} y2={y} stroke="#e0e0e0" strokeWidth={1} />
                             <text x={-6} y={y} textAnchor="end" dominantBaseline="middle" fontSize="var(--font-small)" fill="#888">
                                 {format_value_to_string(y_value)}
@@ -165,7 +165,7 @@ export function Graph<Fields extends string[]>(props: GraphProps<Fields>)
                     ))}
                     <text x={x_of(max_year)} y={PLOT_H + 14} textAnchor="end" fontSize="var(--font-small)" fill="#e07020">{max_year}</text>
 
-                    {data_series.map(series => <>
+                    {data_series.map((series, i) => <g key={i}>
                         {/* Projected line (dashed) */}
                         <polyline
                             points={series.proj_points_polyline}
@@ -187,14 +187,14 @@ export function Graph<Fields extends string[]>(props: GraphProps<Fields>)
                         {/* Known data points */}
                         {series.known_points.map(dp => (
                             <circle
-                                key={dp.year}
+                                key={`${i}-${dp.year}`}
                                 cx={dp.x}
                                 cy={dp.y}
                                 r={3}
                                 fill={series.colour}
                             />
                         ))}
-                    </>)}
+                    </g>)}
 
                     {/* Draggable year cursor */}
                     <line

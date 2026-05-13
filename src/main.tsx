@@ -52,7 +52,7 @@ function App ()
     }
 
 
-    const [components, set_components] = useState(cached_components({ bust_cache: false }))
+    const [components, set_components] = useState(cached_components({ bust_cache: true }))
 
     useEffect(() =>
     {
@@ -72,27 +72,29 @@ function App ()
     const components_map_by_ido = useMemo(() => data_components_by_ido(components), [components])
 
 
+    // Must also update version in data/ids.ts
+    const population_id = "1011v12" // UK population
+    const oil_gas_id = "1284v19" // UK oil and gas production, reserves and resources
+    const population_component = components_map_by_idv[population_id]
+    const oil_gas_component = components_map_by_idv[oil_gas_id]
     const { population_by_year, oil_gas_by_year } = useMemo(() =>
     {
-        const population_id = "1011v12" // UK population
-        const oil_gas_id = "1284v19" // UK oil and gas production, reserves and resources
-
         let population_by_year: PopulationByYear | undefined = undefined
-        const population_component = components_map_by_idv[population_id]
+
         if (population_component)
         {
             population_by_year = process_uk_population_data_component(population_component)
         }
 
         let oil_gas_by_year: OilGasByYear | undefined = undefined
-        const oil_gas_component = components_map_by_idv[oil_gas_id]
+
         if (oil_gas_component)
         {
             oil_gas_by_year = process_uk_oil_gas_data_component(oil_gas_component)
         }
 
         return { population_by_year, oil_gas_by_year }
-    }, [components_map_by_idv])
+    }, [population_component, oil_gas_component])
 
 
     const [year, _set_year] = useState(2026)

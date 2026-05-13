@@ -5,7 +5,7 @@ import { GraphIcon } from "../../../components/svgs"
 import { is_narrow_screen } from "../../../utils/screen_type"
 import { OilGasByYear } from "../../data/fossil_fuels/process_data_component"
 import { PopulationByYear } from "../../data/population/process_data_component"
-import { GraphOilGas } from "./GraphOilGas"
+import { GraphOilGasProduction, GraphOilGasReserves, GraphOilGasResources } from "./GraphOilGas"
 import { GraphPopulation } from "./GraphPopulation"
 import "./ui.css"
 
@@ -47,8 +47,20 @@ export function DataPortal(props: DataPortalProps)
                 <h1>Data Graphs <GraphIcon style={{ height: 30 }} /></h1>
 
                 <div style={{ overflowY: "scroll", maxHeight: "50vh", paddingRight: 10, paddingBottom: 30 }}>
-                    <Section id="" title="Oil & Gas" />
-                    {oil_gas_by_year && <GraphOilGas
+                    <Section id="" title="Oil & Gas Reserves" />
+                    {oil_gas_by_year && <GraphOilGasReserves
+                        year={props.year}
+                        oil_gas_by_year={oil_gas_by_year}
+                    />}
+
+                    <Section id="" title="Oil & Gas Resources" />
+                    {oil_gas_by_year && <GraphOilGasResources
+                        year={props.year}
+                        oil_gas_by_year={oil_gas_by_year}
+                    />}
+
+                    <Section id="" title="Oil & Gas Production" />
+                    {oil_gas_by_year && <GraphOilGasProduction
                         year={props.year}
                         oil_gas_by_year={oil_gas_by_year}
                     />}

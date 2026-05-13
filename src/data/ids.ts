@@ -1,6 +1,6 @@
 import { IdAndMaybeVersion, IdOnly, parse_id } from "core/data/id"
 
-import { PROJECTION_UNTIL_YEAR } from "../sim_3d/data/fossil_fuels/process_data_component"
+import { INCLUDE_PROJECTION_UNTIL, PROJECTION_UNTIL_YEAR } from "../sim_3d/data/fossil_fuels/process_data_component"
 import { EnergyFactorName } from "./interface"
 
 
@@ -142,7 +142,7 @@ export const other_ids_performance_boost: IdsToFetchAndMaybeCompute[] = [
     { id: "1280v4" }, // repeated
     { id: "1280v8" },
     // UK Oil and gas reserves and production
-    { id: "1284v7", compute_value: true, args_for_compute: `false,${PROJECTION_UNTIL_YEAR}` },
+    { id: "1284v19", compute_value: true, args_for_compute: `true,${INCLUDE_PROJECTION_UNTIL ? PROJECTION_UNTIL_YEAR : undefined}` },
     { id: "1285v4" },
     { id: "1286v3" },
 ].map(({ id, compute_value, args_for_compute }) =>
