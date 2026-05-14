@@ -1,5 +1,4 @@
 import { OnceOffInfoBox } from "../../components/InfoBox"
-import { GovernmentPolicyIcon } from "../../components/svgs"
 import { WarningAppUnderConstruction } from "../../components/WarningAppUnderConstruction"
 
 
@@ -15,14 +14,16 @@ export function WelcomeMessage()
                     This is a simplification of the UK's national energy system.
                 </p> */}
                 <p style={{ backgroundColor: "#fffae6", padding: 8, borderRadius: 4, border: "1px solid #ffe58f" }}>
-                    Use options ⚡️ from the right to add different energy sources
-                    to the grid and set government policies <GovernmentPolicyIcon style={{ height: 20 }} />. See
-                    how they all affect the UK's energy system.
+                    Use options ⚡️ from the right to add different energy sources.
+                    {/* and set government policies <GovernmentPolicyIcon style={{ height: 20 }} /> */}
                 {/* And click on ℹ️ symbols to get more information */}
+                </p>
+                <p style={{ textAlign: "center" }}>
+                    Shape the UK's energy future with your choices!
                 </p>
 
                 <WarningAppUnderConstruction
-                    custom_message="This simulation is still a work in progress"
+                    custom_message="This simulation is a work in progress"
                 />
 
                 {/* <p>
