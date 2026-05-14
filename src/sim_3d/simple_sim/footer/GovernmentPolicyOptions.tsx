@@ -24,7 +24,7 @@ export function GovernmentPolicyOptions(props: { show_options: boolean, toggle_s
                 aria-label="Toggle government policy options"
                 onClick={props.toggle_showing}
             >
-                <GovernmentPolicyIcon style={{ height: 24 }} />
+                Policy <GovernmentPolicyIcon style={{ height: 24 }} />
             </button>
         </div>
 

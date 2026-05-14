@@ -20,7 +20,7 @@ export function ElectricityGenerationOptions(props: { show_options: boolean, tog
         options={electricity_generation_options}
         build_aria_label={option => `Build ${option} power plant`}
         toggle_aria_label="Toggle power generation options"
-        toggle_collapsed_content="⚡"
+        toggle_collapsed_content="Electricity ⚡"
         remove_aria_label="Remove power plant"
     />
 }
