@@ -1,6 +1,6 @@
 
 
-export function WarningAppUnderConstruction()
+export function WarningAppUnderConstruction(props: { custom_message?: string })
 {
     return <div style={{
         backgroundColor: "#fff3cd",
@@ -10,6 +10,6 @@ export function WarningAppUnderConstruction()
         marginBottom: "16px",
         textAlign: "center",
     }}>
-        🚧 This section is under construction 🚧
+        🚧 {props.custom_message ?? "This section is under construction" } 🚧
     </div>
 }
