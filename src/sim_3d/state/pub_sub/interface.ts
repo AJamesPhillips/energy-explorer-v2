@@ -1,3 +1,4 @@
+import { BuildingActionTypeString } from "../../../state/building_action/interface"
 import { CellData } from "../../simple_sim/interface"
 
 
@@ -32,5 +33,5 @@ export interface PublishableEvents
     on_highlight_oil_reserves: { x: number, y: number } | null
     will_update_tile: CellData | null
     tile_power_changed: { tile: CellData; change_gw: number }
-    invalid_placement: { tile: CellData; item_type: "wind_turbine" | "solar_farm" }
+    invalid_placement: { tile: CellData; item_type: BuildingActionTypeString }
 }

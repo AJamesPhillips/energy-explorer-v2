@@ -7,6 +7,8 @@ import { uk_coverage } from "../data/coverage/uk/data"
 // import { uk_month_hourly_and_location_average_capacity_factor_solar_generation_2018 } from "../data/power_generation/solar_pv"
 // import { uk_month_hourly_and_location_average_capacity_factor_wind_generation_2018 } from "../data/power_generation/wind_turbine"
 import { PerspectiveKnowledgeGraph } from "../../data/interface"
+import { ActiveBuildingAction } from "../../state/building_action/interface"
+import { get_app_state } from "../../state/store"
 import { PowerStats } from "../model/interface"
 import pub_sub from "../state/pub_sub"
 import { CONSTANTS, DEFAULTS } from "./constants"
@@ -138,6 +140,9 @@ function SimpleSim3d(props: SimpleSim3dProps)
     })
 
 
+    const state = get_app_state()
+    const current_action = state.building_action.active
+
     const on_click_tile = useCallback(({ x, y }: { x: number; y: number }) =>
     {
         props.set_data(prev =>
@@ -145,14 +150,17 @@ function SimpleSim3d(props: SimpleSim3dProps)
             const cell = prev[x]?.[y]
             if (!cell) return prev
 
-            const invalid_item = get_invalid_placement_item(cell)
-            if (invalid_item !== null)
+            if (!current_action) return prev
+
+            const new_candidate_tile = modify_cell_with_action(cell, current_action)
+            const cell_valid = is_cell_valid(new_candidate_tile)
+            if (!cell_valid)
             {
-                pub_sub.pub("invalid_placement", { tile: cell, item_type: invalid_item })
+                pub_sub.pub("invalid_placement", { tile: cell, item_type: current_action.type })
                 return prev
             }
 
-            const new_cell = cycle_cell_contents(cell)
+            const new_cell = new_candidate_tile
             const new_cells: CellsData = {
                 ...prev,
                 [x]: {
@@ -170,7 +178,7 @@ function SimpleSim3d(props: SimpleSim3dProps)
 
             return new_cells
         })
-    }, [])
+    }, [current_action])
 
     const on_hover_tile = useCallback((tile: CellData | null) =>
     {
@@ -210,47 +218,64 @@ function SimpleSim3d(props: SimpleSim3dProps)
 // const solar = useMemo(() => uk_month_hourly_and_location_average_capacity_factor_solar_generation_2018(), [])
 
 
-function get_invalid_placement_item(cell: CellData): "wind_turbine" | "solar_farm" | null
+function modify_cell_with_action(cell: CellData, action: ActiveBuildingAction): CellData
 {
-    if (cell.type === "sea" && cell.subtype === "deep") return "wind_turbine"
-    if (cell.type === "land" && (cell.subtype === "wetland" || cell.subtype === "inland_water")) return "solar_farm"
-    return null
+    if (!action) return cell
+
+    if (action.type === "wind")
+    {
+        return { ...cell, has_wind_turbine: true }
+    }
+    else if (action.type === "solar")
+    {
+        return { ...cell, has_solar_farm: true }
+    }
+    // else if (action.type === "gas")
+    // {
+    //     return { ...cell, has_gas_power_plant: true }
+    // }
+    // else if (action.type === "nuclear")
+    // {
+    //     return { ...cell, has_nuclear_power_plant: true }
+    // }
+
+    // else if (action.type === "hydro_pumped_storage")
+    // {
+    //     return { ...cell, has_hydro_pumped_storage: true }
+    // }
+    // else if (action.type === "battery")
+    // {
+    //     return { ...cell, has_battery: true }
+    // }
+
+    return cell
 }
 
 
-function cycle_cell_contents(cell: CellData): CellData
+function is_cell_valid(cell: CellData): boolean
 {
-    if (cell.type === "sea" && cell.subtype === "shallow")
+    if (cell.has_wind_turbine)
     {
-        if (!cell.has_wind_turbine)
+        if (cell.type === "sea")
         {
-            return { ...cell, has_wind_turbine: true }
+            if (cell.subtype === "deep") return false
         }
         else
         {
-            return { ...cell, has_wind_turbine: false }
+            if (cell.subtype === "wetland" || cell.subtype === "inland_water") return false
         }
     }
-    else if (cell.type === "land" && (cell.subtype !== "wetland" && cell.subtype !== "inland_water"))
+
+    if (cell.has_solar_farm)
     {
-        if (!cell.has_solar_farm && !cell.has_wind_turbine)
-        {
-            return { ...cell, has_solar_farm: true }
-        }
-        else if (!cell.has_wind_turbine)
-        {
-            return { ...cell, has_solar_farm: true, has_wind_turbine: true }
-        }
-        else if (cell.has_solar_farm && cell.has_wind_turbine)
-        {
-            return { ...cell, has_solar_farm: false, has_wind_turbine: true }
-        }
+        if (cell.type === "sea") return false
         else
         {
-            return { ...cell, has_solar_farm: false, has_wind_turbine: false }
+            if (cell.subtype === "wetland" || cell.subtype === "inland_water") return false
         }
     }
-    return cell
+
+    return true
 }
 
 

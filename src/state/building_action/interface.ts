@@ -9,7 +9,15 @@ export type BuildingOilGasAction = {
 export type BuildingElectricityAction = {
     type: "wind" | "solar" | "nuclear" | "hydro"
 }
-export type BuildingActionType = BuildingElectricityAction | BuildingOilGasAction | BuildingStorageAction
+export type BuildingDestroyAction = {
+    type: "bulldozer"
+}
+export type BuildingActionType = (
+    BuildingElectricityAction
+    | BuildingOilGasAction
+    | BuildingStorageAction
+    | BuildingDestroyAction
+)
 export type BuildingActionTypeString = BuildingActionType["type"]
 export type ActiveBuildingAction = false | BuildingActionType
 

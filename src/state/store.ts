@@ -43,7 +43,7 @@ export const get_new_app_store = () =>
 // This allows us to create the store only when it's needed, which would allow
 // us to stub out the calls to supabase in tests, for example.
 let _app_store: AppStore | undefined = undefined
-export const app_state = () =>
+export const get_app_state = () =>
 {
     if (_app_store) return _app_store()
     _app_store = get_new_app_store()

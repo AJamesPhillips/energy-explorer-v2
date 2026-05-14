@@ -2,6 +2,7 @@ import { useFrame } from "@react-three/fiber"
 import { useEffect, useRef, useState } from "react"
 import * as THREE from "three"
 
+import { BuildingActionTypeString } from "../../state/building_action/interface"
 import { asset_url } from "../../utils/asset_url"
 import pub_sub from "../state/pub_sub"
 import { CellData } from "./interface"
@@ -14,7 +15,7 @@ interface SinkingEntry
 {
     id: number
     tile: CellData
-    item_type: "wind_turbine" | "solar_farm"
+    item_type: BuildingActionTypeString
 }
 
 let next_id = 0
@@ -57,7 +58,7 @@ function SinkingItem({ entry, cell_size, on_done }: {
 
     const base_x = entry.tile.x * cell_size
     const base_z = entry.tile.y * cell_size
-    const base_y = entry.item_type === "solar_farm" ? cell_size * 0.06 : 0
+    const base_y = entry.item_type === "solar" ? cell_size * 0.06 : 0
 
     useEffect(() =>
     {
@@ -85,9 +86,11 @@ function SinkingItem({ entry, cell_size, on_done }: {
 
     return (
         <group ref={group_ref} position={[base_x, base_y, base_z]}>
-            {entry.item_type === "wind_turbine"
+            {entry.item_type === "wind"
                 ? <WindTurbine cell_size={cell_size} transparent />
-                : <SolarFarmPanels cell_size={cell_size} transparent />
+            : entry.item_type === "solar"
+                ? <SolarFarmPanels cell_size={cell_size} transparent />
+                : null
             }
         </group>
     )

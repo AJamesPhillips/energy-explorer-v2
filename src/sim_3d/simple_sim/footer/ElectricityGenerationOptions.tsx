@@ -1,16 +1,16 @@
 import { is_narrow_screen } from "../../../utils/screen_type"
-import { FooterBuildOptions } from "./FooterBuildOptions"
+import { ActionOption, FooterBuildOptions } from "./FooterBuildOptions"
 
 
-const electricity_generation_options = [
+const electricity_generation_options: ActionOption[] = [
     // { text: "Gas", enabled: true },
     // { text: "Biomass", enabled: false },
     // { text: "Nuclear", enabled: true },
     // { text: "Hydro", enabled: false },
     // { text: "Wave", enabled: false },
     // { text: "Tidal", enabled: false },
-    { text: "Solar", enabled: true },
-    { text: "Wind", enabled: true },
+    { text: "Solar", enabled: true, type: "solar" },
+    { text: "Wind", enabled: true, type: "wind" },
 ]
 
 export function ElectricityGenerationOptions(props: { show_options: boolean, toggle_showing: () => void })
