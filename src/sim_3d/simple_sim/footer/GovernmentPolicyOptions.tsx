@@ -3,6 +3,7 @@ import { ReactNode, useState } from "react"
 import { InfoBox } from "../../../components/InfoBox"
 import { GovernmentPolicyIcon } from "../../../components/svgs"
 import { WarningAppUnderConstruction } from "../../../components/WarningAppUnderConstruction"
+import { is_narrow_screen } from "../../../utils/screen_type"
 import "./GovernmentPolicyOptions.css"
 
 
@@ -24,7 +25,7 @@ export function GovernmentPolicyOptions(props: { show_options: boolean, toggle_s
                 aria-label="Toggle government policy options"
                 onClick={props.toggle_showing}
             >
-                Policy <GovernmentPolicyIcon style={{ height: 24 }} />
+                {is_narrow_screen() ? "" : "Gov Policy " }<GovernmentPolicyIcon style={{ height: 24 }} />
             </button>
         </div>
 
