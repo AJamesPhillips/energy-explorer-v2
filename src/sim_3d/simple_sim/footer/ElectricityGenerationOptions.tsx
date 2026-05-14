@@ -3,9 +3,9 @@ import { FooterBuildOptions } from "./FooterBuildOptions"
 
 
 const electricity_generation_options = [
-    { text: "Gas", enabled: true },
+    // { text: "Gas", enabled: true },
     // { text: "Biomass", enabled: false },
-    { text: "Nuclear", enabled: true },
+    // { text: "Nuclear", enabled: true },
     // { text: "Hydro", enabled: false },
     // { text: "Wave", enabled: false },
     // { text: "Tidal", enabled: false },

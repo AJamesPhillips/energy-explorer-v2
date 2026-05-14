@@ -10,6 +10,7 @@ export type BuildingElectricityAction = {
     type: "wind" | "solar" | "nuclear" | "hydro"
 }
 export type BuildingActionType = BuildingElectricityAction | BuildingOilGasAction | BuildingStorageAction
+export type BuildingActionTypeString = BuildingActionType["type"]
 export type ActiveBuildingAction = false | BuildingActionType
 
 export interface BuildingActionState

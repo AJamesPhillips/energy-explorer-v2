@@ -39,14 +39,14 @@ export function FooterBuildOptions(props: {
                 >
                     {option.text}
                 </button>)}
-                <button
+                {false && <button
                     type="button"
                     className={"ui_button actions_bulldozer_button " + (selected_option === "Bulldozer" ? "actions_option_selected" : "")}
                     onClick={() => set_selected_option(selected => selected === "Bulldozer" ? "" : "Bulldozer")}
                     aria-label={props.remove_aria_label}
                 >
                     <BulldozerIcon style={{ height: 30 }} />
-                </button>
+                </button>}
             </div>}
 
             <button
