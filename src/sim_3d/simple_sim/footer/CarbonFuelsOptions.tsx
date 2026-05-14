@@ -9,9 +9,11 @@ const carbon_fuels_options = [
     // { text: "Terminals", enabled: false },
 ]
 
-export function CarbonFuelsOptions()
+export function CarbonFuelsOptions(props: { show_options: boolean, toggle_showing: () => void })
 {
     return <FooterBuildOptions
+        show_options={props.show_options}
+        toggle_showing={props.toggle_showing}
         options={carbon_fuels_options}
         build_aria_label={option => `Build ${option}`}
         toggle_aria_label="Toggle carbon fuels options"

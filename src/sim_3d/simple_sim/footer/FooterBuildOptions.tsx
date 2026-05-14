@@ -11,6 +11,8 @@ interface Option
 }
 
 export function FooterBuildOptions(props: {
+    show_options: boolean
+    toggle_showing: () => void
     options: Option[]
     build_aria_label: (option: string) => string
     toggle_aria_label: string
@@ -18,12 +20,11 @@ export function FooterBuildOptions(props: {
     remove_aria_label: string
 })
 {
-    const [show_options, set_show_options] = useState(false)
     const [selected_option, set_selected_option] = useState("")
 
     return <div className="footer_row">
         <div className="actions_stack">
-            {show_options && <div className="actions_options">
+            {props.show_options && <div className="actions_options">
                 {props.options.map(option => <button
                     key={option.text}
                     type="button"
@@ -51,11 +52,11 @@ export function FooterBuildOptions(props: {
             <button
                 type="button"
                 className="ui_button actions_toggle_button"
-                onClick={() => set_show_options(prev => !prev)}
-                aria-expanded={show_options}
+                onClick={props.toggle_showing}
+                aria-expanded={props.show_options}
                 aria-label={props.toggle_aria_label}
             >
-                {show_options
+                {props.show_options
                     ? <CloseIcon style={{ height: 16 }} />
                     : props.toggle_collapsed_content}
             </button>

@@ -12,9 +12,11 @@ const electricity_generation_options = [
     { text: "Wind", enabled: true },
 ]
 
-export function ElectricityGenerationOptions()
+export function ElectricityGenerationOptions(props: { show_options: boolean, toggle_showing: () => void })
 {
     return <FooterBuildOptions
+        show_options={props.show_options}
+        toggle_showing={props.toggle_showing}
         options={electricity_generation_options}
         build_aria_label={option => `Build ${option} power plant`}
         toggle_aria_label="Toggle power generation options"

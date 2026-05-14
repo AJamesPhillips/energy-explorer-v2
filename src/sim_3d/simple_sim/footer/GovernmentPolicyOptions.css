@@ -1,0 +1,25 @@
+#app_footer .footer_generation_toggle_button
+{
+    min-width: 48px;
+    justify-content: center;
+}
+
+.government_policy_section
+{
+    margin-top: 16px;
+}
+
+.government_policy_section_title
+{
+    margin-bottom: 8px;
+}
+
+.government_policy_section_text
+{
+    margin-bottom: 8px;
+}
+
+.government_policy_status_text
+{
+    margin: 8px 0px 0px 0px;
+}

@@ -5,8 +5,7 @@ import { Link } from "../../../components/Link"
 import { GitHubLogo, MagnifyingGlassIcon, MailIcon } from "../../../components/svgs"
 import { is_narrow_screen } from "../../../utils/screen_type"
 import pub_sub from "../../state/pub_sub"
-import { CarbonFuelsOptions } from "./CarbonFuelsOptions"
-import { ElectricityGenerationOptions } from "./ElectricityGenerationOptions"
+import { ActionOptions } from "./ActionOptions"
 import "./Footer.css"
 import { TileInfo } from "./TileInfo"
 
@@ -20,8 +19,7 @@ export function Footer()
             <TileInfo />
         </div>}
 
-        <CarbonFuelsOptions />
-        <ElectricityGenerationOptions />
+        <ActionOptions />
 
         <div className="footer_row">
             <div className="ui_button" onClick={() => set_show_contact_info(true)}>
