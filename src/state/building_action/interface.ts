@@ -4,10 +4,10 @@ export type BuildingStorageAction = {
     type: "hydro_pumped_storage" | "battery"
 }
 export type BuildingOilGasAction = {
-    type: "gas"
+    type: "oil_and_gas_rig"
 }
 export type BuildingElectricityAction = {
-    type: "wind" | "solar" | "nuclear" | "hydro"
+    type: "gas" | "hydro" | "nuclear" | "solar" | "wind"
 }
 export type BuildingDestroyAction = {
     type: "bulldozer"

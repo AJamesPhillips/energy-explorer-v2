@@ -1,9 +1,9 @@
 import { CarbonFuelsIcon } from "../../../components/svgs"
 import { is_narrow_screen } from "../../../utils/screen_type"
-import { FooterBuildOptions } from "./FooterBuildOptions"
+import { ActionOption, FooterBuildOptions } from "./FooterBuildOptions"
 
-const carbon_fuels_options = [
-    { text: "Oil&Gas Rig", enabled: true },
+const carbon_fuels_options: ActionOption[] = [
+    { text: "Oil&Gas Rig", enabled: true, type: "oil_and_gas_rig" },
     // { text: "Pipeline", enabled: false },
     // { text: "Refineries", enabled: false },
     // { text: "Storage", enabled: false },
