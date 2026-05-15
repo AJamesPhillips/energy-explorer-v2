@@ -30,6 +30,7 @@ import { GraphViewer } from "./graph/GraphViewer"
 import "./main.css"
 import { OilGasByYear, process_uk_oil_gas_data_component } from "./sim_3d/data/fossil_fuels/process_data_component"
 import { PopulationByYear, process_uk_population_data_component } from "./sim_3d/data/population/process_data_component"
+import { process_solar_farms_data_component, SolarFarmsByYear } from "./sim_3d/data/solar_pv/process_data_component"
 import { Sim3d } from "./sim_3d/Sim3d"
 import { DataPortal } from "./sim_3d/simple_sim/ui/DataPortal"
 import { Info } from "./sim_3d/simple_sim/ui/Info"
@@ -52,7 +53,7 @@ function App ()
     }
 
 
-    const [components, set_components] = useState(cached_components({ bust_cache: true }))
+    const [components, set_components] = useState(cached_components({ bust_cache: false }))
 
     useEffect(() =>
     {
@@ -75,26 +76,32 @@ function App ()
     // Must also update version in data/ids.ts
     const population_id = "1011v12" // UK population
     const oil_gas_id = "1284v19" // UK oil and gas production, reserves and resources
+    const solar_farms_id = "1295v2" // UK solar farms by year
     const population_component = components_map_by_idv[population_id]
     const oil_gas_component = components_map_by_idv[oil_gas_id]
+    const solar_farms_component = components_map_by_idv[solar_farms_id]
     const { population_by_year, oil_gas_by_year } = useMemo(() =>
     {
         let population_by_year: PopulationByYear | undefined = undefined
-
         if (population_component)
         {
             population_by_year = process_uk_population_data_component(population_component)
         }
 
         let oil_gas_by_year: OilGasByYear | undefined = undefined
-
         if (oil_gas_component)
         {
             oil_gas_by_year = process_uk_oil_gas_data_component(oil_gas_component)
         }
 
+        let solar_farms_by_year: SolarFarmsByYear | undefined = undefined
+        if (solar_farms_component)
+        {
+            solar_farms_by_year = process_solar_farms_data_component(solar_farms_component)
+        }
+
         return { population_by_year, oil_gas_by_year }
-    }, [population_component, oil_gas_component])
+    }, [population_component, oil_gas_component, solar_farms_component])
 
 
     const [year, _set_year] = useState(2026)

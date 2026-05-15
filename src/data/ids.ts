@@ -150,6 +150,8 @@ export const other_ids_performance_boost: IdsToFetchAndMaybeCompute[] = [
     { id: "1285v4" },
     { id: "1286v3" }, // repeated
     { id: "1286v7" },
+    // UK Solar Farms
+    { id: "1295v2", compute_value: true, args_for_compute: `` },
 ].map(({ id, compute_value, args_for_compute }) =>
 {
     if (!compute_value)
