@@ -2,6 +2,11 @@
 Will accumulate links to resources here when they don't immediately fit into
 WikiSim.org
 
+## National Energy Planning
+
+[Participatory processes for strategic energy planning: A toolkit for national energy planners](https://www.irena.org/Publications/2025/Sep/Participatory-processes-for-strategic-energy-planning-A-toolkit-for-national-energy-planners)
+
+
 
 ## Electricity Price Set by Gas & not yet Renewables
 
@@ -49,8 +54,20 @@ https://www.ecologie.gouv.fr/sites/default/files/documents/202604_France%27s_roa
 
 This report shows that existing UK housing stock could have 47.5 GW of rooftop
 solar PV potential.  It's important to note that this is the nameplate capacity
-not the average annual output: https://anot8.org/r/?url=https%3A%2F%2Fwww.cpre.org.uk%2Fwp-content%2Fuploads%2F2023%2F05%2FRooftop-Revolution-Report.pdf&h=0-ajp&ta=%5B%5B0%2C10%2C%22%22%2C%22%22%2C%5B%5D%2C%2221.5%22%2C%22424.5%22%2C%22790.5%22%2C%22416%22%2C%22AJP%22%5D%5D
+not the [average annual output](https://anot8.org/r/?url=https%3A%2F%2Fwww.cpre.org.uk%2Fwp-content%2Fuploads%2F2023%2F05%2FRooftop-Revolution-Report.pdf&h=0-ajp&ta=%5B%5B0%2C10%2C%22%22%2C%22%22%2C%5B%5D%2C%2221.5%22%2C%22424.5%22%2C%22790.5%22%2C%22416%22%2C%22AJP%22%5D%5D)
 
+
+# Energy Sources
+
+## Wind
+
+* https://github.com/microsoft/global-renewables-watch
+* (unfavourable license: https://www.iea.org/data-and-statistics/data-product/renewables-2025-dataset)
+
+## Solar
+
+* https://github.com/microsoft/global-renewables-watch
+* (unfavourable license: https://www.iea.org/data-and-statistics/data-product/renewables-2025-dataset)
 
 ## Oil and gas
 
